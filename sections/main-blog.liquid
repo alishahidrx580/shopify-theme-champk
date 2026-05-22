@@ -1,0 +1,490 @@
+{%- liquid
+  assign per_page = section.settings.per_page | default: 9
+  assign articles_count = blog.articles_count
+-%}
+
+<section class="main-blog full-width">
+  <div class="main-blog__inner cham-container">
+    <header class="main-blog__head" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h1 class="main-blog__heading font-display">
+        {{- section.settings.heading_lead -}}
+        {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        {%- if section.settings.heading_tail != blank -%}{{ section.settings.heading_tail }}{%- endif -%}
+      </h1>
+      {%- if section.settings.body != blank -%}
+        <div class="main-blog__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- if blog.all_tags.size > 0 -%}
+      <nav class="main-blog__tags" aria-label="Filter by tag" data-reveal data-reveal-delay="100">
+        <a
+          href="{{ blog.url }}"
+          class="main-blog__tag {% if current_tags == blank %}is-active{% endif %}"
+        >{{ 'sections.main_blog.all_tag_label' | t }}</a>
+        {%- for tag in blog.all_tags -%}
+          {%- assign is_active = false -%}
+          {%- if current_tags contains tag -%}{%- assign is_active = true -%}{%- endif -%}
+          <a
+            href="{{ blog.url }}/tagged/{{ tag | handleize }}"
+            class="main-blog__tag {% if is_active %}is-active{% endif %}"
+          >{{ tag }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+
+    {%- if articles_count == 0 -%}
+      <p class="main-blog__empty">{{ 'sections.main_blog.no_articles' | t }}</p>
+    {%- else -%}
+      {%- paginate blog.articles by per_page -%}
+        {%- assign show_featured = false -%}
+        {%- if paginate.current_page == 1 and current_tags == blank and blog.articles.size > 0 -%}
+          {%- assign show_featured = true -%}
+          {%- assign featured = blog.articles.first -%}
+        {%- endif -%}
+
+        {%- if show_featured -%}
+          {%- assign words = featured.content | strip_html | split: ' ' | size -%}
+          {%- assign minutes = words | divided_by: 200 -%}
+          {%- if minutes < 1 -%}{%- assign minutes = 1 -%}{%- endif -%}
+          {%- assign read_time = 'sections.main_blog.read_time_html' | t: minutes: minutes -%}
+          {%- assign date_str = featured.published_at | date: '%B %-d, %Y' -%}
+
+          <article class="main-blog__featured" data-reveal>
+            <a href="{{ featured.url }}" class="main-blog__featured-media" aria-hidden="true" tabindex="-1">
+              {%- if featured.image -%}
+                <img
+                  src="{{ featured.image | image_url: width: 1400 }}"
+                  srcset="{{ featured.image | image_url: width: 700 }} 700w, {{ featured.image | image_url: width: 1400 }} 1400w, {{ featured.image | image_url: width: 2000 }} 2000w"
+                  sizes="(min-width: 1024px) 55vw, 100vw"
+                  alt="{{ featured.title | escape }}"
+                  width="{{ featured.image.width }}"
+                  height="{{ featured.image.height }}"
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
+                  class="main-blog__featured-img"
+                >
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'main-blog__featured-img main-blog__featured-img--placeholder' }}
+              {%- endif -%}
+            </a>
+            <div class="main-blog__featured-body">
+              <span class="eyebrow">{{ date_str }} · {{ read_time }}</span>
+              <h2 class="main-blog__featured-title font-display">
+                <a href="{{ featured.url }}">{{ featured.title }}</a>
+              </h2>
+              {%- if featured.excerpt_or_content != blank -%}
+                <p class="main-blog__featured-excerpt">
+                  {{ featured.excerpt_or_content | strip_html | truncatewords: 35 }}
+                </p>
+              {%- endif -%}
+              <a href="{{ featured.url }}" class="main-blog__read-link gold-link">
+                {{ 'sections.main_blog.read_article' | t }}
+              </a>
+            </div>
+          </article>
+        {%- endif -%}
+
+        <div class="main-blog__grid">
+          {%- for article in blog.articles -%}
+            {%- if show_featured and forloop.first -%}
+              {%- continue -%}
+            {%- endif -%}
+
+            {%- assign card_words = article.content | strip_html | split: ' ' | size -%}
+            {%- assign card_minutes = card_words | divided_by: 200 -%}
+            {%- if card_minutes < 1 -%}{%- assign card_minutes = 1 -%}{%- endif -%}
+            {%- assign card_read_time = 'sections.main_blog.read_time_html' | t: minutes: card_minutes -%}
+            {%- assign card_date = article.published_at | date: '%B %-d, %Y' -%}
+
+            <article class="main-blog__card" data-reveal data-reveal-delay="{{ forloop.index0 | times: 80 }}">
+              <a href="{{ article.url }}" class="main-blog__card-media" aria-hidden="true" tabindex="-1">
+                {%- if article.image -%}
+                  <img
+                    src="{{ article.image | image_url: width: 900 }}"
+                    srcset="{{ article.image | image_url: width: 450 }} 450w, {{ article.image | image_url: width: 900 }} 900w, {{ article.image | image_url: width: 1350 }} 1350w"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    alt="{{ article.title | escape }}"
+                    width="{{ article.image.width }}"
+                    height="{{ article.image.height }}"
+                    loading="lazy"
+                    decoding="async"
+                    class="main-blog__card-img"
+                  >
+                {%- else -%}
+                  {{ 'lifestyle-2' | placeholder_svg_tag: 'main-blog__card-img main-blog__card-img--placeholder' }}
+                {%- endif -%}
+              </a>
+              <div class="main-blog__card-body">
+                <span class="main-blog__card-meta">{{ card_date }} · {{ card_read_time }}</span>
+                <h3 class="main-blog__card-title font-display">
+                  <a href="{{ article.url }}">{{ article.title }}</a>
+                </h3>
+                {%- if article.excerpt_or_content != blank -%}
+                  <p class="main-blog__card-excerpt">
+                    {{ article.excerpt_or_content | strip_html | truncatewords: 18 }}
+                  </p>
+                {%- endif -%}
+              </div>
+            </article>
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="main-blog__pagination" aria-label="Pagination">
+            {{ paginate | default_pagination }}
+          </nav>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .main-blog {
+    width: 100%;
+    padding-top: calc(var(--header-height) + 4rem);
+    padding-bottom: 8rem;
+  }
+
+  @media (min-width: 1024px) {
+    .main-blog {
+      padding-top: calc(var(--header-height) + 6rem);
+      padding-bottom: 10rem;
+    }
+  }
+
+  .main-blog__head {
+    max-width: 48rem;
+  }
+
+  .main-blog__heading {
+    margin-top: 1.5rem;
+    font-size: 3rem;
+    line-height: 0.98;
+  }
+
+  @media (min-width: 1024px) {
+    .main-blog__heading {
+      font-size: 5rem;
+    }
+  }
+
+  .main-blog__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .main-blog__body {
+    margin-top: 2rem;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+    line-height: 1.65;
+    max-width: 36rem;
+  }
+
+  .main-blog__body > p {
+    margin: 0;
+  }
+
+  /* === Tag pills === */
+  .main-blog__tags {
+    margin-top: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (min-width: 1024px) {
+    .main-blog__tags {
+      margin-top: 4rem;
+    }
+  }
+
+  .main-blog__tag {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    border: 1px solid var(--border);
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .main-blog__tag:hover,
+  .main-blog__tag:focus-visible {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .main-blog__tag.is-active {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  /* === Featured article === */
+  .main-blog__featured {
+    margin-top: 4rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 1024px) {
+    .main-blog__featured {
+      margin-top: 5rem;
+      grid-template-columns: 11fr 9fr;
+      gap: 4rem;
+      align-items: center;
+    }
+  }
+
+  .main-blog__featured-media {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background-color: var(--surface);
+  }
+
+  .main-blog__featured-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s ease;
+  }
+
+  .main-blog__featured:hover .main-blog__featured-img {
+    transform: scale(1.03);
+  }
+
+  .main-blog__featured-img--placeholder {
+    color: color-mix(in oklab, var(--primary) 30%, var(--surface));
+  }
+
+  .main-blog__featured-title {
+    margin-top: 1.25rem;
+    font-size: 2.25rem;
+    line-height: 1.05;
+  }
+
+  @media (min-width: 1024px) {
+    .main-blog__featured-title {
+      font-size: 3rem;
+    }
+  }
+
+  .main-blog__featured-title a {
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+
+  .main-blog__featured-title a:hover,
+  .main-blog__featured-title a:focus-visible {
+    color: var(--primary);
+  }
+
+  .main-blog__featured-excerpt {
+    margin-top: 1.5rem;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    line-height: 1.65;
+  }
+
+  .main-blog__read-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--primary);
+  }
+
+  /* === Grid === */
+  .main-blog__grid {
+    margin-top: 4rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2rem;
+    row-gap: 3.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .main-blog__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .main-blog__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 5rem;
+      row-gap: 4.5rem;
+    }
+  }
+
+  .main-blog__card-media {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background-color: var(--surface);
+    margin-bottom: 1.25rem;
+  }
+
+  .main-blog__card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s ease;
+  }
+
+  .main-blog__card:hover .main-blog__card-img,
+  .main-blog__card:focus-within .main-blog__card-img {
+    transform: scale(1.04);
+  }
+
+  .main-blog__card-img--placeholder {
+    color: color-mix(in oklab, var(--primary) 30%, var(--surface));
+  }
+
+  .main-blog__card-meta {
+    display: block;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--muted-foreground);
+  }
+
+  .main-blog__card-title {
+    margin-top: 0.75rem;
+    font-size: 1.5rem;
+    line-height: 1.15;
+  }
+
+  @media (min-width: 1024px) {
+    .main-blog__card-title {
+      font-size: 1.75rem;
+    }
+  }
+
+  .main-blog__card-title a {
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+
+  .main-blog__card-title a:hover,
+  .main-blog__card-title a:focus-visible {
+    color: var(--primary);
+  }
+
+  .main-blog__card-excerpt {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+    line-height: 1.6;
+  }
+
+  /* === Pagination === */
+  .main-blog__pagination {
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .main-blog__pagination .pagination,
+  .main-blog__pagination ul {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .main-blog__pagination a,
+  .main-blog__pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding-inline: 0.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--foreground) 70%, transparent);
+    border: 1px solid var(--border);
+    transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .main-blog__pagination a:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .main-blog__pagination .pagination__current,
+  .main-blog__pagination [aria-current="page"] {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .main-blog__empty {
+    margin-top: 4rem;
+    color: var(--muted-foreground);
+    font-size: 0.9375rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.main_blog.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Journal"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Notes on skin,"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "formulation and ritual"
+    },
+    {
+      "type": "text",
+      "id": "heading_tail",
+      "label": "Heading (after emphasis)",
+      "default": "."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "t:labels.body",
+      "default": "<p>Slow reading on the science, the texture, and the small daily acts that compound into quiet radiance.</p>"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Articles per page",
+      "min": 3,
+      "max": 24,
+      "step": 1,
+      "default": 9
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

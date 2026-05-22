@@ -1,0 +1,184 @@
+<section class="page-cards-pair full-width page-cards-pair--bg-{{ section.settings.background }}">
+  <div class="page-cards-pair__inner cham-container">
+    <div class="page-cards-pair__grid">
+      <div class="page-cards-pair__head" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="page-cards-pair__heading font-display">
+          {{- section.settings.heading_lead -}}
+          {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        </h2>
+      </div>
+
+      <div class="page-cards-pair__cards">
+        {%- for block in section.blocks -%}
+          <div
+            class="page-cards-pair__card"
+            data-reveal
+            data-reveal-delay="{{ forloop.index | times: 80 | plus: 40 }}"
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.eyebrow != blank -%}
+              <p class="eyebrow eyebrow--bare page-cards-pair__card-eyebrow">{{ block.settings.eyebrow }}</p>
+            {%- endif -%}
+            <h3 class="page-cards-pair__card-title font-display">{{ block.settings.title }}</h3>
+            <div class="page-cards-pair__card-body">{{ block.settings.body }}</div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .page-cards-pair {
+    width: 100%;
+  }
+
+  .page-cards-pair--bg-surface {
+    background-color: var(--surface);
+  }
+
+  .page-cards-pair--bg-default {
+    background-color: var(--background);
+  }
+
+  .page-cards-pair__inner {
+    padding-block: 8rem;
+  }
+
+  .page-cards-pair__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    .page-cards-pair__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    .page-cards-pair__head {
+      grid-column: span 4;
+    }
+    .page-cards-pair__cards {
+      grid-column: span 8;
+    }
+  }
+
+  .page-cards-pair__heading {
+    margin-top: 1.5rem;
+    font-size: clamp(2.25rem, 4.5vw, 3rem);
+    line-height: 1.05;
+  }
+
+  .page-cards-pair__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .page-cards-pair__cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .page-cards-pair__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .page-cards-pair__card {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+  }
+
+  .page-cards-pair__card-eyebrow {
+    color: color-mix(in oklab, var(--foreground) 70%, transparent);
+  }
+
+  .page-cards-pair__card-title {
+    margin-top: 0.75rem;
+    font-size: 1.875rem;
+    line-height: 1.1;
+  }
+
+  .page-cards-pair__card-body {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+    line-height: 1.65;
+  }
+
+  .page-cards-pair__card-body > p {
+    margin: 0;
+  }
+
+  .page-cards-pair__card-body > p + p {
+    margin-top: 0.75rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Cards pair",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "surface", "label": "Surface" },
+        { "value": "default", "label": "Default" }
+      ],
+      "default": "surface"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "Heading (lead)"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "Heading (emphasis)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Card eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Card title"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Card body"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Cards pair"
+    }
+  ]
+}
+{% endschema %}

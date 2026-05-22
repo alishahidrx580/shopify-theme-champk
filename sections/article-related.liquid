@@ -1,0 +1,219 @@
+{%- liquid
+  assign limit = section.settings.articles_to_show | default: 3
+  assign current_handle = article.handle
+-%}
+
+{%- if blog.articles_count > 1 -%}
+  <section class="article-related full-width">
+    <div class="article-related__inner cham-container">
+      <header class="article-related__head" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="article-related__heading font-display">{{ section.settings.heading }}</h2>
+      </header>
+
+      <div class="article-related__grid">
+        {%- assign rendered = 0 -%}
+        {%- for other in blog.articles -%}
+          {%- if other.handle != current_handle and rendered < limit -%}
+            {%- assign card_words = other.content | strip_html | split: ' ' | size -%}
+            {%- assign card_minutes = card_words | divided_by: 200 -%}
+            {%- if card_minutes < 1 -%}{%- assign card_minutes = 1 -%}{%- endif -%}
+            {%- assign card_read_time = 'sections.main_blog.read_time_html' | t: minutes: card_minutes -%}
+            {%- assign card_date = other.published_at | date: '%B %-d, %Y' -%}
+
+            <article class="article-related__card" data-reveal data-reveal-delay="{{ rendered | times: 80 }}">
+              <a href="{{ other.url }}" class="article-related__card-media" aria-hidden="true" tabindex="-1">
+                {%- if other.image -%}
+                  <img
+                    src="{{ other.image | image_url: width: 900 }}"
+                    srcset="{{ other.image | image_url: width: 450 }} 450w, {{ other.image | image_url: width: 900 }} 900w"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    alt="{{ other.title | escape }}"
+                    width="{{ other.image.width }}"
+                    height="{{ other.image.height }}"
+                    loading="lazy"
+                    decoding="async"
+                    class="article-related__card-img"
+                  >
+                {%- else -%}
+                  {{ 'lifestyle-2' | placeholder_svg_tag: 'article-related__card-img article-related__card-img--placeholder' }}
+                {%- endif -%}
+              </a>
+              <div class="article-related__card-body">
+                <span class="article-related__card-meta">{{ card_date }} · {{ card_read_time }}</span>
+                <h3 class="article-related__card-title font-display">
+                  <a href="{{ other.url }}">{{ other.title }}</a>
+                </h3>
+                {%- if other.excerpt_or_content != blank -%}
+                  <p class="article-related__card-excerpt">
+                    {{ other.excerpt_or_content | strip_html | truncatewords: 18 }}
+                  </p>
+                {%- endif -%}
+              </div>
+            </article>
+            {%- assign rendered = rendered | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .article-related {
+    width: 100%;
+    background-color: var(--surface);
+    padding-block: 5rem;
+    margin-top: 5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .article-related {
+      padding-block: 7rem;
+      margin-top: 7rem;
+    }
+  }
+
+  .article-related__head {
+    max-width: 36rem;
+    margin-bottom: 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    .article-related__head {
+      margin-bottom: 4rem;
+    }
+  }
+
+  .article-related__heading {
+    margin-top: 1rem;
+    font-size: 2.25rem;
+    line-height: 1.05;
+  }
+
+  @media (min-width: 1024px) {
+    .article-related__heading {
+      font-size: 3rem;
+    }
+  }
+
+  .article-related__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2rem;
+    row-gap: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .article-related__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .article-related__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .article-related__card-media {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background-color: var(--background);
+    margin-bottom: 1.25rem;
+  }
+
+  .article-related__card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s ease;
+  }
+
+  .article-related__card:hover .article-related__card-img,
+  .article-related__card:focus-within .article-related__card-img {
+    transform: scale(1.04);
+  }
+
+  .article-related__card-img--placeholder {
+    color: color-mix(in oklab, var(--primary) 30%, var(--background));
+  }
+
+  .article-related__card-meta {
+    display: block;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--muted-foreground);
+  }
+
+  .article-related__card-title {
+    margin-top: 0.75rem;
+    font-size: 1.5rem;
+    line-height: 1.15;
+  }
+
+  @media (min-width: 1024px) {
+    .article-related__card-title {
+      font-size: 1.75rem;
+    }
+  }
+
+  .article-related__card-title a {
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+
+  .article-related__card-title a:hover,
+  .article-related__card-title a:focus-visible {
+    color: var(--primary);
+  }
+
+  .article-related__card-excerpt {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+    line-height: 1.6;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.article_related.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Continue reading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading_lead",
+      "default": "More from the journal"
+    },
+    {
+      "type": "range",
+      "id": "articles_to_show",
+      "label": "Articles to show",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.article_related.presets_default"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["article"]
+  }
+}
+{% endschema %}

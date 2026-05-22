@@ -1,0 +1,280 @@
+<section
+  class="home-cover-cta full-width home-cover-cta--align-{{ section.settings.align }}"
+  style="--height-svh: {{ section.settings.height_svh }}svh; --min-height-px: {{ section.settings.min_height_px }}px; --overlay-from: {{ section.settings.overlay_strength | divided_by: 100.0 }};"
+>
+  {%- if section.settings.image != blank -%}
+    <img
+      src="{{ section.settings.image | image_url: width: 1920 }}"
+      srcset="{{ section.settings.image | image_url: width: 800 }} 800w, {{ section.settings.image | image_url: width: 1280 }} 1280w, {{ section.settings.image | image_url: width: 1920 }} 1920w, {{ section.settings.image | image_url: width: 2560 }} 2560w"
+      sizes="100vw"
+      alt="{{ section.settings.image.alt | escape }}"
+      width="{{ section.settings.image.width }}"
+      height="{{ section.settings.image.height }}"
+      loading="lazy"
+      decoding="async"
+      class="home-cover-cta__image"
+    >
+  {%- else -%}
+    <div class="home-cover-cta__image home-cover-cta__image--placeholder" aria-hidden="true"></div>
+  {%- endif -%}
+
+  <div class="home-cover-cta__overlay" aria-hidden="true"></div>
+
+  <div class="home-cover-cta__inner cham-container">
+    <div class="home-cover-cta__content" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+
+      <h2 class="home-cover-cta__heading font-display">
+        {{- section.settings.heading_lead -}}
+        {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        {%- if section.settings.heading_tail != blank %} {{ section.settings.heading_tail }}{%- endif -%}
+      </h2>
+
+      {%- if section.settings.body != blank -%}
+        <div class="home-cover-cta__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.cta_label != blank and section.settings.cta_url != blank -%}
+        <a href="{{ section.settings.cta_url }}" class="home-cover-cta__cta">
+          {{ section.settings.cta_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .home-cover-cta {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    height: var(--height-svh, 60svh);
+    min-height: var(--min-height-px, 460px);
+  }
+
+  .home-cover-cta__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .home-cover-cta__image--placeholder {
+    background: linear-gradient(135deg, oklch(0.3 0.03 70), oklch(0.15 0.01 60));
+  }
+
+  /* Default overlay ratios match React's beyond-cosmetics gradient (from-black/X
+     via-black/0.43X to-black/0.14X). Bottom-aligned content needs a strong floor
+     and a light top. */
+  .home-cover-cta__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgb(0 0 0 / var(--overlay-from, 0.7)),
+      rgb(0 0 0 / calc(var(--overlay-from, 0.7) * 0.43)) 50%,
+      rgb(0 0 0 / calc(var(--overlay-from, 0.7) * 0.14))
+    );
+  }
+
+  /* Center-aligned content needs darker midtones and top to keep text readable
+     across the whole visual area — matches React's ritual gradient
+     (from-black via-black/55 to-black/40). */
+  .home-cover-cta--align-center .home-cover-cta__overlay {
+    background: linear-gradient(
+      to top,
+      rgb(0 0 0 / var(--overlay-from, 1)),
+      rgb(0 0 0 / calc(var(--overlay-from, 1) * 0.55)) 50%,
+      rgb(0 0 0 / calc(var(--overlay-from, 1) * 0.40))
+    );
+  }
+
+  .home-cover-cta__inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding-block: 4rem;
+  }
+
+  @media (min-width: 1024px) {
+    .home-cover-cta__inner {
+      padding-block: 6rem;
+    }
+  }
+
+  .home-cover-cta--align-start .home-cover-cta__inner {
+    align-items: flex-start;
+  }
+
+  .home-cover-cta--align-center .home-cover-cta__inner {
+    align-items: center;
+  }
+
+  .home-cover-cta--align-end .home-cover-cta__inner {
+    align-items: flex-end;
+  }
+
+  /* Default content width matches React's max-w-xl on the beyond-cosmetics cover.
+     The center-aligned variant (ritual hero) uses max-w-2xl. */
+  .home-cover-cta__content {
+    max-width: 36rem;
+  }
+
+  .home-cover-cta--align-center .home-cover-cta__content {
+    max-width: 42rem;
+  }
+
+  .home-cover-cta__heading {
+    margin-top: 1.5rem;
+    font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+    line-height: 1.05;
+    color: #fff;
+  }
+
+  .home-cover-cta--align-center .home-cover-cta__heading {
+    font-size: clamp(3rem, 6.5vw, 4.5rem);
+    line-height: 1;
+  }
+
+  .home-cover-cta__heading em {
+    color: var(--primary-glow);
+    font-style: italic;
+  }
+
+  .home-cover-cta__body {
+    margin-top: 1.5rem;
+    color: rgb(255 255 255 / 0.85);
+    line-height: 1.65;
+    max-width: 28rem;
+  }
+
+  .home-cover-cta__body > p {
+    margin: 0;
+  }
+
+  .home-cover-cta__cta {
+    display: inline-block;
+    margin-top: 2.5rem;
+    padding: 1rem 2.25rem;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .home-cover-cta__cta:hover,
+  .home-cover-cta__cta:focus-visible {
+    background-color: var(--primary-glow);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.home_cover_cta.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "header",
+      "content": "t:general.content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis"
+    },
+    {
+      "type": "text",
+      "id": "heading_tail",
+      "label": "Heading (after emphasis)",
+      "info": "Optional text rendered after the italic emphasis, kept in the heading's base color. Use when the italic phrase sits mid-sentence."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "t:labels.body"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "t:labels.cta_label"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "t:labels.cta_url"
+    },
+    {
+      "type": "header",
+      "content": "t:general.layout"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "t:labels.alignment",
+      "options": [
+        { "value": "start", "label": "t:options.cover_align.start" },
+        { "value": "center", "label": "t:options.cover_align.center" },
+        { "value": "end", "label": "t:options.cover_align.end" }
+      ],
+      "default": "end"
+    },
+    {
+      "type": "range",
+      "id": "height_svh",
+      "label": "t:labels.min_height_svh",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "svh",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "min_height_px",
+      "label": "t:labels.min_height_px",
+      "min": 360,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 460
+    },
+    {
+      "type": "range",
+      "id": "overlay_strength",
+      "label": "t:labels.overlay_strength",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 70
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.home_cover_cta.presets_default"
+    }
+  ]
+}
+{% endschema %}

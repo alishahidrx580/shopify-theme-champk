@@ -1,0 +1,195 @@
+{% doc %}
+  Renders a product card. Accepts either a `product` object (live data) or
+  a `placeholder` flag (no product yet — renders Shopify's placeholder SVG
+  with dummy copy so the home page looks finished in empty dev stores).
+
+  Hover swaps the primary image for the secondary image with a soft zoom.
+
+  @param {product} [product] - The product to render
+  @param {boolean} [placeholder] - Render placeholder mode
+  @param {number} [index] - 1-based index, used for placeholder variation
+  @param {boolean} [eager] - Use eager loading + high fetchpriority for the primary image
+
+  @example
+  {% render 'product-card', product: product %}
+  {% render 'product-card', placeholder: true, index: 1 %}
+{% enddoc %}
+
+{%- liquid
+  if placeholder
+    assign card_url = '#'
+    assign placeholder_index = index | default: 1
+    assign primary_slot = placeholder_index | modulo: 3 | plus: 1
+    assign secondary_slot = placeholder_index | plus: 1 | modulo: 3 | plus: 1
+    assign primary_placeholder = 'product-' | append: primary_slot
+    assign secondary_placeholder = 'product-' | append: secondary_slot
+    assign card_title = 'sections.home_featured_products.placeholder_title' | t
+    assign card_tagline = 'sections.home_featured_products.placeholder_tagline' | t
+    assign card_category = ''
+  else
+    assign card_url = product.url
+    assign card_title = product.metafields.custom.short_name | default: product.title
+    assign card_tagline = product.metafields.custom.tagline
+    assign card_category = product.metafields.custom.category | default: product.type
+    assign primary_image = product.featured_image
+    assign secondary_image = product.images[1] | default: product.featured_image
+  endif
+-%}
+
+<a href="{{ card_url }}" class="product-card">
+  <div class="product-card__media">
+    {%- if placeholder -%}
+      {{ primary_placeholder | placeholder_svg_tag: 'product-card__placeholder product-card__img product-card__img--primary' }}
+      {{ secondary_placeholder | placeholder_svg_tag: 'product-card__placeholder product-card__img product-card__img--secondary' }}
+    {%- else -%}
+      {%- if primary_image -%}
+        <img
+          src="{{ primary_image | image_url: width: 800 }}"
+          srcset="{{ primary_image | image_url: width: 400 }} 400w, {{ primary_image | image_url: width: 800 }} 800w, {{ primary_image | image_url: width: 1200 }} 1200w"
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          alt="{{ product.title | escape }}"
+          width="{{ primary_image.width }}"
+          height="{{ primary_image.height }}"
+          {% if eager %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+          decoding="async"
+          class="product-card__img product-card__img--primary"
+        >
+      {%- endif -%}
+      {%- if secondary_image and secondary_image != primary_image -%}
+        <img
+          src="{{ secondary_image | image_url: width: 800 }}"
+          srcset="{{ secondary_image | image_url: width: 400 }} 400w, {{ secondary_image | image_url: width: 800 }} 800w"
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          alt=""
+          aria-hidden="true"
+          width="{{ secondary_image.width }}"
+          height="{{ secondary_image.height }}"
+          loading="lazy"
+          decoding="async"
+          class="product-card__img product-card__img--secondary"
+        >
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if card_category != blank -%}
+      <span class="product-card__category eyebrow eyebrow--bare">{{ card_category }}</span>
+    {%- endif -%}
+  </div>
+
+  <div class="product-card__body">
+    <div class="product-card__text">
+      <h3 class="product-card__title font-display">{{ card_title }}</h3>
+      {%- if card_tagline != blank -%}
+        <p class="product-card__tagline">{{ card_tagline }}</p>
+      {%- endif -%}
+    </div>
+    <div class="product-card__pricing">
+      {%- unless placeholder -%}
+        <div class="product-card__price">{{ product.price | money }}</div>
+        {%- if product.compare_at_price > product.price -%}
+          <div class="product-card__compare">{{ product.compare_at_price | money }}</div>
+        {%- endif -%}
+      {%- endunless -%}
+    </div>
+  </div>
+</a>
+
+{% stylesheet %}
+  .product-card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .product-card__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: var(--surface);
+  }
+
+  .product-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-card__img--primary {
+    transition: opacity 0.7s ease;
+  }
+
+  .product-card__img--secondary {
+    transform: scale(1.05);
+    transition: transform 1.2s ease;
+  }
+
+  .product-card:hover .product-card__img--primary,
+  .product-card:focus-visible .product-card__img--primary {
+    opacity: 0;
+  }
+
+  .product-card:hover .product-card__img--secondary,
+  .product-card:focus-visible .product-card__img--secondary {
+    transform: scale(1);
+  }
+
+  .product-card__placeholder {
+    color: color-mix(in oklab, var(--primary) 30%, var(--surface));
+  }
+
+  .product-card__category {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: color-mix(in oklab, var(--background) 70%, transparent);
+    backdrop-filter: blur(8px);
+    padding: 0.25rem 0.625rem;
+    color: color-mix(in oklab, var(--foreground) 85%, transparent);
+  }
+
+  .product-card__body {
+    padding-top: 1.25rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .product-card__title {
+    font-size: 1.5rem;
+    line-height: 1.1;
+    color: var(--foreground);
+    transition: color 0.3s ease;
+  }
+
+  .product-card:hover .product-card__title,
+  .product-card:focus-visible .product-card__title {
+    color: var(--primary);
+  }
+
+  .product-card__tagline {
+    margin-top: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+
+  .product-card__pricing {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .product-card__price {
+    color: var(--primary);
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+  }
+
+  .product-card__compare {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    text-decoration: line-through;
+  }
+{% endstylesheet %}

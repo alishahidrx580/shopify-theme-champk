@@ -1,0 +1,88 @@
+<section class="home-marquee full-width">
+  <div class="home-marquee__track">
+    {%- comment -%} Duplicate the blocks twice for a seamless infinite loop. {%- endcomment -%}
+    {%- for repeat in (1..2) -%}
+      {%- for block in section.blocks -%}
+        <span class="home-marquee__item font-display" {{ block.shopify_attributes }}>
+          {{ block.settings.text }}
+          <span class="home-marquee__separator" aria-hidden="true">✺</span>
+        </span>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .home-marquee {
+    overflow: hidden;
+    border-block: 1px solid var(--border);
+    padding-block: 1.5rem;
+    background-color: var(--background);
+  }
+
+  .home-marquee__track {
+    display: flex;
+    gap: 4rem;
+    white-space: nowrap;
+    animation: marquee-scroll 40s linear infinite;
+    width: max-content;
+  }
+
+  .home-marquee__item {
+    font-size: 1.5rem;
+    line-height: 1;
+    color: color-mix(in oklab, var(--foreground) 85%, transparent);
+    display: inline-flex;
+    align-items: center;
+    gap: 4rem;
+  }
+
+  @media (min-width: 1024px) {
+    .home-marquee__item {
+      font-size: 1.875rem;
+    }
+  }
+
+  .home-marquee__separator {
+    color: var(--primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-marquee__track {
+      animation: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.home_marquee.name",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "marquee_item",
+      "name": "t:sections.home_marquee.block_item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:labels.marquee_text"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "t:sections.home_marquee.presets_default",
+      "blocks": [
+        { "type": "marquee_item", "settings": { "text": "Considered Formulation" } },
+        { "type": "marquee_item", "settings": { "text": "French Standards" } },
+        { "type": "marquee_item", "settings": { "text": "Quiet Radiance" } },
+        { "type": "marquee_item", "settings": { "text": "Made for Real Skin" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,104 @@
+<section class="page-image-band full-width" style="--margin-top: {{ section.settings.margin_top }}rem; --aspect-mobile: {{ section.settings.aspect_mobile }}; --aspect-desktop: {{ section.settings.aspect_desktop }};">
+  <div class="page-image-band__frame" data-reveal>
+    {%- if section.settings.image != blank -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 2400 }}"
+        srcset="{{ section.settings.image | image_url: width: 800 }} 800w, {{ section.settings.image | image_url: width: 1280 }} 1280w, {{ section.settings.image | image_url: width: 1920 }} 1920w, {{ section.settings.image | image_url: width: 2560 }} 2560w"
+        sizes="100vw"
+        alt="{{ section.settings.image.alt | escape }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        loading="lazy"
+        decoding="async"
+        class="page-image-band__img"
+      >
+    {%- else -%}
+      <div class="page-image-band__img page-image-band__img--placeholder" aria-hidden="true"></div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .page-image-band {
+    width: 100%;
+    margin-top: var(--margin-top, 6rem);
+  }
+
+  .page-image-band__frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--aspect-mobile, 16 / 9);
+    overflow: hidden;
+  }
+
+  @media (min-width: 1024px) {
+    .page-image-band__frame {
+      aspect-ratio: var(--aspect-desktop, 21 / 8);
+    }
+  }
+
+  .page-image-band__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .page-image-band__img--placeholder {
+    background: linear-gradient(135deg, var(--surface), var(--muted));
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Image band",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "aspect_mobile",
+      "label": "Aspect (mobile)",
+      "options": [
+        { "value": "16 / 9", "label": "16:9 (landscape)" },
+        { "value": "4 / 3", "label": "4:3" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "3 / 4", "label": "3:4 (portrait)" }
+      ],
+      "default": "16 / 9"
+    },
+    {
+      "type": "select",
+      "id": "aspect_desktop",
+      "label": "Aspect (desktop)",
+      "options": [
+        { "value": "21 / 8", "label": "21:8 (wide cinema)" },
+        { "value": "21 / 9", "label": "21:9" },
+        { "value": "16 / 9", "label": "16:9" },
+        { "value": "3 / 1", "label": "3:1 (panoramic)" }
+      ],
+      "default": "21 / 8"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Top margin",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "rem",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image band"
+    }
+  ]
+}
+{% endschema %}

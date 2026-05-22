@@ -1,0 +1,168 @@
+<section class="home-featured full-width">
+  <div class="home-featured__inner cham-container">
+    <div class="home-featured__head">
+      <div data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="home-featured__heading font-display">
+          {{- section.settings.heading_lead -}}
+          {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        </h2>
+      </div>
+      {%- if section.settings.view_all_label != blank -%}
+        <a href="{{ section.settings.view_all_url | default: routes.all_products_collection_url }}" class="home-featured__view-all gold-link" data-reveal>
+          {{ section.settings.view_all_label }} →
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="home-featured__grid">
+      {%- assign limit = section.settings.products_to_show -%}
+      {%- assign products_collection = section.settings.collection -%}
+
+      {%- assign source = blank -%}
+      {%- if products_collection.products_count > 0 -%}
+        {%- assign source = products_collection.products -%}
+      {%- elsif collections.all.products.size > 0 -%}
+        {%- assign source = collections.all.products -%}
+      {%- endif -%}
+
+      {%- if source != blank -%}
+        {%- for product in source limit: limit -%}
+          <div data-reveal data-reveal-delay="{{ forloop.index0 | times: 100 }}">
+            {% render 'product-card', product: product %}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..limit) -%}
+          <div data-reveal data-reveal-delay="{{ forloop.index0 | times: 100 }}">
+            {% render 'product-card', placeholder: true, index: i %}
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .home-featured {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .home-featured__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+    gap: 2rem;
+  }
+
+  .home-featured__heading {
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    line-height: 1.05;
+    margin-top: 1rem;
+  }
+
+  .home-featured__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .home-featured__view-all {
+    display: none;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.75rem;
+    color: color-mix(in oklab, var(--foreground) 90%, transparent);
+    transition: color 0.3s ease;
+  }
+
+  .home-featured__view-all:hover {
+    color: var(--primary);
+  }
+
+  @media (min-width: 1024px) {
+    .home-featured__view-all {
+      display: inline-block;
+    }
+  }
+
+  .home-featured__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2rem;
+    row-gap: 4rem;
+  }
+
+  @media (min-width: 768px) {
+    .home-featured__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .home-featured__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.home_featured_products.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "The Edit"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Hero"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "formulations"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:labels.collection",
+      "info": "If empty or has no products, placeholder cards will be shown."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "t:labels.products_to_show",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "t:labels.view_all_label",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": "t:labels.view_all_url"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.home_featured_products.presets_default"
+    }
+  ]
+}
+{% endschema %}

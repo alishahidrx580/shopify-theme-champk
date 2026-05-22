@@ -1,0 +1,603 @@
+{%- liquid
+  assign picker_collection = section.settings.collection
+  if picker_collection != blank
+    assign picker_products = picker_collection.products
+  else
+    assign picker_products = collections.all.products
+  endif
+
+  assign message_max = settings.gift_message_max | default: 240
+-%}
+
+<section
+  class="page-gift full-width"
+  data-page-gift
+  data-message-max="{{ message_max }}"
+>
+  <div class="page-gift__inner">
+    {%- comment -%} HERO {%- endcomment -%}
+    <div class="page-gift__hero">
+      <div class="page-gift__hero-left" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h1 class="page-gift__heading font-display">
+          {{- section.settings.heading_lead -}}
+          {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        </h1>
+      </div>
+      {%- if section.settings.intro != blank -%}
+        <div class="page-gift__hero-right" data-reveal data-reveal-delay="120">
+          <div class="page-gift__intro">{{ section.settings.intro }}</div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} PICKER + SUMMARY {%- endcomment -%}
+    <div class="page-gift__grid">
+      <div class="page-gift__picker">
+        <span class="eyebrow">{{ 'sections.page_gift.picker_eyebrow' | t }}</span>
+
+        <ul class="page-gift__products">
+          {%- for product in picker_products -%}
+            {%- if product.available == false -%}{%- continue -%}{%- endif -%}
+            {%- assign variant = product.selected_or_first_available_variant -%}
+            <li
+              class="page-gift__product"
+              data-gift-product
+              data-product-handle="{{ product.handle }}"
+              data-variant-id="{{ variant.id }}"
+              data-price="{{ variant.price }}"
+              data-name="{{ product.title | escape }}"
+              data-reveal
+              data-reveal-delay="{{ forloop.index0 | times: 60 }}"
+            >
+              <a class="page-gift__product-media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+                {%- if product.featured_image -%}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 480 }}"
+                    alt="{{ product.title | escape }}"
+                    width="240"
+                    height="300"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                {%- endif -%}
+              </a>
+              <div class="page-gift__product-body">
+                {%- if product.type != blank -%}
+                  <p class="page-gift__product-category eyebrow eyebrow--bare">{{ product.type }}</p>
+                {%- endif -%}
+                <h3 class="page-gift__product-name font-display">{{ product.title }}</h3>
+                <p class="page-gift__product-price">{{ variant.price | money }}</p>
+                <div class="page-gift__product-actions">
+                  <button
+                    type="button"
+                    class="page-gift__add-btn"
+                    data-gift-add
+                  >
+                    {{ 'sections.page_gift.add_label' | t }}
+                  </button>
+                  <div class="page-gift__qty" data-gift-qty-wrap hidden>
+                    <button
+                      type="button"
+                      class="page-gift__qty-btn"
+                      data-gift-qty-delta="-1"
+                      aria-label="{{ 'general.accessibility.decrease_quantity' | t }}"
+                    >−</button>
+                    <span class="page-gift__qty-value" data-gift-qty-value>0</span>
+                    <button
+                      type="button"
+                      class="page-gift__qty-btn"
+                      data-gift-qty-delta="1"
+                      aria-label="{{ 'general.accessibility.increase_quantity' | t }}"
+                    >+</button>
+                  </div>
+                  <span class="page-gift__check" data-gift-check aria-hidden="true" hidden>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- comment -%} MESSAGE {%- endcomment -%}
+        <div class="page-gift__extras" data-reveal>
+          <div class="page-gift__message">
+            <label class="eyebrow eyebrow--bare" for="GiftMessage">{{ 'sections.page_gift.message_label' | t }}</label>
+            <textarea
+              id="GiftMessage"
+              data-gift-message
+              maxlength="{{ message_max }}"
+              rows="3"
+              placeholder="{{ 'sections.page_gift.message_placeholder' | t }}"
+            ></textarea>
+            <p class="page-gift__message-count">
+              <span data-gift-message-count>0</span>/{{ message_max }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} SUMMARY {%- endcomment -%}
+      <aside class="page-gift__summary-wrap">
+        <div class="page-gift__summary">
+          <div class="page-gift__summary-head">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 12 20 22 4 22 4 12"/>
+              <rect x="2" y="7" width="20" height="5"/>
+              <line x1="12" y1="22" x2="12" y2="7"/>
+              <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+              <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+            </svg>
+            <h2 class="eyebrow">{{ 'sections.page_gift.summary_eyebrow' | t }}</h2>
+          </div>
+
+          <p class="page-gift__summary-empty font-display" data-gift-empty>
+            {{ 'sections.page_gift.summary_empty_lead' | t }} <em>{{ 'sections.page_gift.summary_empty_emphasis' | t }}</em>
+          </p>
+
+          <div class="page-gift__summary-detail" data-gift-detail hidden>
+            <ul class="page-gift__summary-items" data-gift-summary-items></ul>
+
+            <div class="page-gift__summary-totals">
+              <div class="page-gift__summary-total">
+                <span class="eyebrow">{{ 'sections.page_gift.total' | t }}</span>
+                <span class="page-gift__summary-total-value font-display" data-gift-total></span>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="page-gift__cta"
+            data-gift-submit
+            disabled
+          >
+            <span data-gift-submit-label>{{ 'sections.page_gift.cta_idle' | t }}</span>
+          </button>
+
+          {%- if section.settings.footnote != blank -%}
+            <p class="page-gift__footnote eyebrow eyebrow--bare">{{ section.settings.footnote }}</p>
+          {%- endif -%}
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'page-gift.js' | asset_url }}" defer></script>
+
+{% stylesheet %}
+  .page-gift {
+    width: 100%;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+
+  @media (min-width: 1024px) {
+    .page-gift {
+      padding-top: 11rem;
+      padding-bottom: 11rem;
+    }
+  }
+
+  .page-gift__inner {
+    max-width: 1400px;
+    margin-inline: auto;
+    padding-inline: var(--page-padding-inline);
+  }
+
+  @media (min-width: 1024px) {
+    .page-gift__inner {
+      padding-inline: var(--page-padding-inline-lg);
+    }
+  }
+
+  /* HERO */
+  .page-gift__hero {
+    display: grid;
+    gap: 3rem;
+    margin-bottom: 5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .page-gift__hero {
+      grid-template-columns: 7fr 5fr;
+      gap: 4rem;
+      align-items: end;
+      margin-bottom: 7rem;
+    }
+  }
+
+  .page-gift__heading {
+    margin-top: 1.5rem;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1;
+  }
+
+  .page-gift__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .page-gift__intro {
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    line-height: 1.65;
+  }
+
+  .page-gift__intro > p {
+    margin: 0;
+  }
+
+  .page-gift__intro > p + p {
+    margin-top: 1rem;
+  }
+
+  /* GRID */
+  .page-gift__grid {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .page-gift__grid {
+      grid-template-columns: 7fr 5fr;
+      gap: 4rem;
+    }
+  }
+
+  /* PICKER */
+  .page-gift__products {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .page-gift__products {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .page-gift__product {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    background-color: var(--background);
+    transition: border-color 0.3s ease;
+  }
+
+  .page-gift__product[data-selected="true"] {
+    border-color: var(--primary);
+  }
+
+  .page-gift__product-media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: color-mix(in oklab, var(--primary) 4%, transparent);
+  }
+
+  .page-gift__product-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .page-gift__product-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    flex: 1;
+  }
+
+  .page-gift__product-category {
+    color: color-mix(in oklab, var(--foreground) 65%, transparent);
+    font-size: 0.625rem;
+    letter-spacing: 0.22em;
+  }
+
+  .page-gift__product-name {
+    margin-top: 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+
+  .page-gift__product-price {
+    margin-top: 0.5rem;
+    color: var(--primary);
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+  }
+
+  .page-gift__product-actions {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .page-gift__add-btn {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: color-mix(in oklab, var(--foreground) 85%, transparent);
+    transition: color 0.3s ease;
+    padding: 0.25rem 0;
+  }
+
+  .page-gift__add-btn:hover,
+  .page-gift__add-btn:focus-visible {
+    color: var(--primary);
+  }
+
+  .page-gift__qty {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--border);
+  }
+
+  .page-gift__qty-btn {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1rem;
+    color: var(--foreground);
+    transition: color 0.3s ease;
+  }
+
+  .page-gift__qty-btn:hover,
+  .page-gift__qty-btn:focus-visible {
+    color: var(--primary);
+  }
+
+  .page-gift__qty-value {
+    min-width: 1.75rem;
+    text-align: center;
+    font-size: 0.8125rem;
+  }
+
+  .page-gift__check {
+    color: var(--primary);
+    display: inline-flex;
+  }
+
+  /* EXTRAS */
+  .page-gift__extras {
+    margin-top: 3rem;
+    padding: 1.75rem;
+    border: 1px solid var(--border);
+    background-color: color-mix(in oklab, var(--primary) 4%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .page-gift__extras {
+      padding: 2rem;
+    }
+  }
+
+  .page-gift__message label {
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-gift__message textarea {
+    width: 100%;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    resize: none;
+    outline: none;
+    transition: border-color 0.3s ease;
+    color: var(--foreground);
+    font-family: inherit;
+  }
+
+  .page-gift__message textarea:focus {
+    border-color: var(--primary);
+  }
+
+  .page-gift__message-count {
+    margin: 0.5rem 0 0;
+    text-align: right;
+    font-size: 0.6875rem;
+    color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  }
+
+  /* SUMMARY */
+  @media (min-width: 1024px) {
+    .page-gift__summary-wrap {
+      position: sticky;
+      top: 8rem;
+    }
+  }
+
+  .page-gift__summary {
+    border: 1px solid var(--border);
+    background-color: color-mix(in oklab, var(--primary) 4%, transparent);
+    padding: 1.75rem;
+  }
+
+  @media (min-width: 1024px) {
+    .page-gift__summary {
+      padding: 2rem;
+    }
+  }
+
+  .page-gift__summary-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+  }
+
+  .page-gift__summary-empty {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+  }
+
+  .page-gift__summary-empty em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .page-gift__summary-items {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-gift__summary-items li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.75rem;
+    font-size: 0.875rem;
+    color: color-mix(in oklab, var(--foreground) 85%, transparent);
+  }
+
+  .page-gift__summary-items li + li {
+    border-top: 1px solid var(--border);
+  }
+
+  .page-gift__summary-items li .qty {
+    color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  }
+
+  .page-gift__summary-items li .price {
+    color: var(--primary);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .page-gift__summary-totals {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+  }
+
+  .page-gift__summary-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .page-gift__summary-total-value {
+    color: var(--primary);
+    font-size: 1.5rem;
+  }
+
+  .page-gift__cta {
+    margin-top: 2rem;
+    width: 100%;
+    padding: 1rem 2rem;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .page-gift__cta:hover:not(:disabled),
+  .page-gift__cta:focus-visible:not(:disabled) {
+    background-color: var(--primary-glow);
+  }
+
+  .page-gift__cta:disabled {
+    background-color: color-mix(in oklab, var(--foreground) 18%, transparent);
+    color: color-mix(in oklab, var(--foreground) 55%, transparent);
+    cursor: not-allowed;
+  }
+
+  .page-gift__cta[data-loading="true"] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .page-gift__footnote {
+    margin-top: 1rem;
+    text-align: center;
+    color: color-mix(in oklab, var(--foreground) 55%, transparent);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.page_gift.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.page_gift.header_content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "The Gift Edit"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Build a gift of"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "lasting radiance."
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "t:sections.page_gift.intro_label",
+      "default": "<p>Choose from our edit of considered formulations. Add premium gift wrap and a handwritten note — for the people whose skin you'd like to look as quietly luminous as your own.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.page_gift.header_picker"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:sections.page_gift.collection_label",
+      "info": "t:sections.page_gift.collection_info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.page_gift.header_footer"
+    },
+    {
+      "type": "text",
+      "id": "footnote",
+      "label": "t:sections.page_gift.footnote_label",
+      "default": "Complimentary shipping on orders over ₹2,500"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.page_gift.presets_default"
+    }
+  ]
+}
+{% endschema %}

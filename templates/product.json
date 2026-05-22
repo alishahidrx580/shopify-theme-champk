@@ -1,0 +1,124 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "free_shipping_override": 0
+      }
+    },
+    "video": {
+      "type": "product-video",
+      "settings": {
+        "video_url": "",
+        "eyebrow": "See it in motion",
+        "heading_lead": "Texture, finish,",
+        "heading_emphasis": "ritual.",
+        "body": ""
+      }
+    },
+    "marketplaces": {
+      "type": "marketplace-badges",
+      "settings": {
+        "eyebrow": "Also Available On",
+        "heading": "",
+        "note": "Same Cham, same standards — wherever you choose to shop.",
+        "dev_preview": false
+      }
+    },
+    "pillars": {
+      "type": "product-pillars",
+      "settings": {
+        "eyebrow": "CONSIDERED FORMULATION",
+        "heading_lead": "Formulated around how your skin",
+        "heading_emphasis": "naturally behaves."
+      }
+    },
+    "key_ingredients": {
+      "type": "product-key-ingredients",
+      "settings": {
+        "eyebrow": "Key Ingredients",
+        "heading_lead": "A short, considered list —",
+        "heading_emphasis": "no single hero.",
+        "body": "<p>Skin response depends on how ingredients interact within a formulation. We focus on synergy, base quality and stability — never isolating one ingredient at the expense of the system.</p>"
+      }
+    },
+    "sensory": {
+      "type": "product-sensory",
+      "settings": {
+        "eyebrow": "The Sensory Experience",
+        "heading_lead": "How it",
+        "heading_emphasis": "feels."
+      }
+    },
+    "ritual": {
+      "type": "product-ritual",
+      "settings": {
+        "eyebrow": "The Ritual",
+        "heading_lead": "How to",
+        "heading_emphasis": "apply.",
+        "body": "<p>A few unhurried minutes, twice a day. Consistency is what skin responds to.</p>"
+      }
+    },
+    "faq": {
+      "type": "product-faq",
+      "settings": {
+        "eyebrow": "Questions",
+        "heading_lead": "What people",
+        "heading_emphasis": "ask."
+      }
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "blocks": {
+        "judge_me_reviews_review_widget_4hkKw8": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "real_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "hide_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_4hkKw8"
+      ],
+      "settings": {
+        "eyebrow": "Customer reviews",
+        "heading_lead": "Loved by skin like",
+        "heading_emphasis": "yours."
+      }
+    },
+    "pairs_with": {
+      "type": "product-pairs-with",
+      "settings": {
+        "eyebrow": "Pairs Beautifully With",
+        "heading": "Complete the ritual",
+        "products_to_show": 3,
+        "view_all_label": "View all",
+        "view_all_url": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "video",
+    "marketplaces",
+    "pillars",
+    "key_ingredients",
+    "sensory",
+    "ritual",
+    "faq",
+    "reviews",
+    "pairs_with"
+  ]
+}

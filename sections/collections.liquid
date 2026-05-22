@@ -1,0 +1,218 @@
+<section class="collections-list full-width">
+  <div class="collections-list__inner cham-container">
+    <header class="collections-list__head" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h1 class="collections-list__heading font-display">
+        {{- section.settings.heading_lead -}}
+        {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        {%- if section.settings.heading_tail != blank -%}{{ section.settings.heading_tail }}{%- endif -%}
+      </h1>
+      {%- if section.settings.body != blank -%}
+        <div class="collections-list__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- if collections.size > 0 -%}
+      <div class="collections-list__grid">
+        {%- for collection in collections -%}
+          <a
+            class="collections-list__card"
+            href="{{ collection.url }}"
+            data-reveal
+            data-reveal-delay="{{ forloop.index0 | times: 80 }}"
+          >
+            <div class="collections-list__media">
+              {%- if collection.featured_image -%}
+                <img
+                  src="{{ collection.featured_image | image_url: width: 800 }}"
+                  srcset="{{ collection.featured_image | image_url: width: 400 }} 400w, {{ collection.featured_image | image_url: width: 800 }} 800w, {{ collection.featured_image | image_url: width: 1200 }} 1200w"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  alt="{{ collection.title | escape }}"
+                  width="{{ collection.featured_image.width }}"
+                  height="{{ collection.featured_image.height }}"
+                  loading="lazy"
+                  decoding="async"
+                  class="collections-list__img"
+                >
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'collections-list__img collections-list__img--placeholder' }}
+              {%- endif -%}
+            </div>
+            <h3 class="collections-list__title font-display">{{ collection.title }}</h3>
+            {%- if collection.description != blank -%}
+              <p class="collections-list__description">{{ collection.description | strip_html | truncatewords: 20 }}</p>
+            {%- endif -%}
+          </a>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="collections-list__empty">{{ 'sections.collections_list.empty_message' | t }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .collections-list {
+    width: 100%;
+    padding-top: calc(var(--header-height) + 4rem);
+    padding-bottom: 8rem;
+  }
+
+  @media (min-width: 1024px) {
+    .collections-list {
+      padding-top: calc(var(--header-height) + 6rem);
+      padding-bottom: 10rem;
+    }
+  }
+
+  .collections-list__head {
+    max-width: 48rem;
+  }
+
+  .collections-list__heading {
+    margin-top: 1.5rem;
+    font-size: 3rem;
+    line-height: 0.98;
+  }
+
+  @media (min-width: 1024px) {
+    .collections-list__heading {
+      font-size: 6rem;
+    }
+  }
+
+  .collections-list__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .collections-list__body {
+    margin-top: 2rem;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+    line-height: 1.65;
+    max-width: 36rem;
+  }
+
+  .collections-list__body > p {
+    margin: 0;
+  }
+
+  .collections-list__grid {
+    margin-top: 4rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2rem;
+    row-gap: 4rem;
+  }
+
+  @media (min-width: 768px) {
+    .collections-list__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .collections-list__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 6rem;
+    }
+  }
+
+  .collections-list__card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .collections-list__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: var(--surface);
+    margin-bottom: 1.25rem;
+  }
+
+  .collections-list__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s ease;
+  }
+
+  .collections-list__card:hover .collections-list__img,
+  .collections-list__card:focus-visible .collections-list__img {
+    transform: scale(1.04);
+  }
+
+  .collections-list__img--placeholder {
+    color: color-mix(in oklab, var(--primary) 30%, var(--surface));
+  }
+
+  .collections-list__title {
+    font-size: 1.5rem;
+    line-height: 1.1;
+    color: var(--foreground);
+    transition: color 0.3s ease;
+  }
+
+  .collections-list__card:hover .collections-list__title,
+  .collections-list__card:focus-visible .collections-list__title {
+    color: var(--primary);
+  }
+
+  .collections-list__description {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: color-mix(in oklab, var(--foreground) 70%, transparent);
+    line-height: 1.6;
+  }
+
+  .collections-list__empty {
+    margin-top: 4rem;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.collections_list.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Discover"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Browse"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "the collections"
+    },
+    {
+      "type": "text",
+      "id": "heading_tail",
+      "label": "Heading (after emphasis)",
+      "default": "."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "t:labels.body",
+      "default": "<p>Curated edits, themed sets and seasonal selections.</p>"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

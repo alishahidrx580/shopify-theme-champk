@@ -1,0 +1,346 @@
+{%- liquid
+  assign raw_video = section.settings.video_url
+  if raw_video == blank
+    assign raw_video = product.metafields.custom.product_video
+  endif
+
+  assign video_src = ''
+  if raw_video != blank
+    assign url_prefix = raw_video | slice: 0, 4
+    if url_prefix == 'http'
+      assign video_src = raw_video
+    else
+      assign url_parts = raw_video | split: '/'
+      assign filename = url_parts | last
+      assign video_src = filename | file_url
+    endif
+  endif
+
+  assign poster_image = section.settings.poster
+  if poster_image == blank
+    assign poster_image = product.featured_image
+  endif
+-%}
+
+{%- if video_src != blank -%}
+<section class="product-video full-width">
+  <div class="product-video__inner cham-container">
+    <div class="product-video__head" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h2 class="product-video__heading font-display">
+        {{- section.settings.heading_lead -}}
+        {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+      </h2>
+      {%- if section.settings.body != blank -%}
+        <div class="product-video__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="product-video__media" data-reveal>
+      <div class="product-video__player" data-video-player data-playing="false" data-muted="true">
+          <video
+            data-video
+            src="{{ video_src }}"
+            {% if poster_image != blank %}poster="{{ poster_image | image_url: width: 1600 }}"{% endif %}
+            playsinline
+            loop
+            muted
+            preload="metadata"
+          ></video>
+
+          <button class="product-video__overlay" data-video-toggle type="button" aria-label="Play video">
+            <span class="product-video__overlay-button" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <polygon points="6 4 20 12 6 20 6 4"/>
+              </svg>
+            </span>
+          </button>
+
+          <div class="product-video__controls">
+            <button class="product-video__control" data-video-toggle type="button" aria-label="Play/pause">
+              <svg class="product-video__icon product-video__icon--play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <polygon points="6 4 20 12 6 20 6 4"/>
+              </svg>
+              <svg class="product-video__icon product-video__icon--pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <rect x="6" y="4" width="4" height="16"/>
+                <rect x="14" y="4" width="4" height="16"/>
+              </svg>
+            </button>
+            <button class="product-video__control" data-video-mute type="button" aria-label="Mute/unmute">
+              <svg class="product-video__icon product-video__icon--muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <line x1="23" y1="9" x2="17" y2="15"/>
+                <line x1="17" y1="9" x2="23" y2="15"/>
+              </svg>
+              <svg class="product-video__icon product-video__icon--unmuted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              </svg>
+            </button>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-video {
+    width: 100%;
+    margin-top: 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-video {
+      margin-top: 3.5rem;
+    }
+  }
+
+  .product-video__head {
+    max-width: 42rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .product-video__heading {
+    margin-top: 1rem;
+    font-size: 2.25rem;
+    line-height: 1.05;
+  }
+
+  @media (min-width: 1024px) {
+    .product-video__heading {
+      font-size: 3rem;
+    }
+  }
+
+  .product-video__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .product-video__body {
+    margin-top: 1.5rem;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    line-height: 1.65;
+  }
+
+  .product-video__body > p {
+    margin: 0;
+  }
+
+  .product-video__player {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    background-color: #000;
+    overflow: hidden;
+  }
+
+  @media (min-width: 640px) {
+    .product-video__player {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  .product-video__player video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    display: block;
+  }
+
+  .product-video__overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background-color: rgb(0 0 0 / 0.2);
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+    border: 0;
+  }
+
+  .product-video__overlay:hover {
+    background-color: rgb(0 0 0 / 0.3);
+  }
+
+  .product-video__player[data-playing="true"] .product-video__overlay {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .product-video__overlay-button {
+    width: 5rem;
+    height: 5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background-color: color-mix(in oklab, var(--background) 90%, transparent);
+    color: var(--primary);
+    box-shadow: 0 20px 60px -20px color-mix(in oklab, var(--primary) 35%, transparent);
+  }
+
+  .product-video__overlay-button svg {
+    margin-left: 4px;
+  }
+
+  .product-video__controls {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .product-video__player:hover .product-video__controls,
+  .product-video__player:focus-within .product-video__controls {
+    opacity: 1;
+  }
+
+  .product-video__control {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background-color: color-mix(in oklab, var(--background) 85%, transparent);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 0;
+  }
+
+  .product-video__control:hover {
+    background-color: var(--background);
+  }
+
+  .product-video__icon {
+    display: none;
+  }
+  .product-video__player[data-playing="false"] .product-video__icon--play {
+    display: block;
+  }
+  .product-video__player[data-playing="true"] .product-video__icon--pause {
+    display: block;
+  }
+  .product-video__player[data-muted="true"] .product-video__icon--muted {
+    display: block;
+  }
+  .product-video__player[data-muted="false"] .product-video__icon--unmuted {
+    display: block;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    document.querySelectorAll('[data-video-player]').forEach((player) => {
+      if (player.dataset.bound === 'true') return;
+      player.dataset.bound = 'true';
+      const video = player.querySelector('[data-video]');
+      if (!video) return;
+      const toggles = player.querySelectorAll('[data-video-toggle]');
+      const muteBtn = player.querySelector('[data-video-mute]');
+
+      function setPlaying() {
+        player.setAttribute('data-playing', video.paused ? 'false' : 'true');
+      }
+      function setMuted() {
+        player.setAttribute('data-muted', video.muted ? 'true' : 'false');
+      }
+
+      toggles.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (video.paused) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      });
+
+      video.addEventListener('click', () => {
+        if (video.paused) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+
+      if (muteBtn) {
+        muteBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          video.muted = !video.muted;
+          setMuted();
+        });
+      }
+
+      video.addEventListener('play', setPlaying);
+      video.addEventListener('pause', setPlaying);
+
+      setPlaying();
+      setMuted();
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:sections.product_video.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "t:labels.video_url",
+      "info": "t:labels.video_url_info"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "t:labels.video_poster",
+      "info": "t:labels.video_poster_info"
+    },
+    {
+      "type": "header",
+      "content": "t:general.content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "See it in motion"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Texture, finish,"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "ritual."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "t:labels.body"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product_video.presets_default"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

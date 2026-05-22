@@ -1,0 +1,89 @@
+{% doc %}
+  Renders a stack of overlapping circular payment badges — Google Pay, PhonePe
+  and Paytm — shown inside the "Buy now" button.
+
+  These are DECORATIVE trust signals, not interactive payment triggers. Whether
+  these methods actually appear at checkout depends entirely on the store's
+  payment provider configuration in Shopify admin (Settings → Payments).
+
+  The marks below are hand-built inline SVG/CSS reconstructions in each brand's
+  official colours:
+    - Google Pay: #4285F4 / #34A853 / #FBBC05 / #EA4335
+    - PhonePe:    #5F259F
+    - Paytm:      #002970 / #00BAF2
+  For pixel-perfect official artwork, obtain each brand's logo from their
+  press/brand kit and swap the badge contents below.
+
+  @example
+  {% render 'payment-badges' %}
+{% enddoc %}
+
+<span class="payment-badges" aria-hidden="true">
+  <span class="payment-badge payment-badge--gpay">
+    <svg viewBox="0 0 48 48">
+      <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
+      <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
+      <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z"/>
+      <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
+    </svg>
+  </span>
+  <span class="payment-badge payment-badge--phonepe">पे</span>
+  <span class="payment-badge payment-badge--paytm">
+    <span class="payment-badge__paytm-a">Pay</span><span class="payment-badge__paytm-b">tm</span>
+  </span>
+</span>
+
+{% stylesheet %}
+  .payment-badges {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .payment-badge {
+    width: 1.875rem;
+    height: 1.875rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    /* White ring so overlapping badges read as a clean stack. */
+    box-shadow: 0 0 0 2px #ffffff;
+    /* Opt out of the parent button's uppercase + tracked-out type. */
+    text-transform: none;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  /* Overlap each badge onto the previous one; later badges paint on top. */
+  .payment-badge + .payment-badge {
+    margin-left: -0.5rem;
+  }
+
+  .payment-badge--gpay {
+    background-color: #ffffff;
+  }
+
+  .payment-badge--gpay svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .payment-badge--phonepe {
+    background-color: #5f259f;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .payment-badge--paytm {
+    background-color: #ffffff;
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .payment-badge__paytm-a { color: #002970; }
+  .payment-badge__paytm-b { color: #00baf2; }
+{% endstylesheet %}

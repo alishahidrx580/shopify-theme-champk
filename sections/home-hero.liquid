@@ -1,0 +1,377 @@
+{%- liquid
+  # Build the random hero rotation pool: section image + non-blank blocks.
+  # The pick changes each render via `now | date: '%s' | modulo: pool_size`.
+  # Cart-personalized pages (this homepage renders cart.item_count in the header)
+  # aren't edge-cached, so each visit triggers a fresh render and a fresh pick.
+  assign hero_image = section.settings.image
+
+  assign pool_size = 0
+  if section.settings.image != blank
+    assign pool_size = pool_size | plus: 1
+  endif
+  for block in section.blocks
+    if block.settings.image != blank
+      assign pool_size = pool_size | plus: 1
+    endif
+  endfor
+
+  if pool_size > 1
+    assign now_seconds = 'now' | date: '%s' | plus: 0
+    assign target_index = now_seconds | modulo: pool_size
+
+    assign current_index = 0
+    if section.settings.image != blank
+      if current_index == target_index
+        assign hero_image = section.settings.image
+      endif
+      assign current_index = current_index | plus: 1
+    endif
+    for block in section.blocks
+      if block.settings.image != blank
+        if current_index == target_index
+          assign hero_image = block.settings.image
+        endif
+        assign current_index = current_index | plus: 1
+      endif
+    endfor
+  endif
+-%}
+
+<section
+  class="home-hero full-width"
+  style="--min-height-svh: {{ section.settings.min_height_svh }}svh; --min-height-px: {{ section.settings.min_height_px }}px;"
+>
+  {%- if hero_image != blank -%}
+    <img
+      src="{{ hero_image | image_url: width: 1920 }}"
+      srcset="{{ hero_image | image_url: width: 800 }} 800w, {{ hero_image | image_url: width: 1280 }} 1280w, {{ hero_image | image_url: width: 1920 }} 1920w, {{ hero_image | image_url: width: 2560 }} 2560w"
+      sizes="100vw"
+      alt="{{ hero_image.alt | default: 'general.brand.name' | t | escape }}"
+      width="{{ hero_image.width }}"
+      height="{{ hero_image.height }}"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      class="home-hero__image"
+    >
+  {%- else -%}
+    <div class="home-hero__image home-hero__image--placeholder" aria-hidden="true"></div>
+  {%- endif -%}
+
+  <div class="home-hero__overlay" aria-hidden="true"></div>
+
+  <div class="home-hero__inner">
+    <div class="home-hero__content" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="eyebrow home-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      <h1 class="home-hero__heading font-display">
+        {{- section.settings.heading_lead -}}
+        {%- if section.settings.heading_break -%}<br>{%- endif -%}
+        {%- if section.settings.heading_emphasis != blank -%}
+          {%- unless section.settings.heading_break %} {% endunless -%}
+          <em>{{ section.settings.heading_emphasis }}</em>
+        {%- endif -%}
+      </h1>
+
+      {%- if section.settings.body != blank -%}
+        <div class="home-hero__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.cta_primary_label != blank or section.settings.cta_secondary_label != blank -%}
+        <div class="home-hero__ctas">
+          {%- if section.settings.cta_primary_label != blank -%}
+            <a href="{{ section.settings.cta_primary_url | default: '#' }}" class="home-hero__cta-primary">
+              {{ section.settings.cta_primary_label }}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.cta_secondary_label != blank -%}
+            <a href="{{ section.settings.cta_secondary_url | default: '#' }}" class="home-hero__cta-secondary gold-link">
+              {{ section.settings.cta_secondary_label }} →
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .home-hero {
+    position: relative;
+    height: var(--min-height-svh, 100svh);
+    min-height: var(--min-height-px, 640px);
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .home-hero__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+  }
+
+  .home-hero__image--placeholder {
+    background: linear-gradient(135deg, oklch(0.25 0.02 70), oklch(0.15 0.01 60));
+  }
+
+  .home-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgb(0 0 0 / 1), rgb(0 0 0 / 0.4) 50%, rgb(0 0 0 / 0.6));
+  }
+
+  .home-hero__inner {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    max-width: var(--page-max-width);
+    margin-inline: auto;
+    padding-inline: var(--page-padding-inline);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .home-hero__inner {
+      padding-inline: var(--page-padding-inline-lg);
+      padding-bottom: 7rem;
+    }
+  }
+
+  .home-hero__eyebrow {
+    color: var(--primary-glow);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Hero uses the eyebrow typography but not the accent bar — matches React's
+     bare <p className="eyebrow"> usage (vs the <Eyebrow> component elsewhere). */
+  .home-hero__eyebrow::before {
+    display: none;
+  }
+
+  .home-hero__heading {
+    font-size: clamp(3.05rem, 9vw, 7.5rem);
+    line-height: 0.95;
+    color: #fff;
+    max-width: 64rem;
+    margin: 0;
+  }
+
+  .home-hero__heading em {
+    color: var(--primary-glow);
+    font-style: italic;
+  }
+
+  .home-hero__body {
+    margin-top: 2rem;
+    max-width: 28rem;
+    font-size: 1rem;
+    color: rgb(255 255 255 / 0.85);
+    line-height: 1.65;
+  }
+
+  @media (min-width: 1024px) {
+    .home-hero__body {
+      font-size: 1.125rem;
+    }
+  }
+
+  .home-hero__body > p {
+    margin: 0;
+  }
+
+  .home-hero__ctas {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .home-hero__cta-primary {
+    display: inline-block;
+    padding: 1rem 2.25rem;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .home-hero__cta-primary:hover,
+  .home-hero__cta-primary:focus-visible {
+    background-color: var(--primary-glow);
+  }
+
+  .home-hero__cta-secondary {
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.75rem;
+    color: rgb(255 255 255 / 0.9);
+    transition: color 0.3s ease;
+  }
+
+  .home-hero__cta-secondary:hover,
+  .home-hero__cta-secondary:focus-visible {
+    color: var(--primary-glow);
+  }
+
+  /* Constrained-height viewports (short laptops, hub displays, landscape):
+     the heading scales with viewport WIDTH, so the bottom-aligned content stack
+     outgrows the reduced-height hero and its top lines clip behind the header.
+     Below this height, tie the display type to viewport HEIGHT, tighten the
+     vertical spacing, and reserve header clearance so the full message stays
+     visible. The clip can occur on any viewport up to ~900px tall. Scoped to
+     wider screens so tall, narrow phones keep the width-based mobile size. */
+  @media (max-height: 900px) and (min-width: 768px) {
+    .home-hero__inner {
+      padding-top: calc(var(--header-height, 4.5rem) + 0.75rem);
+      padding-bottom: 3rem;
+    }
+
+    .home-hero__eyebrow {
+      margin-bottom: 0.75rem;
+    }
+
+    .home-hero__heading {
+      font-size: clamp(2.5rem, 7vh, 5rem);
+    }
+
+    .home-hero__body {
+      margin-top: 1rem;
+    }
+
+    .home-hero__ctas {
+      margin-top: 1.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.home_hero.name",
+  "tag": "section",
+  "class": "home-hero-wrapper",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image",
+      "info": "Recommended: 1920×1280 portrait. The image bleeds under the header."
+    },
+    {
+      "type": "header",
+      "content": "t:general.content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Developed with French Formulation Standards"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Intelligent Skincare."
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_break",
+      "label": "t:labels.heading_break",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "Radiance revealed."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "t:labels.body",
+      "default": "<p>Precisely formulated to help your skin look calm, soft, and naturally radiant.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.cta_label"
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_label",
+      "label": "t:labels.cta_label",
+      "default": "Shop the Ritual"
+    },
+    {
+      "type": "url",
+      "id": "cta_primary_url",
+      "label": "t:labels.cta_url"
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_label",
+      "label": "t:labels.cta_secondary_label",
+      "default": "The Science"
+    },
+    {
+      "type": "url",
+      "id": "cta_secondary_url",
+      "label": "t:labels.cta_secondary_url"
+    },
+    {
+      "type": "header",
+      "content": "t:general.layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_svh",
+      "label": "t:labels.min_height_svh",
+      "min": 60,
+      "max": 100,
+      "step": 1,
+      "unit": "svh",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "min_height_px",
+      "label": "t:labels.min_height_px",
+      "min": 360,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 640
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero_image",
+      "name": "Hero image (rotation)",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:labels.image",
+          "info": "Add multiple blocks to enable random hero rotation. The section image above also joins the pool. If only one image exists overall, it shows every time."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.home_hero.presets_default"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,399 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "home-hero",
+      "blocks": {
+        "hero_image_iEF4Hp": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Cover-11.jpg"
+          }
+        },
+        "hero_image_df7R8y": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Cover-8.jpg"
+          }
+        },
+        "hero_image_MbEFeG": {
+          "type": "hero_image",
+          "settings": {}
+        },
+        "hero_image_tjPBqK": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Cover-10.jpg"
+          }
+        },
+        "hero_image_cVJWxQ": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Cover-4.jpg"
+          }
+        },
+        "hero_image_zWA4zA": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Cover-9.jpg"
+          }
+        },
+        "hero_image_iUmdEi": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Cover-7.jpg"
+          }
+        },
+        "hero_image_aFDx6y": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Cover-2.jpg"
+          }
+        },
+        "hero_image_xzi7wF": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Cover-6.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "hero_image_iEF4Hp",
+        "hero_image_df7R8y",
+        "hero_image_MbEFeG",
+        "hero_image_tjPBqK",
+        "hero_image_cVJWxQ",
+        "hero_image_zWA4zA",
+        "hero_image_iUmdEi",
+        "hero_image_aFDx6y",
+        "hero_image_xzi7wF"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/Cover-5.jpg",
+        "eyebrow": "Developed with French Formulation Standards",
+        "heading_lead": "Intelligent Skincare.",
+        "heading_break": true,
+        "heading_emphasis": "Radiance revealed.",
+        "body": "<p>Precisely formulated to help your skin look calm, soft, and naturally radiant.</p>",
+        "cta_primary_label": "Shop Now",
+        "cta_primary_url": "/collections/all",
+        "cta_secondary_label": "The Science",
+        "cta_secondary_url": "/pages/research-and-philosophy",
+        "min_height_svh": 72,
+        "min_height_px": 480
+      }
+    },
+    "featured-products": {
+      "type": "home-featured-products",
+      "settings": {
+        "eyebrow": "The Edit",
+        "heading_lead": "The Radiance",
+        "heading_emphasis": "Library",
+        "collection": "",
+        "products_to_show": 3,
+        "view_all_label": "View all",
+        "view_all_url": "/collections/all"
+      }
+    },
+    "marquee": {
+      "type": "home-marquee",
+      "blocks": {
+        "item_1": {
+          "type": "marquee_item",
+          "settings": {
+            "text": "Considered Formulation"
+          }
+        },
+        "item_2": {
+          "type": "marquee_item",
+          "settings": {
+            "text": "French Standards"
+          }
+        },
+        "item_3": {
+          "type": "marquee_item",
+          "settings": {
+            "text": "Quiet Radiance"
+          }
+        },
+        "item_4": {
+          "type": "marquee_item",
+          "settings": {
+            "text": "Made for Real Skin"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
+      ],
+      "settings": {}
+    },
+    "manifesto": {
+      "type": "home-manifesto",
+      "settings": {
+        "eyebrow": "About Cham",
+        "heading": "<p>Our products are crafted for <em>natural radiance.</em> Each Cham formulation is designed to complement your skin's natural rhythm, so it looks softer, calmer, and naturally luminous.</p>"
+      }
+    },
+    "split-texture": {
+      "type": "home-image-text",
+      "settings": {
+        "layout_style": "fullbleed",
+        "padding_size": "default",
+        "image": "shopify://shop_images/Formulated_for_natural_radiance_jpg.jpg",
+        "image_side": "left",
+        "image_frame": "natural",
+        "image_position": "center center",
+        "background": "surface",
+        "eyebrow": "Skincare, refined",
+        "heading_lead": "Formulated for",
+        "heading_emphasis": "natural radiance",
+        "body": "<p>Each product is precision-crafted with a clear intent. Together, they work to make skin smoother, more even, and naturally luminous day after day.</p>",
+        "cta_label": "Our Philosophy",
+        "cta_url": "/pages/research-and-philosophy",
+        "cta_style": "outline"
+      }
+    },
+    "pillars": {
+      "type": "home-pillars",
+      "blocks": {
+        "p1": {
+          "type": "pillar",
+          "settings": {
+            "number": "01",
+            "title": "Comfort",
+            "body": "<p>Textures designed to feel weightless and kind on every skin type. No heaviness, no residue.</p>"
+          }
+        },
+        "p2": {
+          "type": "pillar",
+          "settings": {
+            "number": "02",
+            "title": "Balance",
+            "body": "<p>Hydration, barrier and pH supported in equilibrium — never stripped or overstimulated.</p>"
+          }
+        },
+        "p3": {
+          "type": "pillar",
+          "settings": {
+            "number": "03",
+            "title": "Finish",
+            "body": "<p>A soft, even, naturally luminous look that comes from skin that simply feels good.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "settings": {
+        "eyebrow": "Composition Principles",
+        "heading_lead": "Balanced for",
+        "heading_emphasis": "Optimum Glow"
+      }
+    },
+    "split-intel-skincare": {
+      "type": "home-image-text",
+      "settings": {
+        "layout_style": "contained",
+        "padding_size": "default",
+        "image": "shopify://shop_images/Graphic_jpg.jpg",
+        "image_side": "left",
+        "image_frame": "natural",
+        "image_position": "center center",
+        "background": "surface",
+        "eyebrow": "Intelligent Skincare",
+        "heading_lead": "A different",
+        "heading_emphasis": "approach to skincare.",
+        "body": "<p>Most skincare focuses only on the surface — adding shine, stripping oils, or overstimulating skin. Cham takes a different approach, formulating around how skin already wants to behave.</p>",
+        "cta_label": "",
+        "cta_url": "",
+        "cta_style": "outline"
+      }
+    },
+    "split-intel-formulation": {
+      "type": "home-image-text",
+      "settings": {
+        "layout_style": "contained",
+        "padding_size": "default",
+        "image": "shopify://shop_images/cream.jpg",
+        "image_side": "right",
+        "image_frame": "natural",
+        "image_position": "center center",
+        "background": "default",
+        "eyebrow": "Intelligent Formulation",
+        "heading_lead": "Skin responds better when",
+        "heading_emphasis": "approached naturally.",
+        "body": "<p>Skin looks its best when it is supported, hydrated, and treated with restraint. Our formulations are built around this single idea to complement your skin's natural ability and reveal a softer, calmer, more radiant appearance.</p>",
+        "cta_label": "",
+        "cta_url": "",
+        "cta_style": "outline"
+      }
+    },
+    "cover-beyond": {
+      "type": "home-cover-cta",
+      "settings": {
+        "image": "shopify://shop_images/hand.jpg",
+        "eyebrow": "Beyond Cosmetics",
+        "heading_lead": "Each product activates a",
+        "heading_emphasis": "specific skin function.",
+        "heading_tail": "",
+        "body": "<p>Together, they create visible brightness, smoother texture and long-term glow.</p>",
+        "cta_label": "",
+        "cta_url": "",
+        "align": "end",
+        "height_svh": 60,
+        "min_height_px": 460,
+        "overlay_strength": 70
+      }
+    },
+    "split-not-cosmetic": {
+      "type": "home-image-text",
+      "settings": {
+        "layout_style": "contained",
+        "padding_size": "default",
+        "image": "shopify://shop_images/face.jpg",
+        "image_side": "left",
+        "image_frame": "natural",
+        "image_position": "center center",
+        "background": "default",
+        "eyebrow": "Not Just Cosmetic",
+        "heading_lead": "Skincare is not just cosmetic.",
+        "heading_emphasis": "It's biological.",
+        "body": "<p>When skincare works with the skin's internal signals, calm replaces stress and glow becomes a natural outcome.</p>",
+        "cta_label": "",
+        "cta_url": "",
+        "cta_style": "outline"
+      }
+    },
+    "split-gift": {
+      "type": "home-image-text",
+      "settings": {
+        "layout_style": "contained",
+        "padding_size": "compact",
+        "image": "shopify://shop_images/Gift_of_lasting-radience_jpg.jpg",
+        "image_side": "left",
+        "image_frame": "portrait",
+        "image_position": "left center",
+        "background": "surface",
+        "eyebrow": "The Gift Edit",
+        "heading_lead": "Gift of",
+        "heading_emphasis": "lasting radiance.",
+        "body": "<p>Considered formulations, presented in keepsake packaging — for the people whose skin you'd want to look as quietly luminous as your own.</p>",
+        "cta_label": "Build Your Gift",
+        "cta_url": "/pages/gifts",
+        "cta_style": "solid"
+      }
+    },
+    "faq": {
+      "type": "home-faq",
+      "blocks": {
+        "q1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is Cham about?",
+            "answer": "<p>Cham is a skincare company developed with a research-backed approach grounded in skin biology and formulation science. We focus on formulation balance, skin comfort, and long-term radiance — not just surface shine.</p>"
+          }
+        },
+        "q2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How does science guide your formulation?",
+            "answer": "<p>Skin is one of the body's most responsive organs, closely linked to the immune and sensory systems. Inflammation, hydration balance, barrier function and recovery are all influenced by cellular signaling within the skin. Decades of skin-biology research into how cells communicate and maintain balance inform how we approach modern formulation.</p>"
+          }
+        },
+        "q3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is Cham's skincare philosophy?",
+            "answer": "<p>We support skin balance rather than overpowering it with aggressive actives or heavy textures. Our focus is on how ingredients work together, how formulations feel, and how they align with natural skin processes over time.</p>"
+          }
+        },
+        "q4": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How is Cham different from general skincare brands?",
+            "answer": "<p>Many products create immediate brightness through oils, silicones or reflective films — effects that are often short-lived. Cham emphasises hydration balance, barrier support and calm skin conditions, alongside an instant feel of comfort.</p>"
+          }
+        },
+        "q5": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Does Cham use single hero ingredients?",
+            "answer": "<p>No. Skin response depends on how ingredients interact within a formulation, the quality of base materials and overall stability. We focus on synergy and integrity, not isolating one ingredient.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
+      "settings": {
+        "eyebrow": "Learn More",
+        "heading_lead": "Frequently",
+        "heading_emphasis": "asked.",
+        "cta_label": "The Science",
+        "cta_url": "/pages/science"
+      }
+    },
+    "cover-ritual": {
+      "type": "home-cover-cta",
+      "settings": {
+        "image": "shopify://shop_images/ritual.jpg",
+        "eyebrow": "The Ritual",
+        "heading_lead": "Skincare that",
+        "heading_emphasis": "works with",
+        "heading_tail": "your skin — not on it.",
+        "body": "",
+        "cta_label": "Begin the Ritual",
+        "cta_url": "/collections/all",
+        "align": "center",
+        "height_svh": 80,
+        "min_height_px": 520,
+        "overlay_strength": 100
+      }
+    },
+    "newsletter": {
+      "type": "home-newsletter",
+      "settings": {
+        "eyebrow": "Letters from Cham",
+        "heading_lead": "Receive our notes on skin, formulation and the slow pursuit of a quiet glow.",
+        "heading_emphasis": "",
+        "submit_label": "Subscribe",
+        "success_heading": "You're on the list",
+        "success_text": "Thank you — you'll hear from us soon."
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "featured-products",
+    "marquee",
+    "manifesto",
+    "split-texture",
+    "pillars",
+    "split-intel-skincare",
+    "split-intel-formulation",
+    "cover-beyond",
+    "split-not-cosmetic",
+    "split-gift",
+    "faq",
+    "cover-ritual",
+    "newsletter"
+  ]
+}

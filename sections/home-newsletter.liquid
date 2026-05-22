@@ -1,0 +1,353 @@
+<section class="home-newsletter full-width">
+  <div class="home-newsletter__inner">
+    <div class="home-newsletter__content" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+
+      <h2 class="home-newsletter__heading font-display">
+        {{- section.settings.heading_lead -}}
+        {%- if section.settings.heading_emphasis != blank %} {{ section.settings.heading_emphasis }}{%- endif -%}
+      </h2>
+
+      {% form 'customer', class: 'home-newsletter__form' %}
+        {%- if form.posted_successfully? -%}
+          <div class="home-newsletter__success" data-newsletter-success>
+            <span class="home-newsletter__sparkle" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/>
+                <path d="M19 16l.7 1.9L21.5 18.6 19.7 19.3 19 21.2 18.3 19.3 16.5 18.6 18.3 17.9 19 16z" opacity="0.7"/>
+                <path d="M5 4l.5 1.3L6.8 5.8 5.5 6.3 5 7.6 4.5 6.3 3.2 5.8 4.5 5.3 5 4z" opacity="0.6"/>
+              </svg>
+            </span>
+            <h3 class="home-newsletter__success-heading font-display">
+              {{ section.settings.success_heading }}
+            </h3>
+            <p class="home-newsletter__success-text">{{ section.settings.success_text }}</p>
+          </div>
+        {%- else -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <label for="NewsletterEmail-{{ section.id }}" class="visually-hidden">
+            {{ 'sections.home_newsletter.email_label' | t }}
+          </label>
+          <input
+            type="email"
+            name="contact[email]"
+            id="NewsletterEmail-{{ section.id }}"
+            placeholder="{{ 'sections.home_newsletter.email_placeholder' | t }}"
+            required
+            autocomplete="email"
+            class="home-newsletter__input"
+          >
+          <button type="submit" class="home-newsletter__submit">
+            {{ section.settings.submit_label }}
+          </button>
+        {%- endif -%}
+
+        {%- if form.errors -%}
+          <p class="home-newsletter__error">
+            {{ form.errors | default_errors }}
+          </p>
+        {%- endif -%}
+      {% endform %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .home-newsletter {
+    padding-block: 8rem;
+  }
+
+  .home-newsletter__inner {
+    max-width: 900px;
+    margin-inline: auto;
+    padding-inline: var(--page-padding-inline);
+    text-align: center;
+  }
+
+  @media (min-width: 1024px) {
+    .home-newsletter__inner {
+      padding-inline: var(--page-padding-inline-lg);
+    }
+  }
+
+  .home-newsletter__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home-newsletter__heading {
+    margin-top: 1rem;
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    line-height: 1.15;
+  }
+
+  .home-newsletter__form {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 32rem;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .home-newsletter__form {
+      flex-direction: row;
+    }
+  }
+
+  .home-newsletter__input {
+    flex: 1;
+    background-color: transparent;
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    font-size: 0.875rem;
+    color: var(--foreground);
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .home-newsletter__input:focus {
+    border-color: var(--primary);
+  }
+
+  .home-newsletter__submit {
+    padding: 1rem 2rem;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .home-newsletter__submit:hover,
+  .home-newsletter__submit:focus-visible {
+    background-color: var(--primary-glow);
+  }
+
+  .home-newsletter__success {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    width: 100%;
+    animation: home-newsletter-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .home-newsletter__sparkle {
+    display: inline-flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    color: var(--primary);
+    animation: home-newsletter-sparkle 2.6s ease-in-out infinite;
+  }
+
+  .home-newsletter__sparkle svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .home-newsletter__success-heading {
+    margin: 0;
+    font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+    line-height: 1.2;
+    color: var(--primary);
+  }
+
+  .home-newsletter__success-text {
+    margin: 0;
+    color: var(--foreground);
+    opacity: 0.78;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  .home-newsletter__confetti-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  @keyframes home-newsletter-rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes home-newsletter-sparkle {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.85; }
+    50% { transform: scale(1.12) rotate(6deg); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-newsletter__success { animation: none; }
+    .home-newsletter__sparkle { animation: none; }
+  }
+
+  .home-newsletter__error {
+    margin-top: 1rem;
+    color: var(--destructive);
+    font-size: 0.8125rem;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    function fireNewsletterConfetti() {
+      var target = document.querySelector('[data-newsletter-success]');
+      if (!target || target.dataset.confettiFired === '1') return;
+      target.dataset.confettiFired = '1';
+
+      var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) return;
+
+      var canvas = document.createElement('canvas');
+      canvas.className = 'home-newsletter__confetti-canvas';
+      canvas.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(canvas);
+
+      var ctx = canvas.getContext('2d');
+      var dpr = window.devicePixelRatio || 1;
+
+      function size() {
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      size();
+      window.addEventListener('resize', size);
+
+      var root = getComputedStyle(document.documentElement);
+      function token(name, fallback) {
+        var v = root.getPropertyValue(name).trim();
+        return v || fallback;
+      }
+      var colors = [
+        token('--primary', '#c89a4a'),
+        token('--primary-glow', '#e4b770'),
+        token('--foreground', '#2f261b'),
+        '#f5e8d3',
+        '#e8c79a'
+      ];
+
+      var rect = target.getBoundingClientRect();
+      var originX = rect.left + rect.width / 2;
+      var originY = rect.top + rect.height / 3;
+
+      var particles = [];
+      var count = 160;
+      for (var i = 0; i < count; i++) {
+        var angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.1;
+        var speed = 6 + Math.random() * 11;
+        particles.push({
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: 4 + Math.random() * 7,
+          color: colors[(Math.random() * colors.length) | 0],
+          rot: Math.random() * Math.PI * 2,
+          vr: (Math.random() - 0.5) * 0.35,
+          life: 1,
+          decay: 0.006 + Math.random() * 0.006
+        });
+      }
+
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var alive = false;
+        for (var j = 0; j < particles.length; j++) {
+          var p = particles[j];
+          if (p.life <= 0) continue;
+          alive = true;
+          p.vy += 0.22;
+          p.vx *= 0.992;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.vr;
+          p.life -= p.decay;
+          ctx.save();
+          ctx.globalAlpha = Math.max(p.life, 0);
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.45);
+          ctx.restore();
+        }
+        if (alive) {
+          requestAnimationFrame(tick);
+        } else {
+          window.removeEventListener('resize', size);
+          canvas.remove();
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fireNewsletterConfetti);
+    } else {
+      fireNewsletterConfetti();
+    }
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:sections.home_newsletter.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Letters from Cham"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Receive our notes on skin, formulation and the slow pursuit of a quiet glow."
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "t:labels.submit_label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "success_heading",
+      "label": "t:labels.success_heading",
+      "default": "You're on the list"
+    },
+    {
+      "type": "text",
+      "id": "success_text",
+      "label": "t:labels.success_text",
+      "default": "A first note from Cham is on its way to your inbox. Welcome to the slow pursuit of a quiet glow."
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.home_newsletter.presets_default"
+    }
+  ]
+}
+{% endschema %}

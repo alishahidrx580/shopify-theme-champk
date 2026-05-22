@@ -1,0 +1,411 @@
+{%- comment -%}
+  Customer reviews — a themed shell around Judge.me's review widget.
+
+  Judge.me's Theme App Extension renders its review widget as an *app
+  block*: the merchant adds the "Judge.me Review Widget" block here via
+  the theme editor and it renders inside `{% content_for 'blocks' %}`.
+
+  The section head carries a custom rating summary (big average + stars +
+  count) parsed from the `judgeme.badge` metafield so the header matches
+  the React design; Judge.me's own in-widget summary is hidden via CSS.
+{%- endcomment -%}
+
+{%- liquid
+  assign jm_badge = product.metafields.judgeme.badge | append: ''
+  assign review_count = ''
+  assign review_avg = ''
+  if jm_badge contains 'data-number-of-reviews'
+    assign review_count = jm_badge | split: 'data-number-of-reviews="' | last | split: '"' | first
+    assign review_avg = jm_badge | split: 'data-average-rating="' | last | split: '"' | first
+  endif
+  assign count_num = review_count | times: 1
+  assign avg_num = review_avg | times: 1.0
+  assign avg_display = avg_num | round: 1
+  assign avg_rounded = avg_num | round
+-%}
+
+<section class="product-reviews full-width" id="reviews">
+  <div class="product-reviews__inner cham-container">
+    <div class="product-reviews__head" data-reveal>
+      <div class="product-reviews__head-text">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="product-reviews__heading font-display">
+          {{- section.settings.heading_lead -}}
+          {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        </h2>
+      </div>
+
+      {%- if count_num > 0 -%}
+        <div class="product-reviews__summary">
+          <div class="product-reviews__summary-rating">
+            <span class="product-reviews__avg font-display">{{ avg_display }}</span>
+            <span class="product-reviews__stars" aria-hidden="true">
+              {%- for i in (1..5) -%}
+                <svg
+                  class="product-reviews__star{% if i <= avg_rounded %} is-filled{% endif %}"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+              {%- endfor -%}
+            </span>
+          </div>
+          <p class="product-reviews__summary-note">
+            {{ 'sections.product_reviews.summary_html' | t: count: count_num }}
+          </p>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="product-reviews__widget">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  /* === Section shell (mirrors the product-pillars rhythm) === */
+  .product-reviews {
+    background-color: var(--surface);
+    padding-block: 6rem;
+    margin-top: 6rem;
+    scroll-margin-top: calc(var(--header-height) + 1rem);
+  }
+
+  @media (min-width: 1024px) {
+    .product-reviews {
+      padding-block: 9rem;
+      margin-top: 8rem;
+    }
+  }
+
+  /* === Section head — heading left, React-style rating summary right === */
+  .product-reviews__head {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-reviews__head {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 4rem;
+      margin-bottom: 4rem;
+    }
+  }
+
+  .product-reviews__head-text {
+    max-width: 36rem;
+  }
+
+  .product-reviews__heading {
+    margin-top: 1.5rem;
+    font-size: 2.25rem;
+    line-height: 1.05;
+  }
+
+  @media (min-width: 1024px) {
+    .product-reviews__heading {
+      font-size: 3.75rem;
+    }
+  }
+
+  .product-reviews__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .product-reviews__summary {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+
+  .product-reviews__avg {
+    display: block;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--primary);
+  }
+
+  @media (min-width: 1024px) {
+    .product-reviews__avg {
+      font-size: 3.75rem;
+    }
+  }
+
+  .product-reviews__stars {
+    display: inline-flex;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+  }
+
+  .product-reviews__star {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: color-mix(in oklab, var(--foreground) 15%, transparent);
+  }
+
+  .product-reviews__star.is-filled {
+    color: var(--primary);
+  }
+
+  .product-reviews__summary-note {
+    max-width: 16rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--border);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+
+  .product-reviews__summary-note strong {
+    color: var(--foreground);
+    font-weight: 500;
+  }
+
+  /* === Judge.me v3 widget restyle ===
+     The Review Widget app block renders Judge.me's "v3" markup (`jm-*`
+     classes) with Vue-scoped `[data-v-*]` CSS that out-specifies a plain
+     `.product-reviews .jm-*` selector — so the overrides below use
+     `!important` (Judge.me itself uses none, so they win cleanly). Where
+     Judge.me exposes a theming custom property we set that instead.
+     Verified by injecting against the live widget. */
+
+  .product-reviews #judgeme_product_reviews {
+    /* Judge.me v3 theming tokens — exact theme gold + sharp corners. */
+    --jm-review-widget-star-and-histogram-color: var(--primary);
+    --jm-review-widget-text-color: var(--foreground);
+    --jm-widget-border-radius: 2px;
+    --jm-border-radius-200: 2px;
+    --jm-border-radius-400: 2px;
+    --jm-border-radius-600: 2px;
+    --jm-corner-soft: 2px;
+    --jm-corner-round: 2px;
+    --jm-corner-extra-round: 2px;
+  }
+
+  /* Hide Judge.me's in-widget header summary (title + rating + their
+     wrapper) — the section head carries the custom React-style summary.
+     The "Write a review" button and filters in the same header stay. */
+  .product-reviews .jm-review-widget-minimal-header .jm-stack:has(> .jm-review-widget-minimal-header__title) {
+    display: none !important;
+  }
+
+  /* Review list → a responsive card grid. `align-items: start` keeps short
+     cards from stretching into tall empty boxes; the margin reset stops
+     Judge.me's "stack" spacing from doubling up with the grid gap. */
+  .product-reviews .jdgm-review-list {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .product-reviews .jdgm-review-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-reviews .jdgm-review-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .product-reviews .jdgm-review-list > * + * {
+    margin-block-start: 0 !important;
+  }
+
+  /* Review item → a real card: full border, even padding, own background. */
+  .product-reviews .jm-review-item {
+    padding: 1.5rem !important;
+    border: 1px solid var(--border) !important;
+    background-color: var(--background) !important;
+  }
+
+  /* The "pinned" icon and Judge.me's empty trailing cluster aren't part of
+     the Cham review design. */
+  .product-reviews .jm-review-item__pin-icon,
+  .product-reviews .jm-review-item .jm-cluster:empty {
+    display: none !important;
+  }
+
+  /* Reorder the card to the React layout: reviewer → stars → title + body.
+     `.jm-review-item__content` is a block "stack"; making it a flex column
+     lets `order` work, with a uniform gap replacing the stack margins. */
+  .product-reviews .jm-review-item__content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+
+  .product-reviews .jm-review-item__content > * {
+    margin: 0 !important;
+  }
+
+  .product-reviews .jm-review-item__content > .jm-reviewer-info {
+    order: 1;
+  }
+
+  .product-reviews .jm-review-item__content > .jm-cluster:not(.jm-reviewer-info) {
+    order: 2;
+  }
+
+  .product-reviews .jm-review-item__content > .jm-review-content {
+    order: 3;
+  }
+
+  /* Show review titles + bodies in full. Judge.me clamps them with an
+     inline `-webkit-line-clamp` and a "More" toggle that sits awkwardly
+     above the body; the React design shows everything, so un-clamp and
+     drop the toggle. */
+  .product-reviews .jm-review-content__title,
+  .product-reviews .jm-review-content__body {
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    -webkit-box-orient: unset !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .product-reviews .jm-review-content__expand-button {
+    display: none !important;
+  }
+
+  /* Reviewer avatar → gold-tinted circle with a serif initial. */
+  .product-reviews .jm-reviewer-avatar__initial {
+    background-color: color-mix(in oklab, var(--primary) 12%, transparent) !important;
+  }
+
+  .product-reviews .jm-reviewer-avatar__initial .jm-text {
+    color: var(--primary) !important;
+    font-family: var(--font-display) !important;
+  }
+
+  .product-reviews .jm-reviewer-info__name {
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: var(--foreground) !important;
+  }
+
+  /* Review card stars → sized closer to the React design. */
+  .product-reviews .jm-review-item .jm-star-rating__font-icon {
+    font-size: 1rem !important;
+    color: var(--primary) !important;
+  }
+
+  /* Review title → serif display face. */
+  .product-reviews .jm-review-content__title {
+    font-family: var(--font-display) !important;
+    font-size: 1.375rem !important;
+    font-weight: 400 !important;
+    line-height: 1.15 !important;
+    color: var(--foreground) !important;
+  }
+
+  /* Review body → softened, slightly smaller. */
+  .product-reviews .jm-review-content__body {
+    font-size: 0.875rem !important;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent) !important;
+  }
+
+  /* Review photos → span the card, echoing the React 4:3 image. */
+  .product-reviews .jm-cluster:has(> .jm-box > .jm-media-thumbnail-list__thumbnail),
+  .product-reviews .jm-cluster:has(> .jm-box > .jm-media-thumbnail-list__thumbnail) > .jm-box {
+    width: 100% !important;
+  }
+
+  .product-reviews .jm-review-item .jm-media-thumbnail-list__thumbnail {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 3 !important;
+  }
+
+  .product-reviews .jm-review-item .jm-media-thumbnail-list__thumbnail img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Header action buttons → consistent height + the squared theme treatment. */
+  .product-reviews .jm-button--primary,
+  .product-reviews .jm-button--secondary,
+  .product-reviews .jm-sort-filter {
+    min-height: 2.5rem !important;
+    border-radius: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
+  .product-reviews .jm-button--primary {
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+  }
+
+  /* Secondary buttons (filter, sort) — Judge.me's defaults render as
+     transparent boxes with a near-invisible border in dark mode. Bind to
+     theme tokens so they stay readable in both palettes. */
+  .product-reviews .jm-button--secondary,
+  .product-reviews .jm-sort-filter {
+    background-color: transparent !important;
+    border: 1px solid var(--border) !important;
+    color: var(--foreground) !important;
+  }
+
+  .product-reviews .jm-button--secondary:hover,
+  .product-reviews .jm-button--secondary:focus-visible,
+  .product-reviews .jm-sort-filter:hover,
+  .product-reviews .jm-sort-filter:focus-visible {
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.product_reviews.name",
+  "tag": "section",
+  "blocks": [{ "type": "@app" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Customer reviews"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Loved by skin like"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "yours."
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product_reviews.presets_default"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

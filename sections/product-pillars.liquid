@@ -1,0 +1,147 @@
+{%- liquid
+  assign pillars = product.metafields.custom.pillars.value
+-%}
+
+<section class="product-pillars full-width">
+  <div class="product-pillars__inner cham-container">
+    <div class="product-pillars__head" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h2 class="product-pillars__heading font-display">
+        {{- section.settings.heading_lead -}}
+        {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+      </h2>
+    </div>
+
+    {%- if pillars != blank and pillars.size > 0 -%}
+      <div class="product-pillars__grid">
+        {%- for pillar in pillars -%}
+          {%- assign num = '0' | append: forloop.index | slice: -2, 2 -%}
+          <div class="product-pillars__item" data-reveal data-reveal-delay="{{ forloop.index0 | times: 100 }}">
+            <span class="product-pillars__number font-display">{{ num }}</span>
+            <h3 class="product-pillars__title font-display">{{ pillar.title }}</h3>
+            <p class="product-pillars__body">{{ pillar.body }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .product-pillars {
+    background-color: var(--surface);
+    padding-block: 6rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-pillars {
+      padding-block: 9rem;
+    }
+  }
+
+  .product-pillars__head {
+    max-width: 48rem;
+  }
+
+  .product-pillars__heading {
+    font-size: 2.25rem;
+    line-height: 1.05;
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-pillars__heading {
+      font-size: 3.75rem;
+    }
+  }
+
+  .product-pillars__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .product-pillars__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2.5rem;
+    row-gap: 3rem;
+    margin-top: 4rem;
+  }
+
+  @media (min-width: 768px) {
+    .product-pillars__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-pillars__grid {
+      margin-top: 5rem;
+    }
+  }
+
+  .product-pillars__item {
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+  }
+
+  .product-pillars__number {
+    color: var(--primary);
+    font-size: 1.25rem;
+  }
+
+  .product-pillars__title {
+    font-size: 1.5rem;
+    line-height: 1.1;
+    margin-top: 0.75rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-pillars__title {
+      font-size: 1.875rem;
+    }
+  }
+
+  .product-pillars__body {
+    margin-top: 1rem;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+    line-height: 1.65;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.product_pillars.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Skin Intelligence at Work"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Formulated around how your skin"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "naturally behaves."
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product_pillars.presets_default"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,364 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "general": {
+    "accessibility": {
+      "skip_to_content": "Skip to content",
+      "close": "Close",
+      "open_menu": "Open menu",
+      "close_menu": "Close menu",
+      "open_cart": "Open cart",
+      "close_cart": "Close cart",
+      "decrease_quantity": "Decrease quantity",
+      "increase_quantity": "Increase quantity",
+      "remove_item": "Remove item",
+      "toggle_theme": "Toggle light or dark theme"
+    },
+    "brand": {
+      "name": "Cham Skincare"
+    },
+    "meta": {
+      "title": "{{ shop_name }}",
+      "description": "Skincare with intent. Precision-formulated to help skin look comfortable, even and naturally luminous."
+    }
+  },
+  "404": {
+    "title": "404",
+    "not_found": "Page not found.",
+    "back_to_shopping": "Back to shopping"
+  },
+  "blog": {
+    "article_comments": "Comments",
+    "article_metadata_html": "{{ date }} by {{ author }}",
+    "comment_form_body": "Comment",
+    "comment_form_email": "Email",
+    "comment_form_name": "Name",
+    "comment_form_submit": "Post",
+    "comment_form_title": "Add a comment"
+  },
+  "cart": {
+    "checkout": "Checkout",
+    "title": "Cart",
+    "update": "Update",
+    "remove": "Remove"
+  },
+  "main_cart": {
+    "eyebrow_default": "Your Bag",
+    "heading_lead_default": "Review your",
+    "heading_emphasis_default": "ritual",
+    "heading_tail_default": ".",
+    "empty_heading_lead": "Your bag is",
+    "empty_heading_emphasis": "empty",
+    "empty_body": "Begin the ritual. Discover formulations created to make skin perform — not just appear.",
+    "empty_cta": "Explore the range",
+    "note_label": "Order note",
+    "note_placeholder": "Anything we should know? (Delivery instructions, gift recipient, etc.)",
+    "note_saved": "Note saved.",
+    "discount_label": "Discount code",
+    "discount_placeholder": "Enter code",
+    "discount_apply": "Apply",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "shipping_note": "Shipping calculated at checkout.",
+    "checkout": "Proceed to checkout",
+    "continue_shopping": "Continue shopping"
+  },
+  "customers": {
+    "login": {
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "title": "Login"
+    }
+  },
+  "collections": {
+    "title": "Collections"
+  },
+  "gift_card": {
+    "add_to_apple_wallet": "Add to Apple Wallet",
+    "card": "Gift card",
+    "expired": "This gift card has expired",
+    "expires_on": "Expires on {{ expires_on }}",
+    "use_at_checkout": "Use this gift card at checkout"
+  },
+  "password": {
+    "title": "This shop is private",
+    "password": "Password",
+    "enter": "Enter"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search articles, pages, or products",
+    "submit": "Search",
+    "no_results_html": "No results found for {{ terms }}",
+    "results_for_html": "{{ count }} results found for {{ terms }}"
+  },
+  "products": {
+    "add_to_bag": "Add to bag",
+    "add_to_bag_with_price": "Add to bag — {{ price }}",
+    "buy_now": "Buy now",
+    "view_details": "View details",
+    "from_price": "From {{ price }}",
+    "sale": "Sale",
+    "sold_out": "Sold out",
+    "save_percent": "Save {{ percent }}%",
+    "volume_inclusive_taxes": "{{ volume }} · Inclusive of all taxes",
+    "free_shipping_note": "Complimentary shipping on orders over {{ amount }}",
+    "decrease_quantity": "Decrease quantity",
+    "increase_quantity": "Increase quantity"
+  },
+  "sections": {
+    "header": {
+      "menu_label": "Main menu"
+    },
+    "footer": {
+      "brand_tagline_lead": "Skincare with intent.",
+      "brand_tagline_emphasis": "Quiet radiance.",
+      "brand_paragraph": "Developed with French formulation standards. Precision-formulated to help skin look comfortable, even and naturally luminous.",
+      "group_shop": "Shop",
+      "group_brand": "Brand",
+      "group_account": "Account",
+      "shop_all_label": "All Products",
+      "copyright_html": "© {{ year }} Cham Skincare. All rights reserved.",
+      "policies_label": "Policies",
+      "socials_label": "Social links",
+      "follow_instagram": "Follow Cham on Instagram",
+      "follow_facebook": "Follow Cham on Facebook",
+      "follow_youtube": "Follow Cham on YouTube"
+    },
+    "cart_drawer": {
+      "title": "Your Bag",
+      "empty_heading_lead": "Your bag is",
+      "empty_heading_emphasis": "empty",
+      "empty_paragraph": "Begin the ritual. Discover formulations created to make skin perform — not just appear.",
+      "empty_cta": "Explore the Range",
+      "subtotal": "Subtotal",
+      "total": "Estimated total",
+      "shipping_note": "Taxes and shipping calculated at checkout.",
+      "checkout": "Checkout",
+      "continue_shopping": "Continue shopping",
+      "gift_message_label": "Your gift note",
+      "gift_message_placeholder": "A few words for the card — we'll write it by hand.",
+      "gift_message_saved": "Saved",
+      "discount_label": "Discount",
+      "discount_placeholder": "Discount code",
+      "discount_apply": "Apply",
+      "discount_invalid": "Discount code cannot be applied to your cart."
+    },
+    "home_hero": {
+      "eyebrow_default": "Developed with French Formulation Standards",
+      "heading_lead_default": "Intelligent Skincare.",
+      "heading_emphasis_default": "Radiance revealed.",
+      "body_default": "Precisely formulated to help your skin look calm, soft, and naturally radiant.",
+      "cta_primary_default": "Shop the Ritual",
+      "cta_secondary_default": "The Science"
+    },
+    "home_marquee": {
+      "item_1": "Considered Formulation",
+      "item_2": "French Standards",
+      "item_3": "Quiet Radiance",
+      "item_4": "Made for Real Skin"
+    },
+    "home_manifesto": {
+      "eyebrow_default": "About Cham",
+      "heading_default": "Our products are crafted for <em>natural radiance.</em> Each Cham formulation is designed to complement your skin's natural rhythm, so it looks softer, calmer, and naturally luminous."
+    },
+    "home_featured_products": {
+      "eyebrow_default": "The Edit",
+      "heading_lead_default": "Hero",
+      "heading_emphasis_default": "formulations",
+      "view_all_label_default": "View all",
+      "no_products_message": "Featured products will appear here once a collection is selected and contains products.",
+      "placeholder_title": "Featured product",
+      "placeholder_tagline": "Tagline appears here"
+    },
+    "home_image_text": {
+      "texture_eyebrow": "Skincare, refined",
+      "texture_heading_lead": "Formulated for",
+      "texture_heading_emphasis": "natural radiance",
+      "texture_body": "Each product is precision-crafted with a clear intent. Together, they work to make skin smoother, more even, and naturally luminous day after day.",
+      "texture_cta": "Our Philosophy",
+      "intel_skincare_eyebrow": "Intelligent Skincare",
+      "intel_skincare_heading_lead": "A different",
+      "intel_skincare_heading_emphasis": "approach to skincare.",
+      "intel_skincare_body": "Most skincare focuses only on the surface — adding shine, stripping oils, or overstimulating skin. Cham takes a different approach, formulating around how skin already wants to behave.",
+      "intel_formulation_eyebrow": "Intelligent Formulation",
+      "intel_formulation_heading_lead": "Skin responds better when",
+      "intel_formulation_heading_emphasis": "approached naturally.",
+      "intel_formulation_body": "Skin looks its best when it is supported, hydrated, and treated with restraint. Our formulations are built around this single idea to complement your skin's natural ability and reveal a softer, calmer, more radiant appearance.",
+      "not_cosmetic_eyebrow": "Not Just Cosmetic",
+      "not_cosmetic_heading_lead": "Skincare is not just cosmetic.",
+      "not_cosmetic_heading_emphasis": "It's biological.",
+      "not_cosmetic_body": "When skincare works with the skin's internal signals, calm replaces stress and glow becomes a natural outcome.",
+      "gift_edit_eyebrow": "The Gift Edit",
+      "gift_edit_heading_lead": "Gift of",
+      "gift_edit_heading_emphasis": "lasting radiance.",
+      "gift_edit_body": "Considered formulations, presented in keepsake packaging — for the people whose skin you'd want to look as quietly luminous as your own.",
+      "gift_edit_cta": "Build Your Gift"
+    },
+    "home_pillars": {
+      "eyebrow_default": "Composition Principles",
+      "heading_lead_default": "Balanced for",
+      "heading_emphasis_default": "Optimum Glow",
+      "p1_number": "01",
+      "p1_title": "Comfort",
+      "p1_body": "Calm signals first. Hydration and barrier comfort precede every other outcome.",
+      "p2_number": "02",
+      "p2_title": "Balance",
+      "p2_body": "Synergistic actives rather than single-ingredient heroes. The system is the active.",
+      "p3_number": "03",
+      "p3_title": "Finish",
+      "p3_body": "A surface that scatters light evenly. The optical basis of a natural, quiet glow."
+    },
+    "home_cover_cta": {
+      "beyond_eyebrow": "Beyond Cosmetics",
+      "beyond_heading_lead": "Each product activates a",
+      "beyond_heading_emphasis": "specific skin function.",
+      "beyond_body": "Together, they create visible brightness, smoother texture and long-term glow.",
+      "ritual_eyebrow": "The Ritual",
+      "ritual_heading_lead": "Skincare that",
+      "ritual_heading_emphasis": "works with your skin — not on it.",
+      "ritual_cta": "Begin the Ritual"
+    },
+    "home_faq": {
+      "eyebrow_default": "Learn More",
+      "heading_lead_default": "Frequently",
+      "heading_emphasis_default": "asked.",
+      "q1_question": "What is Cham about?",
+      "q1_answer": "<p>Cham is built around a biology-first idea of skin: skincare should support how the skin already behaves, not override it. Every formulation we make is designed to keep skin calm, comfortable and clear — the state in which it naturally looks its best.</p>",
+      "q2_question": "How does science guide your formulation?",
+      "q2_answer": "<p>We formulate around cellular signaling. Hydration, barrier integrity, and a low-inflammation environment are the conditions under which skin renews well. Our formulas focus on those conditions rather than chasing aggressive surface effects.</p>",
+      "q3_question": "What is Cham's skincare philosophy?",
+      "q3_answer": "<p>Support, don't override. A well-formulated system of complementary ingredients delivers a calmer, more even-looking surface than any single hero active. Restraint is part of the formulation, not the opposite of it.</p>",
+      "q4_question": "How is Cham different?",
+      "q4_answer": "<p>We prioritize hydration architecture and barrier comfort over temporary shine. The result is a finish that holds across the day — not a flash that fades by lunchtime.</p>",
+      "q5_question": "Does Cham use single hero ingredients?",
+      "q5_answer": "<p>No. Skin response depends on how ingredients interact within a formulation. We focus on synergy, base quality and stability — never isolating one ingredient at the expense of the system.</p>"
+    },
+    "home_newsletter": {
+      "eyebrow_default": "Letters from Cham",
+      "heading_lead_default": "Receive our notes on",
+      "heading_emphasis_default": "skin, formulation and the slow pursuit of a quiet glow.",
+      "email_label": "Email address",
+      "email_placeholder": "your@email.com",
+      "submit_label": "Subscribe",
+      "success_heading": "You're on the list",
+      "success_text": "A first note from Cham is on its way to your inbox. Welcome to the slow pursuit of a quiet glow."
+    },
+    "page_gift": {
+      "picker_eyebrow": "Choose your formulations",
+      "add_label": "Add to gift +",
+      "message_label": "Your note",
+      "message_placeholder": "A few words for the card — we'll write it by hand.",
+      "summary_eyebrow": "Your gift",
+      "summary_empty_lead": "Choose a formulation to begin",
+      "summary_empty_emphasis": "composing your gift.",
+      "total": "Total",
+      "cta_idle": "Add gift pack to bag"
+    },
+    "main_product": {
+      "breadcrumb_root": "Shop",
+      "accordion_science": "The science",
+      "accordion_how": "How to use",
+      "accordion_full_ingredients": "Full ingredient list",
+      "thumbnail_label": "Show image {{ index }}"
+    },
+    "product_video": {
+      "eyebrow_default": "See it in motion",
+      "heading_lead_default": "Texture, finish,",
+      "heading_emphasis_default": "ritual."
+    },
+    "product_pillars": {
+      "eyebrow_default": "Skin Intelligence at Work",
+      "heading_lead_default": "Formulated around how your skin",
+      "heading_emphasis_default": "naturally behaves."
+    },
+    "product_key_ingredients": {
+      "eyebrow_default": "Key Ingredients",
+      "heading_lead_default": "A short, considered list —",
+      "heading_emphasis_default": "no single hero.",
+      "body_default": "Skin response depends on how ingredients interact within a formulation. We focus on synergy, base quality and stability — never isolating one ingredient at the expense of the system."
+    },
+    "product_sensory": {
+      "eyebrow_default": "The Sensory Experience",
+      "heading_lead_default": "How it",
+      "heading_emphasis_default": "feels."
+    },
+    "product_ritual": {
+      "eyebrow_default": "The Ritual",
+      "heading_lead_default": "How to",
+      "heading_emphasis_default": "apply.",
+      "body_default": "A few unhurried minutes, twice a day. Consistency is what skin responds to."
+    },
+    "product_pairs_with": {
+      "eyebrow_default": "Pairs Beautifully With",
+      "heading_default": "Complete the ritual",
+      "view_all_label": "View all",
+      "view_all_url_default": "/collections/all"
+    },
+    "product_reviews": {
+      "eyebrow_default": "Customer reviews",
+      "heading_lead_default": "Loved by skin like",
+      "heading_emphasis_default": "yours.",
+      "summary_html": "Based on <strong>{{ count }} verified reviews</strong> from the Cham community."
+    },
+    "main_collection": {
+      "eyebrow_default": "The Collection",
+      "heading_lead_default": "Formulations",
+      "heading_emphasis_default": "for skin that performs",
+      "heading_tail_default": ".",
+      "body_default": "Each product activates a specific skin function. Together, they create visible brightness, smoother texture and long-term glow.",
+      "filter_all_label": "All",
+      "item_count": "{{ count }} {{ noun }}",
+      "item_singular": "item",
+      "item_plural": "items",
+      "no_products": "No products match this filter."
+    },
+    "collections_list": {
+      "eyebrow_default": "Discover",
+      "heading_lead_default": "Browse",
+      "heading_emphasis_default": "the collections",
+      "heading_tail_default": ".",
+      "body_default": "Curated edits, themed sets and seasonal selections.",
+      "empty_message": "Collections will appear here once they're created in the admin."
+    },
+    "main_blog": {
+      "eyebrow_default": "Journal",
+      "heading_lead_default": "Notes on skin,",
+      "heading_emphasis_default": "formulation and ritual",
+      "heading_tail_default": ".",
+      "body_default": "Slow reading on the science, the texture, and the small daily acts that compound into quiet radiance.",
+      "all_tag_label": "All",
+      "read_article": "Read article →",
+      "no_articles": "Articles will appear here once they're published.",
+      "read_time_html": "{{ minutes }} min read",
+      "by_author": "by {{ author }}"
+    },
+    "main_article": {
+      "back_to_blog": "← Back to {{ blog }}"
+    },
+    "article_related": {
+      "eyebrow_default": "Continue reading",
+      "heading_default": "More from the journal"
+    },
+    "whatsapp_float": {
+      "default_label": "Chat with us on WhatsApp"
+    },
+    "marketplaces": {
+      "view_on": "View on {{ name }} (opens in a new tab)",
+      "placeholder_eyebrow": "Marketplace badges",
+      "placeholder_text": "This section appears on the storefront when at least one marketplace has a listing URL on this product. To set up:",
+      "placeholder_step_1": "Settings → Custom data → Metaobjects → create a definition with type \"marketplace\" and fields \"name\" (single line text) and \"logo\" (file, image).",
+      "placeholder_step_2": "Settings → Custom data → Products → add a metafield for each marketplace using namespace and key \"marketplace.<handle>\" (e.g. marketplace.amazon) of type URL.",
+      "placeholder_step_3": "On each product, paste the direct listing URL into the relevant marketplace field. Leave blank to hide a marketplace for that product.",
+      "preview_flag": "Preview mode — turn off once real marketplaces are wired"
+    }
+  }
+}

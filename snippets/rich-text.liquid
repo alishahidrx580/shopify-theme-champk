@@ -1,0 +1,101 @@
+{% doc %}
+  Renders Shopify rich-text JSON content as HTML.
+
+  Walks the parsed rich-text node tree and emits HTML for each node type:
+  root, paragraph, heading, list, list-item, link, and text (with optional
+  bold/italic). Use this when Shopify's auto-rendering doesn't apply —
+  notably for rich_text fields inside metaobject entries accessed via a
+  list metafield.
+
+  @param {object} content - A rich-text node. Pass the metaobject field
+    directly (e.g. `faq.answer`); the snippet unwraps `.value` if the
+    field is exposed as a metafield-like wrapper. Blank input renders
+    nothing.
+
+  @example
+  {% render 'rich-text', content: product.metafields.custom.description.value %}
+  {% render 'rich-text', content: faq.answer %}
+{% enddoc %}
+
+{%- liquid
+  assign node = content
+  if node.type == blank and node.value.type != blank
+    assign node = node.value
+  endif
+
+  case node.type
+    when 'root'
+      for child in node.children
+        render 'rich-text', content: child
+      endfor
+
+    when 'paragraph'
+      echo '<p>'
+      for child in node.children
+        render 'rich-text', content: child
+      endfor
+      echo '</p>'
+
+    when 'heading'
+      assign level = node.level | default: 2
+      echo '<h'
+      echo level
+      echo '>'
+      for child in node.children
+        render 'rich-text', content: child
+      endfor
+      echo '</h'
+      echo level
+      echo '>'
+
+    when 'list'
+      assign list_tag = 'ul'
+      if node.listType == 'ordered'
+        assign list_tag = 'ol'
+      endif
+      echo '<'
+      echo list_tag
+      echo '>'
+      for child in node.children
+        render 'rich-text', content: child
+      endfor
+      echo '</'
+      echo list_tag
+      echo '>'
+
+    when 'list-item'
+      echo '<li>'
+      for child in node.children
+        render 'rich-text', content: child
+      endfor
+      echo '</li>'
+
+    when 'link'
+      echo '<a href="'
+      echo node.url | escape
+      echo '"'
+      if node.title != blank
+        echo ' title="'
+        echo node.title | escape
+        echo '"'
+      endif
+      if node.target == '_blank'
+        echo ' target="_blank" rel="noopener"'
+      endif
+      echo '>'
+      for child in node.children
+        render 'rich-text', content: child
+      endfor
+      echo '</a>'
+
+    when 'text'
+      assign text_value = node.value | escape
+      if node.bold
+        assign text_value = text_value | prepend: '<strong>' | append: '</strong>'
+      endif
+      if node.italic
+        assign text_value = text_value | prepend: '<em>' | append: '</em>'
+      endif
+      echo text_value
+  endcase
+-%}

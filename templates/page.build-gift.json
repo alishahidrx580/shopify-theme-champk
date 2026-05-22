@@ -1,0 +1,26 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "gift": {
+      "type": "page-gift",
+      "settings": {
+        "eyebrow": "The Gift Edit",
+        "heading_lead": "Build a gift of",
+        "heading_emphasis": "lasting radiance.",
+        "intro": "<p>Choose from our edit of considered formulations. Add premium gift wrap and a handwritten note — for the people whose skin you'd like to look as quietly luminous as your own.</p>",
+        "footnote": "Complimentary shipping on orders over ₹2,500"
+      }
+    }
+  },
+  "order": [
+    "gift"
+  ]
+}

@@ -1,0 +1,130 @@
+<section class="page-heading-text full-width" style="--margin-top: {{ section.settings.margin_top }}rem;">
+  <div class="page-heading-text__inner">
+    <div class="page-heading-text__grid">
+      <div class="page-heading-text__head" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="page-heading-text__heading font-display">
+          {{- section.settings.heading_lead -}}
+          {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        </h2>
+      </div>
+      <div class="page-heading-text__body" data-reveal data-reveal-delay="120">
+        {{ section.settings.body }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .page-heading-text {
+    width: 100%;
+    margin-top: var(--margin-top, 6rem);
+  }
+
+  @media (min-width: 1024px) {
+    .page-heading-text {
+      margin-top: calc(var(--margin-top, 6rem) + 2rem);
+    }
+  }
+
+  .page-heading-text__inner {
+    max-width: 1100px;
+    margin-inline: auto;
+    padding-inline: var(--page-padding-inline);
+  }
+
+  @media (min-width: 1024px) {
+    .page-heading-text__inner {
+      padding-inline: var(--page-padding-inline-lg);
+    }
+  }
+
+  .page-heading-text__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 1024px) {
+    .page-heading-text__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 2.5rem;
+    }
+    .page-heading-text__head {
+      grid-column: span 4;
+    }
+    .page-heading-text__body {
+      grid-column: span 8;
+    }
+  }
+
+  .page-heading-text__heading {
+    margin-top: 1.5rem;
+    font-size: clamp(1.875rem, 4vw, 3rem);
+    line-height: 1.05;
+  }
+
+  .page-heading-text__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .page-heading-text__body {
+    color: color-mix(in oklab, var(--foreground) 85%, transparent);
+    line-height: 1.65;
+  }
+
+  .page-heading-text__body > p {
+    margin: 0;
+  }
+
+  .page-heading-text__body > p + p {
+    margin-top: 1.5rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Heading + text",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "Heading (lead)"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "Heading (emphasis)"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Top margin (mobile)",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "rem",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Heading + text"
+    }
+  ]
+}
+{% endschema %}

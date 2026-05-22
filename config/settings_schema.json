@@ -1,0 +1,47 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Cham Skincare",
+    "theme_version": "0.1.0",
+    "theme_author": "Cham",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://support.shopify.com/"
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Upload a square image (at least 32x32px). PNG or SVG. Used for the browser tab icon and home-screen icon on mobile."
+      }
+    ]
+  },
+  {
+    "name": "t:settings_schema.commerce.name",
+    "settings": [
+      {
+        "type": "range",
+        "id": "free_shipping_threshold",
+        "label": "t:settings_schema.commerce.free_shipping_threshold.label",
+        "info": "t:settings_schema.commerce.free_shipping_threshold.info",
+        "min": 0,
+        "max": 9900,
+        "step": 100,
+        "unit": "₹",
+        "default": 2500
+      },
+      {
+        "type": "range",
+        "id": "gift_message_max",
+        "label": "t:settings_schema.commerce.gift_message_max.label",
+        "min": 60,
+        "max": 500,
+        "step": 20,
+        "unit": "ch",
+        "default": 240
+      }
+    ]
+  }
+]

@@ -1,0 +1,76 @@
+<section class="page-pull-quote full-width" style="--margin-top: {{ section.settings.margin_top }}rem;">
+  <div class="page-pull-quote__inner cham-container">
+    <div data-reveal>
+      <p class="page-pull-quote__quote font-display">
+        <span class="page-pull-quote__mark" aria-hidden="true">&ldquo;</span>{{ section.settings.quote }}<span class="page-pull-quote__mark" aria-hidden="true">&rdquo;</span>
+      </p>
+      {%- if section.settings.attribution != blank -%}
+        <p class="page-pull-quote__attribution eyebrow eyebrow--bare">{{ section.settings.attribution }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .page-pull-quote {
+    width: 100%;
+    margin-top: var(--margin-top, 8rem);
+  }
+
+  @media (min-width: 1024px) {
+    .page-pull-quote {
+      margin-top: calc(var(--margin-top, 8rem) + 3rem);
+    }
+  }
+
+  .page-pull-quote__quote {
+    font-size: clamp(1.875rem, 4vw, 3rem);
+    line-height: 1.15;
+    max-width: 56rem;
+    margin: 0;
+    color: var(--foreground);
+  }
+
+  .page-pull-quote__mark {
+    color: var(--primary);
+  }
+
+  .page-pull-quote__attribution {
+    margin-top: 2rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Pull quote",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "quote",
+      "label": "Quote"
+    },
+    {
+      "type": "text",
+      "id": "attribution",
+      "label": "Attribution",
+      "info": "e.g. — The Cham Atelier, Paris"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Top margin (mobile)",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "rem",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pull quote"
+    }
+  ]
+}
+{% endschema %}

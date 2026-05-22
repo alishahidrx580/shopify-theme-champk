@@ -1,0 +1,172 @@
+{%- liquid
+  assign steps = product.metafields.custom.steps.value
+  if steps == blank
+    assign steps = product.metafields.custom.steps
+  endif
+-%}
+
+<section class="product-ritual full-width">
+  <div class="product-ritual__inner cham-container">
+    <div class="product-ritual__grid">
+      <div class="product-ritual__head" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="product-ritual__heading font-display">
+          {{- section.settings.heading_lead -}}
+          {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        </h2>
+        {%- if section.settings.body != blank -%}
+          <div class="product-ritual__body">{{ section.settings.body }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if steps != blank and steps.size > 0 -%}
+        <ol class="product-ritual__steps">
+          {%- for step in steps -%}
+            {%- assign num = '0' | append: forloop.index | slice: -2, 2 -%}
+            <li class="product-ritual__step" data-reveal data-reveal-delay="{{ forloop.index0 | times: 60 }}">
+              <span class="product-ritual__step-number font-display">{{ num }}</span>
+              <p class="product-ritual__step-body">{{ step }}</p>
+            </li>
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .product-ritual {
+    width: 100%;
+    padding-block: 6rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-ritual {
+      padding-block: 9rem;
+    }
+  }
+
+  .product-ritual__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-ritual__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 4rem;
+    }
+    .product-ritual__head {
+      grid-column: span 4;
+    }
+    .product-ritual__steps {
+      grid-column: span 8;
+    }
+  }
+
+  .product-ritual__heading {
+    margin-top: 1rem;
+    font-size: 2.25rem;
+    line-height: 1.05;
+  }
+
+  @media (min-width: 1024px) {
+    .product-ritual__heading {
+      font-size: 3rem;
+    }
+  }
+
+  .product-ritual__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .product-ritual__body {
+    margin-top: 1.5rem;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+    line-height: 1.65;
+  }
+
+  .product-ritual__body > p {
+    margin: 0;
+  }
+
+  .product-ritual__steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2.5rem;
+    row-gap: 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 640px) {
+    .product-ritual__steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .product-ritual__step {
+    display: flex;
+    gap: 1.25rem;
+  }
+
+  .product-ritual__step-number {
+    color: var(--primary);
+    font-size: 1.5rem;
+    width: 2.5rem;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .product-ritual__step-body {
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    line-height: 1.65;
+    padding-top: 0.25rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.product_ritual.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "The Ritual"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "How to"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "apply."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "t:labels.body",
+      "default": "<p>A few unhurried minutes, twice a day. Consistency is what skin responds to.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product_ritual.presets_default"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

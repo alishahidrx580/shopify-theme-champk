@@ -1,0 +1,176 @@
+<section class="page-faq full-width">
+  <div class="page-faq__inner">
+    <div class="page-faq__head" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h2 class="page-faq__heading font-display">
+        {{- section.settings.heading_lead -}}
+        {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+      </h2>
+    </div>
+
+    <div class="page-faq__list" data-reveal data-reveal-delay="100">
+      {%- for block in section.blocks -%}
+        <details class="page-faq__item" {{ block.shopify_attributes }}>
+          <summary class="page-faq__question">
+            <span class="page-faq__q-text font-display">{{ block.settings.question }}</span>
+            <svg class="page-faq__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </summary>
+          <div class="page-faq__answer">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .page-faq {
+    width: 100%;
+  }
+
+  .page-faq__inner {
+    max-width: 900px;
+    margin-inline: auto;
+    padding-inline: var(--page-padding-inline);
+    padding-block: 8rem;
+  }
+
+  @media (min-width: 1024px) {
+    .page-faq__inner {
+      padding-inline: var(--page-padding-inline-lg);
+    }
+  }
+
+  .page-faq__heading {
+    margin-top: 1rem;
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    line-height: 1.05;
+  }
+
+  .page-faq__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .page-faq__list {
+    margin-top: 4rem;
+  }
+
+  .page-faq__item {
+    border-top: 1px solid var(--border);
+  }
+
+  .page-faq__item:last-child {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-faq__question {
+    list-style: none;
+    cursor: pointer;
+    padding-block: 1.75rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    color: var(--foreground);
+    transition: color 0.3s ease;
+  }
+
+  .page-faq__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .page-faq__question:hover {
+    color: var(--primary);
+  }
+
+  .page-faq__q-text {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    text-align: left;
+  }
+
+  @media (min-width: 1024px) {
+    .page-faq__q-text {
+      font-size: 1.5rem;
+    }
+  }
+
+  .page-faq__icon {
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+    color: var(--primary);
+    transition: transform 0.3s ease;
+  }
+
+  .page-faq__item[open] .page-faq__icon {
+    transform: rotate(180deg);
+  }
+
+  .page-faq__answer {
+    padding-bottom: 1.75rem;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    line-height: 1.65;
+    max-width: 42rem;
+    font-size: 1rem;
+  }
+
+  .page-faq__answer > p {
+    margin: 0;
+  }
+
+  .page-faq__answer > p + p {
+    margin-top: 1rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Page FAQ",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "Heading (lead)"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "Heading (emphasis)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Page FAQ"
+    }
+  ]
+}
+{% endschema %}

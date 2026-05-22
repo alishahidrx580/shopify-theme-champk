@@ -1,0 +1,487 @@
+/**
+ * Critical CSS — included on every page.
+ * Contains: resets, typography baselines, global atoms (.eyebrow, .font-display,
+ * .gold-link, .reveal), section grid utilities (.shopify-section), the marquee
+ * keyframes, and a `.cham-container` utility used by every homepage section.
+ *
+ * Section-scoped styles live inside each section's {% stylesheet %} block with
+ * BEM prefixes to avoid collisions in the globally-concatenated bundle.
+ */
+
+/* ===== Reset (Josh Comeau-inspired) ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 100svh;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  /* Never scroll sideways. `clip` (not `hidden`) avoids making body a scroll
+     container, so `position: sticky` regions keep working. */
+  overflow-x: clip;
+}
+
+html:has(dialog[scroll-lock][open], details[scroll-lock][open]),
+html:has([data-drawer-open="true"]) {
+  overflow: hidden;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+  color: inherit;
+}
+
+input,
+textarea,
+select {
+  border-radius: var(--radius);
+}
+
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+dialog {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+p:empty {
+  display: none;
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* ===== Typography utilities ===== */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  background-color: currentColor;
+  flex-shrink: 0;
+}
+
+/* Variant for eyebrows over dark imagery — use a brighter gold. */
+.eyebrow--bright {
+  color: var(--primary-glow);
+}
+
+/* Bare typography variant — no accent rule. Use for label-style eyebrows
+   (form labels, attribution lines, card meta) that React renders with just
+   the .eyebrow class instead of the <Eyebrow> component. */
+.eyebrow--bare {
+  display: inline;
+}
+
+.eyebrow--bare::before {
+  display: none;
+}
+
+/* ===== Gold animated underline link ===== */
+.gold-link {
+  position: relative;
+  display: inline-block;
+  color: var(--primary);
+}
+
+.gold-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.gold-link:hover::after,
+.gold-link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border-radius: var(--radius);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  background-color: var(--primary-glow);
+}
+
+.btn--outline {
+  background-color: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+}
+
+.btn--outline:hover,
+.btn--outline:focus-visible {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ===== Reveal animation ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 1.1s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ===== Marquee animation (used by home-marquee section) ===== */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ===== Page container ===== */
+.cham-container {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin-inline: auto;
+  padding-inline: var(--page-padding-inline);
+}
+
+@media (min-width: 1024px) {
+  .cham-container {
+    padding-inline: var(--page-padding-inline-lg);
+  }
+}
+
+/* ===== Section group grid (kept from skeleton for header/footer groups) ===== */
+.shopify-section {
+  --content-width: min(
+    calc(var(--page-width) - var(--page-margin) * 2),
+    calc(100% - var(--page-margin) * 2)
+  );
+  --content-margin: minmax(var(--page-margin), 1fr);
+  --content-grid: var(--content-margin) var(--content-width) var(--content-margin);
+
+  position: relative;
+  grid-template-columns: var(--content-grid);
+  display: grid;
+  width: 100%;
+}
+
+.shopify-section > * {
+  grid-column: 2;
+}
+
+.shopify-section > .full-width {
+  grid-column: 1 / -1;
+}
+
+/* ===== Visually-hidden utility for accessible labels ===== */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Skip link ===== */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--background);
+  color: var(--foreground);
+  padding: 0.5rem 1rem;
+  z-index: 100;
+  text-decoration: underline;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ===== Shopify policy pages =====
+   Shopify renders /policies/<handle> as:
+     .shopify-policy__container
+       .shopify-policy__title > h1
+       .shopify-policy__body > .rte > <content>
+   Use descendant selectors (NOT > combinators) so styles apply through
+   the .rte wrapper. Use margin-block on each element directly, not
+   sibling combinators, so the global * { margin: 0 } reset doesn't
+   strip rhythm. */
+.shopify-policy__container {
+  max-width: 100ch;
+  margin-inline: auto;
+  margin-block: 9rem 6rem;
+  padding-inline: var(--page-padding-inline);
+}
+
+@media (min-width: 1024px) {
+  .shopify-policy__container {
+    margin-block: 12rem 8rem;
+    padding-inline: var(--page-padding-inline-lg);
+  }
+}
+
+.shopify-policy__title {
+  margin-top: 6rem;
+  margin-bottom: 2rem;
+  padding-bottom: 4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 1024px) {
+  .shopify-policy__title {
+    margin-top: 8rem;
+  }
+}
+
+.shopify-policy__title h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 3.125rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.shopify-policy__body,
+.shopify-policy__body .rte {
+  color: color-mix(in oklab, var(--foreground) 80%, transparent);
+  line-height: 1.75;
+  font-size: 1rem;
+}
+
+.shopify-policy__body p,
+.shopify-policy__body ul,
+.shopify-policy__body ol,
+.shopify-policy__body blockquote,
+.shopify-policy__body figure,
+.shopify-policy__body table,
+.shopify-policy__body pre {
+  margin-block: 0 1.25rem;
+}
+
+.shopify-policy__body > *:last-child,
+.shopify-policy__body .rte > *:last-child {
+  margin-bottom: 0;
+}
+
+.shopify-policy__body h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2.125rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+  margin-block: 3rem 1rem;
+}
+
+.shopify-policy__body h2:first-child,
+.shopify-policy__body .rte > h2:first-child {
+  margin-top: 0;
+}
+
+.shopify-policy__body h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+  margin-block: 2.5rem 0.75rem;
+}
+
+.shopify-policy__body h3:first-child,
+.shopify-policy__body .rte > h3:first-child {
+  margin-top: 0;
+}
+
+.shopify-policy__body h4,
+.shopify-policy__body h5,
+.shopify-policy__body h6 {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  color: var(--foreground);
+  font-weight: 600;
+  margin-block: 2rem 0.5rem;
+}
+
+.shopify-policy__body a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+  transition: color 0.3s ease;
+}
+
+.shopify-policy__body a:hover,
+.shopify-policy__body a:focus-visible {
+  color: var(--primary-glow);
+}
+
+.shopify-policy__body ul,
+.shopify-policy__body ol {
+  margin-left: 1.5rem;
+  padding-left: 0;
+}
+
+.shopify-policy__body ul { list-style: disc; }
+.shopify-policy__body ol { list-style: decimal; }
+
+.shopify-policy__body li {
+  margin-block: 0 0.5rem;
+}
+
+.shopify-policy__body li > ul,
+.shopify-policy__body li > ol {
+  margin-block: 0.5rem 0;
+}
+
+.shopify-policy__body strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.shopify-policy__body em {
+  font-style: italic;
+}
+
+.shopify-policy__body blockquote {
+  border-left: 2px solid var(--primary);
+  padding-left: 1.5rem;
+  margin-block: 2rem;
+  font-style: italic;
+  color: color-mix(in oklab, var(--foreground) 90%, transparent);
+}
+
+.shopify-policy__body hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin-block: 3rem;
+}
+
+#shop-hcaptcha-badge-container {
+  display: none !important;
+}

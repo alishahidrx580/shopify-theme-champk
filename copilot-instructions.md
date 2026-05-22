@@ -1,0 +1,1 @@
+/Users/Rahman/Projects/Cham/cham-skincare-theme/AGENTS.md

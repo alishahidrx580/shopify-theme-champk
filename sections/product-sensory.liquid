@@ -1,0 +1,194 @@
+{%- liquid
+  assign sensory_image = product.metafields.custom.sensory_image
+  if sensory_image == blank and product.images.size > 0
+    assign last_idx = product.images.size | minus: 1
+    assign sensory_image = product.images[last_idx]
+  endif
+
+  assign texture = product.metafields.custom.sensory_texture
+  assign finish = product.metafields.custom.sensory_finish
+  assign tags = product.metafields.custom.sensory_tags.value
+-%}
+
+<section class="product-sensory full-width">
+  <div class="product-sensory__inner cham-container">
+    <div class="product-sensory__grid">
+      <div class="product-sensory__media-col" data-reveal>
+        <div class="product-sensory__media">
+          {%- if sensory_image != blank -%}
+            <img
+              src="{{ sensory_image | image_url: width: 1200 }}"
+              srcset="{{ sensory_image | image_url: width: 600 }} 600w, {{ sensory_image | image_url: width: 1200 }} 1200w, {{ sensory_image | image_url: width: 1800 }} 1800w"
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              alt="{{ product.title | append: ' sensory experience' | escape }}"
+              width="{{ sensory_image.width | default: 1200 }}"
+              height="{{ sensory_image.height | default: 1200 }}"
+              loading="lazy"
+              decoding="async"
+              class="product-sensory__img"
+            >
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'product-sensory__img product-sensory__img--placeholder' }}
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="product-sensory__copy-col" data-reveal data-reveal-delay="120">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="product-sensory__heading font-display">
+          {{- section.settings.heading_lead -}}
+          {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        </h2>
+
+        {%- if texture != blank -%}
+          <p class="product-sensory__line">{{ texture }}</p>
+        {%- endif -%}
+        {%- if finish != blank -%}
+          <p class="product-sensory__line">{{ finish }}</p>
+        {%- endif -%}
+
+        {%- if tags != blank and tags.size > 0 -%}
+          <ul class="product-sensory__chips">
+            {%- for tag in tags -%}
+              <li class="product-sensory__chip">{{ tag }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .product-sensory {
+    width: 100%;
+    background-color: var(--surface);
+    padding-block: 6rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-sensory {
+      padding-block: 9rem;
+    }
+  }
+
+  .product-sensory__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .product-sensory__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4rem;
+    }
+  }
+
+  .product-sensory__media {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: var(--background);
+  }
+
+  .product-sensory__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .product-sensory__img--placeholder {
+    color: color-mix(in oklab, var(--primary) 25%, var(--background));
+  }
+
+  @media (min-width: 1024px) {
+    .product-sensory__copy-col {
+      padding-inline-start: 1.5rem;
+    }
+  }
+
+  .product-sensory__heading {
+    margin-top: 1.5rem;
+    font-size: 2.25rem;
+    line-height: 1.05;
+  }
+
+  @media (min-width: 1024px) {
+    .product-sensory__heading {
+      font-size: 3rem;
+    }
+  }
+
+  .product-sensory__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .product-sensory__line {
+    margin-top: 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.55;
+    color: color-mix(in oklab, var(--foreground) 85%, transparent);
+  }
+
+  .product-sensory__line + .product-sensory__line {
+    margin-top: 0.75rem;
+  }
+
+  .product-sensory__chips {
+    margin: 2.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+  }
+
+  .product-sensory__chip {
+    padding: 0.625rem 1rem;
+    border: 1px solid color-mix(in oklab, var(--primary) 40%, transparent);
+    color: var(--primary);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.product_sensory.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "The Sensory Experience"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "How it"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "feels."
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product_sensory.presets_default"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,390 @@
+{%- liquid
+  assign raw_video = section.settings.video_url
+  assign video_src = ''
+  if raw_video != blank
+    assign url_prefix = raw_video | slice: 0, 4
+    if url_prefix == 'http'
+      assign video_src = raw_video
+    else
+      assign url_parts = raw_video | split: '/'
+      assign filename = url_parts | last
+      assign video_src = filename | file_url
+    endif
+  endif
+-%}
+
+{%- if video_src != blank -%}
+<section
+  class="page-video-text full-width"
+  style="--margin-top: {{ section.settings.margin_top }}rem;"
+>
+  <div class="page-video-text__inner cham-container">
+    <div class="page-video-text__grid page-video-text--video-{{ section.settings.video_side }}">
+      <div class="page-video-text__copy-col" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="page-video-text__heading font-display">
+          {{- section.settings.heading_lead -}}
+          {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+          {%- if section.settings.heading_tail != blank %}{{ section.settings.heading_tail }}{%- endif -%}
+        </h2>
+        {%- if section.settings.body != blank -%}
+          <div class="page-video-text__body">{{ section.settings.body }}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="page-video-text__media-col" data-reveal data-reveal-delay="150">
+        <div class="page-video-text__player" data-video-player data-playing="false" data-muted="true">
+            <video
+              data-video
+              src="{{ video_src }}"
+              {% if section.settings.poster != blank %}poster="{{ section.settings.poster | image_url: width: 1200 }}"{% endif %}
+              playsinline
+              loop
+              muted
+              preload="metadata"
+            ></video>
+
+            <button class="page-video-text__overlay" data-video-toggle type="button" aria-label="Play video">
+              <span class="page-video-text__overlay-button" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <polygon points="6 4 20 12 6 20 6 4"/>
+                </svg>
+              </span>
+            </button>
+
+            <div class="page-video-text__controls">
+              <button class="page-video-text__control" data-video-toggle type="button" aria-label="Play/pause">
+                <svg class="page-video-text__icon page-video-text__icon--play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <polygon points="6 4 20 12 6 20 6 4"/>
+                </svg>
+                <svg class="page-video-text__icon page-video-text__icon--pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <rect x="6" y="4" width="4" height="16"/>
+                  <rect x="14" y="4" width="4" height="16"/>
+                </svg>
+              </button>
+              <button class="page-video-text__control" data-video-mute type="button" aria-label="Mute/unmute">
+                <svg class="page-video-text__icon page-video-text__icon--muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <line x1="23" y1="9" x2="17" y2="15"/>
+                  <line x1="17" y1="9" x2="23" y2="15"/>
+                </svg>
+                <svg class="page-video-text__icon page-video-text__icon--unmuted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                </svg>
+              </button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% stylesheet %}
+  .page-video-text {
+    width: 100%;
+    margin-top: var(--margin-top, 8rem);
+  }
+
+  @media (min-width: 1024px) {
+    .page-video-text {
+      margin-top: calc(var(--margin-top, 8rem) + 3rem);
+    }
+  }
+
+  .page-video-text__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .page-video-text__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 4rem;
+    }
+    .page-video-text--video-right .page-video-text__copy-col {
+      grid-column: span 5;
+      order: 1;
+    }
+    .page-video-text--video-right .page-video-text__media-col {
+      grid-column: span 7;
+      order: 2;
+    }
+    .page-video-text--video-left .page-video-text__copy-col {
+      grid-column: span 5;
+      order: 2;
+    }
+    .page-video-text--video-left .page-video-text__media-col {
+      grid-column: span 7;
+      order: 1;
+    }
+  }
+
+  .page-video-text__heading {
+    margin-top: 1.5rem;
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    line-height: 1.02;
+  }
+
+  .page-video-text__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .page-video-text__body {
+    margin-top: 2rem;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    line-height: 1.65;
+  }
+
+  .page-video-text__body > p {
+    margin: 0;
+  }
+
+  .page-video-text__player {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    background-color: #000;
+    overflow: hidden;
+  }
+
+  @media (min-width: 640px) {
+    .page-video-text__player {
+      aspect-ratio: 4 / 5;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .page-video-text__player {
+      aspect-ratio: 9 / 12;
+    }
+  }
+
+  .page-video-text__player video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    display: block;
+  }
+
+  .page-video-text__overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background-color: rgb(0 0 0 / 0.2);
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+    border: 0;
+  }
+
+  .page-video-text__overlay:hover {
+    background-color: rgb(0 0 0 / 0.3);
+  }
+
+  .page-video-text__player[data-playing="true"] .page-video-text__overlay {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .page-video-text__overlay-button {
+    width: 5rem;
+    height: 5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background-color: color-mix(in oklab, var(--background) 90%, transparent);
+    color: var(--primary);
+    box-shadow: 0 20px 60px -20px color-mix(in oklab, var(--primary) 35%, transparent);
+  }
+
+  .page-video-text__overlay-button svg {
+    margin-left: 4px;
+  }
+
+  .page-video-text__controls {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .page-video-text__player:hover .page-video-text__controls,
+  .page-video-text__player:focus-within .page-video-text__controls {
+    opacity: 1;
+  }
+
+  .page-video-text__control {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background-color: color-mix(in oklab, var(--background) 85%, transparent);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 0;
+  }
+
+  .page-video-text__control:hover {
+    background-color: var(--background);
+  }
+
+  /* Icon visibility toggles via data attributes */
+  .page-video-text__icon {
+    display: none;
+  }
+  .page-video-text__player[data-playing="false"] .page-video-text__icon--play {
+    display: block;
+  }
+  .page-video-text__player[data-playing="true"] .page-video-text__icon--pause {
+    display: block;
+  }
+  .page-video-text__player[data-muted="true"] .page-video-text__icon--muted {
+    display: block;
+  }
+  .page-video-text__player[data-muted="false"] .page-video-text__icon--unmuted {
+    display: block;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    document.querySelectorAll('[data-video-player]').forEach((player) => {
+      const video = player.querySelector('[data-video]');
+      if (!video) return;
+      const toggles = player.querySelectorAll('[data-video-toggle]');
+      const muteBtn = player.querySelector('[data-video-mute]');
+
+      function setPlaying() {
+        player.setAttribute('data-playing', video.paused ? 'false' : 'true');
+      }
+      function setMuted() {
+        player.setAttribute('data-muted', video.muted ? 'true' : 'false');
+      }
+
+      toggles.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (video.paused) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      });
+
+      video.addEventListener('click', () => {
+        if (video.paused) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+
+      if (muteBtn) {
+        muteBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          video.muted = !video.muted;
+          setMuted();
+        });
+      }
+
+      video.addEventListener('play', setPlaying);
+      video.addEventListener('pause', setPlaying);
+
+      setPlaying();
+      setMuted();
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Video + text",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "Either the filename of a video uploaded to Settings → Files (e.g. cham-video.mp4), or a full https URL."
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "Poster image",
+      "info": "Optional. Shown before playback starts."
+    },
+    {
+      "type": "select",
+      "id": "video_side",
+      "label": "Video side",
+      "options": [
+        { "value": "left", "label": "Video left" },
+        { "value": "right", "label": "Video right" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "header",
+      "content": "Copy"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "Heading (lead)"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "Heading (emphasis)"
+    },
+    {
+      "type": "text",
+      "id": "heading_tail",
+      "label": "Heading (after emphasis)"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Top margin (mobile)",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "rem",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video + text"
+    }
+  ]
+}
+{% endschema %}

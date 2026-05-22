@@ -1,0 +1,133 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "eyebrow": "The Approach",
+        "heading_lead": "Skincare,",
+        "heading_emphasis": "considered slowly",
+        "heading_tail": ".",
+        "body": "<p>We believe great skincare is the result of careful choices — not loud promises. Every Cham product is composed around a simple idea: skin looks its best when it feels comfortable and well cared for.</p>",
+        "max_width": 1100
+      }
+    },
+    "image-band": {
+      "type": "page-image-band",
+      "settings": {
+        "image": "shopify://shop_images/texture.jpg",
+        "aspect_mobile": "16 / 9",
+        "aspect_desktop": "21 / 8",
+        "margin_top": 6
+      }
+    },
+    "principles": {
+      "type": "home-pillars",
+      "blocks": {
+        "p1": {
+          "type": "pillar",
+          "settings": {
+            "number": "01",
+            "title": "Comfort",
+            "body": "<p>We start with how a formula feels — lightweight textures and well-tolerated bases that make daily use a pleasure, not a chore.</p>"
+          }
+        },
+        "p2": {
+          "type": "pillar",
+          "settings": {
+            "number": "02",
+            "title": "Balance",
+            "body": "<p>Hydration, soothing humectants and a considered ingredient ratio. We avoid harsh strippers and unnecessary fragrance loads.</p>"
+          }
+        },
+        "p3": {
+          "type": "pillar",
+          "settings": {
+            "number": "03",
+            "title": "Finish",
+            "body": "<p>A soft, even, naturally luminous-looking finish — the visible result of skin that simply feels good in its own right.</p>"
+          }
+        }
+      },
+      "block_order": ["p1", "p2", "p3"],
+      "settings": {
+        "eyebrow": "Three Principles",
+        "heading_lead": "Comfort · Balance ·",
+        "heading_emphasis": "Finish"
+      }
+    },
+    "beliefs": {
+      "type": "page-cards-pair",
+      "blocks": {
+        "c1": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Less, but better",
+            "title": "Considered range",
+            "body": "<p>A small, edited collection that works together. Each product earns its place — no fillers, no duplicates.</p>"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "eyebrow": "Honest claims",
+            "title": "No miracles",
+            "body": "<p>We talk about how things look and feel — not what they do at a cellular level. Honest, appearance-based language. Individual results may vary.</p>"
+          }
+        }
+      },
+      "block_order": ["c1", "c2"],
+      "settings": {
+        "background": "surface",
+        "eyebrow": "What we believe",
+        "heading_lead": "Quiet routines.",
+        "heading_emphasis": "Patient results."
+      }
+    },
+    "faq": {
+      "type": "page-faq",
+      "blocks": {
+        "q1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is Cham about?",
+            "answer": "<p>Cham is a skincare house developed with a research-backed approach to formulation. We focus on ingredient quality, formulation balance and skin comfort — designing products that help skin look and feel its best with consistent use.</p>"
+          }
+        },
+        "q2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is Cham's skincare philosophy?",
+            "answer": "<p>We support the skin rather than overpower it with aggressive actives or heavy textures. We focus on how ingredients work together, how formulations feel on the skin, and how they fit naturally into a daily routine.</p>"
+          }
+        },
+        "q3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How is Cham different from general skincare brands?",
+            "answer": "<p>Many products focus on immediate brightness or shine created by oils, silicones, or reflective films — effects that are short-lived. Cham designs formulations that emphasise hydration, comfort and a softly luminous look that grows with continued use. Individual results may vary.</p>"
+          }
+        },
+        "q4": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Does Cham use single hero ingredients?",
+            "answer": "<p>No. The way ingredients interact within a formulation, the quality of the base, and the overall stability all matter. We focus on ingredient synergy rather than highlighting one molecule in isolation.</p>"
+          }
+        },
+        "q5": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is Cham made?",
+            "answer": "<p>Cham is developed with French formulation standards, in collaboration with experienced cosmetic chemists. We work in small batches to maintain quality and consistency.</p>"
+          }
+        }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5"],
+      "settings": {
+        "eyebrow": "Questions",
+        "heading_lead": "What people ask"
+      }
+    }
+  },
+  "order": ["hero", "image-band", "principles", "beliefs", "faq"]
+}

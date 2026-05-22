@@ -1,0 +1,323 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "general": {
+    "404": "Not found",
+    "article": "Article",
+    "block": "Block",
+    "blog": "Blog",
+    "cart": "Cart",
+    "collection": "Collection",
+    "collections": "Collections",
+    "collection_card": "Collection card",
+    "collections_grid": "Collections grid",
+    "colors": "Colors",
+    "column": "Column",
+    "content": "Content",
+    "custom_section": "Custom section",
+    "fonts": "Fonts",
+    "footer": "Footer",
+    "group": "Group",
+    "header": "Header",
+    "layout": "Layout",
+    "main": "Main",
+    "page": "Page",
+    "password": "Password",
+    "primary": "Primary",
+    "product": "Product",
+    "row": "Row",
+    "search": "Search",
+    "secondary": "Secondary",
+    "section": "Section",
+    "settings": "Settings",
+    "sidebar": "Sidebar",
+    "text": "Text",
+    "theme": "Theme",
+    "typography": "Typography"
+  },
+  "labels": {
+    "alignment": "Alignment",
+    "background": "Background",
+    "foreground": "Foreground",
+    "grid_gap": "Grid spacing",
+    "grid_item_width": "Grid item width",
+    "input_corner_radius": "Input corner radius",
+    "layout_direction": "Layout direction",
+    "menu": "Menu",
+    "customer_account_menu": "Customer account menu",
+    "padding": "Padding",
+    "page_margin": "Page margin",
+    "page_width": "Page width",
+    "show_payment_icons": "Show payment icons",
+    "text_style": "Text style",
+    "text": "Text",
+    "eyebrow": "Eyebrow",
+    "heading_lead": "Heading (lead)",
+    "heading_emphasis": "Heading (emphasis)",
+    "body": "Body copy",
+    "image": "Image",
+    "image_mobile": "Mobile image",
+    "image_side": "Image side",
+    "image_frame": "Image frame",
+    "image_position": "Image position",
+    "cta_label": "Button label",
+    "cta_url": "Button link",
+    "cta_secondary_label": "Secondary button label",
+    "cta_secondary_url": "Secondary button link",
+    "min_height_svh": "Minimum height (svh)",
+    "min_height_px": "Minimum height (px)",
+    "overlay_strength": "Overlay strength",
+    "padding_block_top": "Top padding",
+    "padding_block_bottom": "Bottom padding",
+    "heading_break": "Insert line break in heading",
+    "collection": "Collection",
+    "products_to_show": "Products to show",
+    "view_all_label": "View all label",
+    "view_all_url": "View all link",
+    "linklist_main": "Main menu",
+    "linklist_shop": "Shop menu",
+    "linklist_brand": "Brand menu",
+    "linklist_account": "Account menu",
+    "brand_tagline_lead": "Brand tagline (lead)",
+    "brand_tagline_emphasis": "Brand tagline (emphasis)",
+    "brand_paragraph": "Brand paragraph",
+    "locations_text": "Locations text",
+    "question": "Question",
+    "answer": "Answer",
+    "pillar_number": "Pillar number",
+    "pillar_title": "Pillar title",
+    "pillar_body": "Pillar body",
+    "marquee_text": "Marquee text",
+    "email_label": "Email field label",
+    "email_placeholder": "Email field placeholder",
+    "submit_label": "Submit label",
+    "success_heading": "Success heading",
+    "success_text": "Success message",
+    "video_url": "Video URL",
+    "video_url_info": "Either the filename of a video uploaded to Settings → Files (e.g. cham-video.mp4), or a full https URL. Falls back to the product's custom.product_video metafield.",
+    "video_poster": "Poster image",
+    "video_poster_info": "Optional. Falls back to the first product image.",
+    "video_side": "Video side",
+    "free_shipping_threshold_override": "Free shipping threshold override",
+    "free_shipping_threshold_info": "Leave blank to use the global setting (Commerce → Free shipping threshold).",
+    "accordion_science_label": "Science accordion label",
+    "accordion_how_label": "How to use accordion label",
+    "accordion_full_ingredients_label": "Full ingredients accordion label",
+    "ingredient_name": "Ingredient name",
+    "ingredient_role": "Ingredient role",
+    "ingredient_image": "Ingredient image (overrides product gallery cycle)",
+    "step_body": "Step copy",
+    "show_filters": "Show category filters",
+    "filter_categories": "Filter categories",
+    "filter_categories_info": "Comma-separated list of categories. Each becomes a filter pill. Match values to product type or custom.category metafield.",
+    "instagram_url": "Instagram URL",
+    "facebook_url": "Facebook URL",
+    "youtube_url": "YouTube URL",
+    "whatsapp_enabled": "Show WhatsApp button",
+    "whatsapp_number": "WhatsApp number",
+    "whatsapp_number_info": "Include the country code, digits only — e.g. 919876543210.",
+    "whatsapp_custom_url": "Custom link",
+    "whatsapp_custom_url_info": "Optional. A full https link (e.g. a wa.me or chat URL). Overrides the number above.",
+    "whatsapp_prefilled_message": "Pre-filled message",
+    "whatsapp_prefilled_message_info": "Optional. Text the customer's chat opens with.",
+    "whatsapp_tooltip": "Tooltip and accessible label",
+    "whatsapp_color_style": "Button color",
+    "whatsapp_show_badge": "Show notification badge",
+    "whatsapp_badge_text": "Badge text",
+    "whatsapp_badge_text_info": "Keep it short — e.g. 1 or a single character."
+  },
+  "options": {
+    "alignment": {
+      "left": "Left",
+      "center": "Center",
+      "right": "Right"
+    },
+    "direction": {
+      "horizontal": "Horizontal",
+      "vertical": "Vertical"
+    },
+    "page_width": {
+      "narrow": "Narrow",
+      "wide": "Wide"
+    },
+    "size": {
+      "large": "Large",
+      "small": "Small"
+    },
+    "text_style": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "normal": "Normal text"
+    },
+    "image_side": {
+      "left": "Image left, text right",
+      "right": "Image right, text left"
+    },
+    "image_frame": {
+      "natural": "Natural aspect",
+      "portrait": "Portrait (4:5)",
+      "square": "Square (1:1)"
+    },
+    "background_variant": {
+      "default": "Default background",
+      "surface": "Surface background"
+    },
+    "cover_align": {
+      "start": "Top",
+      "center": "Center",
+      "end": "Bottom"
+    },
+    "whatsapp_color": {
+      "gold": "Theme gold",
+      "green": "WhatsApp green"
+    }
+  },
+  "sections": {
+    "header": {
+      "name": "Header"
+    },
+    "footer": {
+      "name": "Footer"
+    },
+    "home_hero": {
+      "name": "Home hero",
+      "presets_default": "Hero"
+    },
+    "home_marquee": {
+      "name": "Marquee",
+      "presets_default": "Marquee",
+      "block_item": "Item"
+    },
+    "home_manifesto": {
+      "name": "Manifesto",
+      "presets_default": "Manifesto",
+      "heading_label": "Heading (rich text)"
+    },
+    "home_featured_products": {
+      "name": "Featured products",
+      "presets_default": "Featured products"
+    },
+    "home_image_text": {
+      "name": "Image + Text",
+      "presets_default": "Image + Text"
+    },
+    "home_pillars": {
+      "name": "Pillars",
+      "presets_default": "Pillars",
+      "block_pillar": "Pillar"
+    },
+    "home_cover_cta": {
+      "name": "Cover with CTA",
+      "presets_default": "Cover with CTA"
+    },
+    "home_faq": {
+      "name": "FAQ",
+      "presets_default": "FAQ",
+      "block_faq": "Question"
+    },
+    "home_newsletter": {
+      "name": "Newsletter",
+      "presets_default": "Newsletter"
+    },
+    "main_product": {
+      "name": "Product"
+    },
+    "product_video": {
+      "name": "Product video",
+      "presets_default": "Product video"
+    },
+    "product_pillars": {
+      "name": "Product pillars",
+      "presets_default": "Product pillars"
+    },
+    "product_key_ingredients": {
+      "name": "Key ingredients",
+      "presets_default": "Key ingredients"
+    },
+    "product_sensory": {
+      "name": "Sensory experience",
+      "presets_default": "Sensory experience"
+    },
+    "product_ritual": {
+      "name": "Ritual steps",
+      "presets_default": "Ritual steps"
+    },
+    "product_faq": {
+      "name": "Product FAQ",
+      "presets_default": "Product FAQ",
+      "info": "Questions and answers are managed per product in Admin → Products → [product] → Metafields (FAQs). This section auto-hides on products with no FAQs."
+    },
+    "page_gift": {
+      "name": "Gift composer",
+      "presets_default": "Gift composer",
+      "header_content": "Hero",
+      "intro_label": "Intro copy",
+      "header_picker": "Product picker",
+      "collection_label": "Collection to offer as gift items",
+      "collection_info": "Leave empty to show all products.",
+      "header_footer": "Footer",
+      "footnote_label": "Footnote text"
+    },
+    "product_pairs_with": {
+      "name": "Pairs with",
+      "presets_default": "Pairs with"
+    },
+    "product_reviews": {
+      "name": "Product reviews",
+      "presets_default": "Product reviews"
+    },
+    "main_collection": {
+      "name": "Collection"
+    },
+    "collections_list": {
+      "name": "Collections list"
+    },
+    "main_cart": {
+      "name": "Cart"
+    },
+    "main_blog": {
+      "name": "Blog"
+    },
+    "main_article": {
+      "name": "Article"
+    },
+    "article_related": {
+      "name": "Related articles",
+      "presets_default": "Related articles"
+    },
+    "whatsapp_float": {
+      "name": "WhatsApp button"
+    },
+    "marketplaces": {
+      "name": "Marketplace badges",
+      "presets_default": "Marketplace badges",
+      "info": "Marketplaces (name + logo) live in Settings → Custom data → Metaobjects (type \"marketplace\"). Per-product listing URLs live on each product's metafields under namespace \"marketplace\". This section auto-renders any marketplace with a non-blank URL on the current product.",
+      "heading_label": "Heading",
+      "heading_info": "Optional. Leave blank to let the eyebrow + logos speak for themselves.",
+      "note_label": "Footnote",
+      "note_info": "Optional small line below the logos. Good place to anchor your price advantage.",
+      "preview_header": "Developer preview",
+      "dev_preview_label": "Show sample marketplaces (text wordmarks)",
+      "dev_preview_info": "Renders 4 fake entries (Amazon, Nykaa, Myntra, Flipkart) so you can verify layout before wiring real data. Auto-hidden once any real marketplace has a URL on this product. Turn off when going live."
+    }
+  },
+  "settings_schema": {
+    "commerce": {
+      "name": "Commerce",
+      "free_shipping_threshold": {
+        "label": "Free shipping threshold",
+        "info": "Order subtotal above which shipping is complimentary. Used in cart and PDP microcopy."
+      },
+      "gift_message_max": {
+        "label": "Gift message character limit"
+      }
+    }
+  }
+}

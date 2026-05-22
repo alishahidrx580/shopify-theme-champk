@@ -1,0 +1,331 @@
+{%- liquid
+  assign categories_raw = section.settings.filter_categories
+  assign categories = categories_raw | split: ','
+  assign show_filters = section.settings.show_filters
+  assign all_label = section.settings.filter_all_label
+  if all_label == blank
+    assign all_label = 'sections.main_collection.filter_all_label' | t
+  endif
+
+  assign total_count = collection.products_count
+  assign noun = 'sections.main_collection.item_plural' | t
+  if total_count == 1
+    assign noun = 'sections.main_collection.item_singular' | t
+  endif
+  assign initial_count_text = 'sections.main_collection.item_count' | t: count: total_count, noun: noun
+-%}
+
+<section class="main-collection full-width" data-collection-root>
+  <div class="main-collection__inner cham-container">
+    <header class="main-collection__head" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h1 class="main-collection__heading font-display">
+        {{- section.settings.heading_lead -}}
+        {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+        {%- if section.settings.heading_tail != blank -%}{{ section.settings.heading_tail }}{%- endif -%}
+      </h1>
+      {%- if section.settings.body != blank -%}
+        <div class="main-collection__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- if show_filters and collection.products_count > 0 -%}
+      <div class="main-collection__filter-bar" data-reveal data-reveal-delay="100">
+        <div class="main-collection__filters" role="tablist" aria-label="Filter by category">
+          <button
+            type="button"
+            class="main-collection__filter is-active"
+            data-filter
+            data-filter-value="all"
+            role="tab"
+            aria-selected="true"
+          >{{ all_label }}</button>
+          {%- for cat in categories -%}
+            {%- assign cat_trimmed = cat | strip -%}
+            {%- if cat_trimmed != blank -%}
+              <button
+                type="button"
+                class="main-collection__filter"
+                data-filter
+                data-filter-value="{{ cat_trimmed | downcase | escape }}"
+                role="tab"
+                aria-selected="false"
+              >{{ cat_trimmed }}</button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        <span
+          class="main-collection__count"
+          data-collection-count
+          data-singular="{{ 'sections.main_collection.item_singular' | t }}"
+          data-plural="{{ 'sections.main_collection.item_plural' | t }}"
+        >{{ initial_count_text }}</span>
+      </div>
+    {%- endif -%}
+
+    {%- if collection.products_count > 0 -%}
+      <div class="main-collection__grid" data-collection-grid>
+        {%- for product in collection.products -%}
+          {%- assign cat_value = product.metafields.custom.category | default: product.type -%}
+          {%- assign eager = false -%}
+          {%- if forloop.index0 < 3 -%}{%- assign eager = true -%}{%- endif -%}
+          <div
+            class="main-collection__item"
+            data-collection-item
+            data-category="{{ cat_value | downcase | escape }}"
+            data-reveal
+            data-reveal-delay="{{ forloop.index0 | times: 80 }}"
+          >
+            {%- render 'product-card', product: product, eager: eager -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="main-collection__empty">{{ 'sections.main_collection.no_products' | t }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .main-collection {
+    width: 100%;
+    padding-top: calc(var(--header-height) + 4rem);
+    padding-bottom: 8rem;
+  }
+
+  @media (min-width: 1024px) {
+    .main-collection {
+      padding-top: calc(var(--header-height) + 6rem);
+      padding-bottom: 10rem;
+    }
+  }
+
+  .main-collection__head {
+    max-width: 48rem;
+  }
+
+  .main-collection__heading {
+    margin-top: 1.5rem;
+    font-size: 3rem;
+    line-height: 0.98;
+  }
+
+  @media (min-width: 1024px) {
+    .main-collection__heading {
+      font-size: 6rem;
+    }
+  }
+
+  .main-collection__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .main-collection__body {
+    margin-top: 2rem;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+    line-height: 1.65;
+    max-width: 36rem;
+  }
+
+  .main-collection__body > p {
+    margin: 0;
+  }
+
+  .main-collection__filter-bar {
+    margin-top: 4rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (min-width: 1024px) {
+    .main-collection__filter-bar {
+      margin-top: 6rem;
+    }
+  }
+
+  .main-collection__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .main-collection__filter {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    border: 1px solid var(--border);
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    background-color: transparent;
+    cursor: pointer;
+    transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .main-collection__filter:hover,
+  .main-collection__filter:focus-visible {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .main-collection__filter.is-active {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .main-collection__count {
+    margin-left: auto;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--muted-foreground);
+  }
+
+  .main-collection__grid {
+    margin-top: 4rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2rem;
+    row-gap: 4rem;
+  }
+
+  @media (min-width: 768px) {
+    .main-collection__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .main-collection__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .main-collection__item[data-hidden="true"] {
+    display: none;
+  }
+
+  .main-collection__empty {
+    margin-top: 4rem;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    document.querySelectorAll('[data-collection-root]').forEach((root) => {
+      if (root.dataset.bound === 'true') return;
+      root.dataset.bound = 'true';
+
+      const filters = root.querySelectorAll('[data-filter]');
+      const items = root.querySelectorAll('[data-collection-item]');
+      const counter = root.querySelector('[data-collection-count]');
+      if (!filters.length || !items.length) return;
+
+      const singular = counter ? counter.getAttribute('data-singular') || 'item' : 'item';
+      const plural = counter ? counter.getAttribute('data-plural') || 'items' : 'items';
+
+      function applyFilter(value) {
+        let visible = 0;
+        items.forEach((item) => {
+          const cat = item.getAttribute('data-category') || '';
+          const match = value === 'all' || cat === value;
+          if (match) {
+            item.removeAttribute('data-hidden');
+            visible += 1;
+          } else {
+            item.setAttribute('data-hidden', 'true');
+          }
+        });
+        if (counter) {
+          counter.textContent = visible + ' ' + (visible === 1 ? singular : plural);
+        }
+      }
+
+      filters.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const value = btn.getAttribute('data-filter-value');
+          filters.forEach((b) => {
+            const isActive = b === btn;
+            b.classList.toggle('is-active', isActive);
+            b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+          applyFilter(value);
+        });
+      });
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:sections.main_collection.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "The Collection"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Formulations"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "for skin that performs"
+    },
+    {
+      "type": "text",
+      "id": "heading_tail",
+      "label": "Heading (after emphasis)",
+      "default": "."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "t:labels.body",
+      "default": "<p>Each product activates a specific skin function. Together, they create visible brightness, smoother texture and long-term glow.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Filters"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "t:labels.show_filters",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "filter_categories",
+      "label": "t:labels.filter_categories",
+      "info": "t:labels.filter_categories_info",
+      "default": "Face, Body, Treatment"
+    },
+    {
+      "type": "text",
+      "id": "filter_all_label",
+      "label": "'All' pill label",
+      "default": "All"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

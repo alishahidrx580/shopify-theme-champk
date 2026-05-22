@@ -1,0 +1,61 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "contact": {
+      "type": "contact-form",
+      "blocks": {
+        "b1": {
+          "type": "info_block",
+          "settings": {
+            "label": "Care",
+            "content": "<p>hi@chamskincare.com</p><p>Mon — Fri · 10:00 to 18:00 IST</p>"
+          }
+        },
+        "b3": {
+          "type": "info_block",
+          "settings": {
+            "label": "Address",
+            "content": "<p>Noida, Uttar Pradesh</p>"
+          }
+        },
+        "b5": {
+          "type": "info_block",
+          "settings": {
+            "label": "Follow",
+            "content": "<p>Instagram · @chamskincare.official</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b3",
+        "b5"
+      ],
+      "settings": {
+        "eyebrow": "Get in Touch",
+        "heading_lead": "We'd love to",
+        "heading_emphasis": "hear from you",
+        "heading_tail": ".",
+        "body": "<p>For client care, press inquiries, or collaborations — write to us. Every message is read by a human in our atelier.</p>",
+        "first_name_label": "First name",
+        "last_name_label": "Last name",
+        "email_label": "Email",
+        "subject_label": "Subject",
+        "message_label": "Message",
+        "submit_label": "Send Message",
+        "success_text": "Thank you — we'll be in touch soon."
+      }
+    }
+  },
+  "order": [
+    "contact"
+  ]
+}

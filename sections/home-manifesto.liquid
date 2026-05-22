@@ -1,0 +1,95 @@
+<section class="home-manifesto full-width">
+  <div class="home-manifesto__inner cham-container">
+    <div class="home-manifesto__grid">
+      <div class="home-manifesto__eyebrow-col" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+      </div>
+      <div class="home-manifesto__copy" data-reveal data-reveal-delay="120">
+        <h2 class="home-manifesto__heading font-display">{{ section.settings.heading }}</h2>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .home-manifesto {
+    padding-block: 8rem;
+  }
+
+  @media (min-width: 1024px) {
+    .home-manifesto {
+      padding-block: 11rem;
+    }
+  }
+
+  .home-manifesto__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: end;
+  }
+
+  @media (min-width: 1024px) {
+    .home-manifesto__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .home-manifesto__eyebrow-col {
+      grid-column: span 3;
+    }
+
+    .home-manifesto__copy {
+      grid-column: span 9;
+    }
+  }
+
+  .home-manifesto__heading {
+    font-size: clamp(2.25rem, 5.5vw, 4.5rem);
+    line-height: 1.05;
+    color: var(--foreground);
+    margin: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .home-manifesto__heading {
+      font-size: clamp(3rem, 5.5vw, 4.5rem);
+    }
+  }
+
+  .home-manifesto__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .home-manifesto__heading p {
+    margin: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.home_manifesto.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "About Cham"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "t:sections.home_manifesto.heading_label",
+      "default": "<p>Our products are crafted for <em>natural radiance.</em> Each Cham formulation is designed to complement your skin's natural rhythm, so it looks softer, calmer, and naturally luminous.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.home_manifesto.presets_default"
+    }
+  ]
+}
+{% endschema %}

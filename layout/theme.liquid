@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    {% # Apply theme before paint to avoid FOUC. Light is the default; %}
+    {% # dark is opt-in only — applied when the visitor has chosen it. %}
+    <script src="https://sdk.breezesdk.store/configs/0dk07t-ha/crt.js" async></script>
+<script src="https://sdk.breezesdk.store/nexus/ctrl/shopify/mods/184.0.1/mod.js" async></script>
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('cham-theme') === 'dark' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+
+    {% # Favicon %}
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{{ settings.favicon | image_url: width: 16, height: 16 }}">
+      <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+    {%- endif -%}
+
+    {% # Design tokens — oklch palette + typography vars %}
+    {% render 'css-variables' %}
+
+    {% # Google Fonts: Instrument Serif (display) + Karla (body) %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Karla:wght@300;400;500;600;700&display=swap"
+    >
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Karla:wght@300;400;500;600;700&display=swap"
+    >
+
+    {% # Critical CSS %}
+    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+
+    {% # Reveal-on-scroll module %}
+    <script src="{{ 'reveal.js' | asset_url }}" defer></script>
+
+    {% # Cart drawer controller %}
+    <script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
+
+    {% # Social, title, schema.org %}
+    {% render 'meta-tags' %}
+    
+    {% # Yandex Webmaster verification %}
+    <meta name="yandex-verification" content="1e79091c41279006" />
+ 
+    {% # Bing Webmaster verification %}
+    <meta name="msvalidate.01" content="821EE4864C02599A531DE3041205A0B7" />
+   
+    {% # Pinterest Domain verification %}
+    <meta name="p:domain_verify" content="ce5593d2b86b30d7c75f174f6e501528"/>   
+    {{ content_for_header }}
+  </head>
+
+  <body class="template-{{ template.name | handle }}">
+    <a class="skip-link" href="#main-content">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="main-content" role="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {% render 'cart-drawer' %}
+  </body>
+</html>

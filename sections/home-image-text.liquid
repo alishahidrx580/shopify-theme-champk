@@ -1,0 +1,412 @@
+{%- liquid
+  assign image_side = section.settings.image_side
+  assign image_frame = section.settings.image_frame
+  assign image_position = section.settings.image_position
+  assign background = section.settings.background
+  assign layout_style = section.settings.layout_style | default: 'contained'
+  assign padding_size = section.settings.padding_size | default: 'default'
+  assign has_cta = false
+  if section.settings.cta_label != blank and section.settings.cta_url != blank
+    assign has_cta = true
+  endif
+-%}
+
+<section class="home-image-text full-width home-image-text--bg-{{ background }} home-image-text--image-{{ image_side }} home-image-text--layout-{{ layout_style }} home-image-text--padding-{{ padding_size }}">
+  <div class="home-image-text__inner cham-container">
+    <div class="home-image-text__grid">
+      <div class="home-image-text__media-col" data-reveal>
+        <div class="home-image-text__media home-image-text__media--{{ image_frame }}">
+          {%- if section.settings.image != blank -%}
+            <img
+              src="{{ section.settings.image | image_url: width: 1200 }}"
+              srcset="{{ section.settings.image | image_url: width: 600 }} 600w, {{ section.settings.image | image_url: width: 1200 }} 1200w, {{ section.settings.image | image_url: width: 1800 }} 1800w"
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              alt="{{ section.settings.image.alt | escape }}"
+              width="{{ section.settings.image.width }}"
+              height="{{ section.settings.image.height }}"
+              loading="lazy"
+              decoding="async"
+              class="home-image-text__img"
+              style="object-position: {{ image_position }};"
+            >
+          {%- else -%}
+            <div class="home-image-text__placeholder" aria-hidden="true"></div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="home-image-text__copy-col" data-reveal data-reveal-delay="120">
+        <div class="home-image-text__copy">
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          {%- endif -%}
+
+          {%- if section.settings.heading_lead != blank or section.settings.heading_emphasis != blank -%}
+            <h2 class="home-image-text__heading font-display">
+              {{- section.settings.heading_lead -}}
+              {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+            </h2>
+          {%- endif -%}
+
+          {%- if section.settings.body != blank -%}
+            <div class="home-image-text__body">{{ section.settings.body }}</div>
+          {%- endif -%}
+
+          {%- if has_cta -%}
+            <a href="{{ section.settings.cta_url }}" class="home-image-text__cta home-image-text__cta--{{ section.settings.cta_style }}">
+              {{ section.settings.cta_label }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .home-image-text {
+    width: 100%;
+  }
+
+  .home-image-text--bg-default {
+    background-color: var(--background);
+  }
+
+  .home-image-text--bg-surface {
+    background-color: var(--surface);
+  }
+
+  /* === Contained variant (default) — 1400px max-width with page padding === */
+  .home-image-text--layout-contained .home-image-text__inner {
+    padding-block: 8rem;
+  }
+
+  @media (min-width: 1024px) {
+    .home-image-text--layout-contained .home-image-text__inner {
+      padding-block: 11rem;
+    }
+  }
+
+  .home-image-text--layout-contained.home-image-text--padding-compact .home-image-text__inner {
+    padding-block: 6rem;
+  }
+
+  @media (min-width: 1024px) {
+    .home-image-text--layout-contained.home-image-text--padding-compact .home-image-text__inner {
+      padding-block: 8rem;
+    }
+  }
+
+  .home-image-text__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .home-image-text__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Image right means: text first (order 1), image second (order 2) on desktop.
+     Image left means: image first (order 1), text second (order 2) on desktop. */
+  @media (min-width: 1024px) {
+    .home-image-text--image-right .home-image-text__media-col {
+      order: 2;
+    }
+    .home-image-text--image-right .home-image-text__copy-col {
+      order: 1;
+    }
+  }
+
+  /* Asymmetric copy padding mirrors React's `lg:pl-8` on image-left splits. */
+  @media (min-width: 1024px) {
+    .home-image-text--layout-contained.home-image-text--image-left .home-image-text__copy-col {
+      padding-inline-start: 2rem;
+    }
+  }
+
+  .home-image-text__media {
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--background);
+  }
+
+  .home-image-text__media--portrait {
+    aspect-ratio: 4 / 5;
+  }
+
+  .home-image-text__media--square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .home-image-text__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .home-image-text__placeholder {
+    aspect-ratio: 4 / 5;
+    background: linear-gradient(135deg, var(--surface), var(--muted));
+    width: 100%;
+  }
+
+  /* Don't cap the copy block — heading fills the column naturally (matching
+     React, where only the body <p> has max-w-md). The body keeps its own cap below. */
+  .home-image-text__copy {
+    max-width: none;
+  }
+
+  /* === Full-bleed variant — edge-to-edge 50/50 grid, surface bg lives on the copy column only === */
+  .home-image-text--layout-fullbleed .home-image-text__inner {
+    max-width: none;
+    padding-inline: 0;
+    padding-block: 0;
+  }
+
+  .home-image-text--layout-fullbleed .home-image-text__grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  @media (min-width: 1024px) {
+    .home-image-text--layout-fullbleed .home-image-text__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* In full-bleed, the section background is always default — surface lives on the copy column. */
+  .home-image-text--layout-fullbleed.home-image-text--bg-surface {
+    background-color: var(--background);
+  }
+
+  .home-image-text--layout-fullbleed .home-image-text__media-col {
+    position: relative;
+    aspect-ratio: 1 / 1;
+  }
+
+  @media (min-width: 1024px) {
+    .home-image-text--layout-fullbleed .home-image-text__media-col {
+      aspect-ratio: auto;
+      min-height: 640px;
+    }
+  }
+
+  .home-image-text--layout-fullbleed .home-image-text__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .home-image-text--layout-fullbleed .home-image-text__copy-col {
+    display: flex;
+    align-items: center;
+    padding: 6rem 2rem;
+  }
+
+  @media (min-width: 1024px) {
+    .home-image-text--layout-fullbleed .home-image-text__copy-col {
+      padding: 6rem 5rem;
+    }
+  }
+
+  .home-image-text--layout-fullbleed.home-image-text--bg-surface .home-image-text__copy-col {
+    background-color: var(--surface);
+  }
+
+  .home-image-text--layout-fullbleed .home-image-text__copy {
+    max-width: none;
+  }
+
+  .home-image-text__heading {
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    line-height: 1.05;
+    margin-top: 1.5rem;
+  }
+
+  .home-image-text__heading em {
+    color: var(--primary);
+    font-style: italic;
+  }
+
+  .home-image-text__body {
+    margin-top: 2rem;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    line-height: 1.65;
+    max-width: 28rem;
+  }
+
+  .home-image-text__body > p {
+    margin: 0;
+  }
+
+  .home-image-text__cta {
+    display: inline-block;
+    margin-top: 2.5rem;
+    padding: 1rem 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .home-image-text__cta--outline {
+    border: 1px solid var(--primary);
+    color: var(--primary);
+  }
+
+  .home-image-text__cta--outline:hover,
+  .home-image-text__cta--outline:focus-visible {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .home-image-text__cta--solid {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .home-image-text__cta--solid:hover,
+  .home-image-text__cta--solid:focus-visible {
+    background-color: var(--primary-glow);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.home_image_text.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "Layout style",
+      "info": "Contained centres the content in a 1400px frame. Full-bleed makes the image and copy each fill 50% of the viewport, edge-to-edge.",
+      "options": [
+        { "value": "contained", "label": "Contained" },
+        { "value": "fullbleed", "label": "Full-bleed (50/50)" }
+      ],
+      "default": "contained"
+    },
+    {
+      "type": "select",
+      "id": "padding_size",
+      "label": "Vertical padding",
+      "info": "Compact suits gift-edit-style sections; default suits storytelling splits.",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "compact", "label": "Compact" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "select",
+      "id": "image_side",
+      "label": "t:labels.image_side",
+      "options": [
+        { "value": "left", "label": "t:options.image_side.left" },
+        { "value": "right", "label": "t:options.image_side.right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "image_frame",
+      "label": "t:labels.image_frame",
+      "options": [
+        { "value": "natural", "label": "t:options.image_frame.natural" },
+        { "value": "portrait", "label": "t:options.image_frame.portrait" },
+        { "value": "square", "label": "t:options.image_frame.square" }
+      ],
+      "default": "natural"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:labels.image_position",
+      "options": [
+        { "value": "left center", "label": "t:options.alignment.left" },
+        { "value": "center center", "label": "t:options.alignment.center" },
+        { "value": "right center", "label": "t:options.alignment.right" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "t:labels.background",
+      "options": [
+        { "value": "default", "label": "t:options.background_variant.default" },
+        { "value": "surface", "label": "t:options.background_variant.surface" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "header",
+      "content": "t:general.content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "t:labels.body"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.cta_label"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "t:labels.cta_label"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "t:labels.cta_url"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "t:labels.text_style",
+      "options": [
+        { "value": "outline", "label": "Outline" },
+        { "value": "solid", "label": "Solid" }
+      ],
+      "default": "outline"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.home_image_text.presets_default"
+    }
+  ]
+}
+{% endschema %}

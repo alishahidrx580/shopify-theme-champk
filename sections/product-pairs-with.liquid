@@ -1,0 +1,157 @@
+{%- liquid
+  assign related = product.metafields.custom.related_products.value
+  assign products_to_show = section.settings.products_to_show | default: 3
+  assign view_all_url = section.settings.view_all_url
+  if view_all_url == blank
+    assign view_all_url = routes.all_products_collection_url
+  endif
+-%}
+
+{%- if related != blank and related.size > 0 -%}
+<section class="product-pairs-with full-width">
+  <div class="product-pairs-with__inner cham-container">
+    <div class="product-pairs-with__head">
+      <div data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="product-pairs-with__heading font-display">{{ section.settings.heading }}</h2>
+      </div>
+      {%- if section.settings.view_all_label != blank -%}
+        <a href="{{ view_all_url }}" class="product-pairs-with__view-all gold-link" data-reveal data-reveal-delay="100">
+          {{ section.settings.view_all_label }} →
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="product-pairs-with__grid">
+      {%- for p in related limit: products_to_show -%}
+        <div data-reveal data-reveal-delay="{{ forloop.index0 | times: 80 }}">
+          {%- render 'product-card', product: p -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-pairs-with {
+    width: 100%;
+    padding-block: 5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-pairs-with {
+      padding-bottom: 8rem;
+    }
+  }
+
+  .product-pairs-with__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-pairs-with__head {
+      margin-bottom: 4rem;
+    }
+  }
+
+  .product-pairs-with__heading {
+    margin-top: 1rem;
+    font-size: 2.25rem;
+    line-height: 1.05;
+  }
+
+  @media (min-width: 1024px) {
+    .product-pairs-with__heading {
+      font-size: 3rem;
+    }
+  }
+
+  .product-pairs-with__view-all {
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.6875rem;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    transition: color 0.3s ease;
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .product-pairs-with__view-all {
+      display: inline-block;
+    }
+  }
+
+  .product-pairs-with__view-all:hover {
+    color: var(--primary);
+  }
+
+  .product-pairs-with__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2rem;
+    row-gap: 3.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .product-pairs-with__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.product_pairs_with.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Pairs Beautifully With"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading_lead",
+      "default": "Complete the ritual"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "t:labels.products_to_show",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "t:labels.view_all_label",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": "t:labels.view_all_url"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product_pairs_with.presets_default"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
