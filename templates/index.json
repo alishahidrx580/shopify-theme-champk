@@ -243,6 +243,7 @@
     "cover-beyond": {
       "type": "home-cover-cta",
       "settings": {
+        "image": "shopify://shop_images/Prompt_Recreate_this_reference_image_as_202605231949.jpg",
         "eyebrow": "Beyond Cosmetics",
         "heading_lead": "Each product activates a",
         "heading_emphasis": "specific skin function.",
