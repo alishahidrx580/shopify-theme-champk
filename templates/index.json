@@ -149,6 +149,7 @@
       "settings": {
         "layout_style": "fullbleed",
         "padding_size": "default",
+        "image": "shopify://shop_images/Here_s_the_same_prompt_adjusted_202605231931.jpg",
         "image_side": "left",
         "image_frame": "natural",
         "image_position": "center center",
