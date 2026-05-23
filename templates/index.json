@@ -281,9 +281,10 @@
       "settings": {
         "layout_style": "contained",
         "padding_size": "compact",
+        "image": "shopify://shop_images/Prompt_Create_a_hyper-realistic_4K_editorial_202605232006.jpg",
         "image_side": "left",
         "image_frame": "portrait",
-        "image_position": "left center",
+        "image_position": "center center",
         "background": "surface",
         "eyebrow": "The Gift Edit",
         "heading_lead": "Gift of",
