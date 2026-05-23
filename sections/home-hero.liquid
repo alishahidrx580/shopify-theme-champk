@@ -212,40 +212,30 @@
     object-position: 50% 50%;
     opacity: 0;
     transition: opacity var(--hero-fade-ms, 800ms) ease-in-out;
-    transform: scale(var(--kb-zoom-from, 1));
     transform-origin: 50% 50%;
     will-change: opacity, transform;
   }
 
   .home-hero__image.is-active {
     opacity: 1;
-    /* Animation runs continuously while the slide is active: zoom in, zoom
-       out, repeat. `alternate` reverses direction each iteration so motion
-       never visibly stops. Duration controls one half-cycle (in OR out). */
-    animation: home-hero-kb var(--kb-duration, 18s) ease-in-out infinite alternate;
+    /* Transform is driven by JS for a continuous zoom flow across slides.
+       No CSS animation here — JS sets transform on every frame. */
   }
 
   /* Pan direction varies by slide so consecutive images don't feel identical.
      Each direction uses a different transform-origin to shift the zoom focus. */
-  .home-hero__image[data-kb-dir="0"].is-active { transform-origin: 70% 30%; } /* zooms toward top-right */
-  .home-hero__image[data-kb-dir="1"].is-active { transform-origin: 30% 70%; } /* zooms toward bottom-left */
-  .home-hero__image[data-kb-dir="2"].is-active { transform-origin: 30% 30%; } /* zooms toward top-left */
-  .home-hero__image[data-kb-dir="3"].is-active { transform-origin: 70% 70%; } /* zooms toward bottom-right */
-
-  @keyframes home-hero-kb {
-    from { transform: scale(var(--kb-zoom-from, 1)); }
-    to   { transform: scale(var(--kb-zoom-to, 1.06)); }
-  }
+  .home-hero__image[data-kb-dir="0"] { transform-origin: 70% 30%; } /* zooms toward top-right */
+  .home-hero__image[data-kb-dir="1"] { transform-origin: 30% 70%; } /* zooms toward bottom-left */
+  .home-hero__image[data-kb-dir="2"] { transform-origin: 30% 30%; } /* zooms toward top-left */
+  .home-hero__image[data-kb-dir="3"] { transform-origin: 70% 70%; } /* zooms toward bottom-right */
 
   .home-hero--no-motion .home-hero__image.is-active {
-    animation: none;
-    transform: scale(1.02);
+    transform: scale(1.02) !important;
   }
 
   .home-hero__image--placeholder {
     background: linear-gradient(135deg, oklch(0.25 0.02 70), oklch(0.15 0.01 60));
     opacity: 1;
-    animation: none;
   }
 
   .home-hero__overlay {
@@ -390,39 +380,129 @@
     const heroes = Array.from(document.querySelectorAll('.home-hero'));
 
     heroes.forEach((root) => {
-      const slides = root.querySelectorAll('.home-hero__image');
-      if (slides.length <= 1) return;
+      const slides = Array.from(root.querySelectorAll('.home-hero__image'));
+      if (slides.length === 0) return;
 
       const rotationMs = parseInt(root.dataset.rotationMs, 10) || 6000;
       const fadeMs = parseInt(root.dataset.fadeMs, 10) || 800;
 
+      // Apply fade duration to each slide.
       slides.forEach((s) => s.style.setProperty('--hero-fade-ms', fadeMs + 'ms'));
 
+      // Read zoom range from CSS custom properties set in Liquid.
+      const cs = window.getComputedStyle(root);
+      const zoomFrom = parseFloat(cs.getPropertyValue('--kb-zoom-from')) || 1.0;
+      const zoomTo = parseFloat(cs.getPropertyValue('--kb-zoom-to')) || 1.06;
+
+      // If motion is effectively off (zoom range is zero), just set static.
+      const motionOff = root.classList.contains('home-hero--no-motion') || Math.abs(zoomTo - zoomFrom) < 0.001;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (motionOff || reducedMotion) {
+        slides.forEach((s, i) => {
+          s.style.transform = 'scale(1.02)';
+          if (i === 0) s.classList.add('is-active');
+        });
+        // Still rotate if multiple slides, just without zoom.
+        if (slides.length <= 1) return;
+        let current = 0;
+        const tick = () => {
+          const next = (current + 1) % slides.length;
+          slides[current].classList.remove('is-active');
+          slides[next].classList.add('is-active');
+          current = next;
+        };
+        const t = window.setInterval(tick, rotationMs);
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) window.clearInterval(t);
+        });
+        return;
+      }
+
+      // ===== Continuous zoom across slides =====
+      // A single shared `zoom` value oscillates between zoomFrom and zoomTo.
+      // Direction reverses on each slide change so the next slide picks up
+      // exactly where the previous left off, then heads back the other way.
+      //
+      // - direction = +1: zooming IN  (toward zoomTo)
+      // - direction = -1: zooming OUT (toward zoomFrom)
+      //
+      // Speed is chosen so that one full traversal (zoomFrom -> zoomTo or vice
+      // versa) takes `rotationMs` — meaning each slide does exactly one half
+      // of a zoom cycle while it's visible. This guarantees the handoff
+      // happens cleanly at the extremes.
+
       let current = 0;
+      let zoom = zoomFrom;
+      let direction = 1; // start by zooming in
+      let lastTs = null;
+      let rafId = null;
       let timer = null;
 
-      function showSlide(next) {
+      // Initialize: first slide visible, all set to starting zoom.
+      slides.forEach((s, i) => {
+        s.style.transform = 'scale(' + zoomFrom + ')';
+        if (i === 0) s.classList.add('is-active');
+      });
+
+      function applyTransformToAll() {
+        // Apply the current zoom to every slide so the outgoing slide stays
+        // at the same scale during the crossfade (no snap), and the incoming
+        // slide is already at the matching scale before it fades in.
+        const t = 'scale(' + zoom.toFixed(4) + ')';
+        for (let i = 0; i < slides.length; i++) {
+          slides[i].style.transform = t;
+        }
+      }
+
+      function frame(ts) {
+        if (lastTs === null) lastTs = ts;
+        const dt = ts - lastTs;
+        lastTs = ts;
+
+        // Travel one full (zoomFrom <-> zoomTo) range every rotationMs.
+        const range = zoomTo - zoomFrom;
+        const speed = range / rotationMs; // per ms
+        zoom += direction * speed * dt;
+
+        // Clamp at the extremes (the rotation tick handles direction flip,
+        // but this guards against drift if a tick is delayed).
+        if (zoom > zoomTo) zoom = zoomTo;
+        if (zoom < zoomFrom) zoom = zoomFrom;
+
+        applyTransformToAll();
+        rafId = window.requestAnimationFrame(frame);
+      }
+
+      function showNext() {
+        const next = (current + 1) % slides.length;
         if (next === current) return;
+
+        // Crossfade: outgoing fades out, incoming fades in.
         slides[current].classList.remove('is-active');
-        // Force reflow so the Ken Burns animation restarts when the slide
-        // becomes active again on the next cycle.
-        void slides[next].offsetWidth;
         slides[next].classList.add('is-active');
+
+        // Reverse zoom direction so the new slide heads back the other way.
+        direction *= -1;
         current = next;
       }
 
-      function tick() {
-        const next = (current + 1) % slides.length;
-        showSlide(next);
+      function startLoop() {
+        if (rafId === null) {
+          lastTs = null;
+          rafId = window.requestAnimationFrame(frame);
+        }
+        if (timer === null && slides.length > 1) {
+          timer = window.setInterval(showNext, rotationMs);
+        }
       }
 
-      function start() {
-        stop();
-        timer = window.setInterval(tick, rotationMs);
-      }
-
-      function stop() {
-        if (timer) {
+      function stopLoop() {
+        if (rafId !== null) {
+          window.cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+        if (timer !== null) {
           window.clearInterval(timer);
           timer = null;
         }
@@ -430,13 +510,13 @@
 
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
-          stop();
+          stopLoop();
         } else {
-          start();
+          startLoop();
         }
       });
 
-      start();
+      startLoop();
     });
   })();
 {% endjavascript %}
