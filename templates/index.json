@@ -12,6 +12,14 @@
     "hero": {
       "type": "home-hero",
       "blocks": {
+        "hero_image_pHnHmi": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Good_thinking___if_Nano_202605231602.jpg",
+            "position_x": 50,
+            "position_y": 1
+          }
+        },
         "hero_image_h474QN": {
           "type": "hero_image",
           "settings": {
@@ -38,6 +46,7 @@
         }
       },
       "block_order": [
+        "hero_image_pHnHmi",
         "hero_image_h474QN",
         "hero_image_MG9Trz",
         "hero_image_cVJWxQ"
