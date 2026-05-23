@@ -37,7 +37,7 @@
         "position_x": 50,
         "position_y": 50,
         "rotation_seconds": 7,
-        "fade_ms": 1200,
+        "fade_ms": 800,
         "kb_preset": "editorial",
         "kb_zoom_to": 110,
         "kb_duration_s": 14,
