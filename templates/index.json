@@ -17,7 +17,7 @@
           "settings": {
             "image": "shopify://shop_images/Woman_with_a_glowing_skin.jpg",
             "position_x": 50,
-            "position_y": 50
+            "position_y": 4
           }
         }
       },
@@ -26,7 +26,7 @@
       ],
       "settings": {
         "position_x": 50,
-        "position_y": 100,
+        "position_y": 50,
         "rotation_seconds": 6,
         "fade_ms": 800,
         "eyebrow": "Developed with French Formulation Standards",
