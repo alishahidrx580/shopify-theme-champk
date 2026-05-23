@@ -14,15 +14,11 @@
       "blocks": {
         "hero_image_iEF4Hp": {
           "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Cover-11.jpg"
-          }
+          "settings": {}
         },
         "hero_image_df7R8y": {
           "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Cover-8.jpg"
-          }
+          "settings": {}
         },
         "hero_image_MbEFeG": {
           "type": "hero_image",
@@ -30,39 +26,27 @@
         },
         "hero_image_tjPBqK": {
           "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Cover-10.jpg"
-          }
+          "settings": {}
         },
         "hero_image_cVJWxQ": {
           "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Cover-4.jpg"
-          }
+          "settings": {}
         },
         "hero_image_zWA4zA": {
           "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Cover-9.jpg"
-          }
+          "settings": {}
         },
         "hero_image_iUmdEi": {
           "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Cover-7.jpg"
-          }
+          "settings": {}
         },
         "hero_image_aFDx6y": {
           "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Cover-2.jpg"
-          }
+          "settings": {}
         },
         "hero_image_xzi7wF": {
           "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Cover-6.jpg"
-          }
+          "settings": {}
         }
       },
       "block_order": [
@@ -77,7 +61,6 @@
         "hero_image_xzi7wF"
       ],
       "settings": {
-        "image": "shopify://shop_images/Cover-5.jpg",
         "eyebrow": "Developed with French Formulation Standards",
         "heading_lead": "Intelligent Skincare.",
         "heading_break": true,
@@ -94,7 +77,7 @@
     "featured-products": {
       "type": "home-featured-products",
       "settings": {
-        "eyebrow": "The Edit",
+        "eyebrow": "The Collection",
         "heading_lead": "The Radiance",
         "heading_emphasis": "Library",
         "collection": "",
@@ -151,7 +134,6 @@
       "settings": {
         "layout_style": "fullbleed",
         "padding_size": "default",
-        "image": "shopify://shop_images/Formulated_for_natural_radiance_jpg.jpg",
         "image_side": "left",
         "image_frame": "natural",
         "image_position": "center center",
@@ -209,7 +191,6 @@
       "settings": {
         "layout_style": "contained",
         "padding_size": "default",
-        "image": "shopify://shop_images/Graphic_jpg.jpg",
         "image_side": "left",
         "image_frame": "natural",
         "image_position": "center center",
@@ -228,7 +209,6 @@
       "settings": {
         "layout_style": "contained",
         "padding_size": "default",
-        "image": "shopify://shop_images/cream.jpg",
         "image_side": "right",
         "image_frame": "natural",
         "image_position": "center center",
@@ -245,7 +225,6 @@
     "cover-beyond": {
       "type": "home-cover-cta",
       "settings": {
-        "image": "shopify://shop_images/hand.jpg",
         "eyebrow": "Beyond Cosmetics",
         "heading_lead": "Each product activates a",
         "heading_emphasis": "specific skin function.",
@@ -264,7 +243,6 @@
       "settings": {
         "layout_style": "contained",
         "padding_size": "default",
-        "image": "shopify://shop_images/face.jpg",
         "image_side": "left",
         "image_frame": "natural",
         "image_position": "center center",
@@ -283,7 +261,6 @@
       "settings": {
         "layout_style": "contained",
         "padding_size": "compact",
-        "image": "shopify://shop_images/Gift_of_lasting-radience_jpg.jpg",
         "image_side": "left",
         "image_frame": "portrait",
         "image_position": "left center",
@@ -354,7 +331,6 @@
     "cover-ritual": {
       "type": "home-cover-cta",
       "settings": {
-        "image": "shopify://shop_images/ritual.jpg",
         "eyebrow": "The Ritual",
         "heading_lead": "Skincare that",
         "heading_emphasis": "works with",
