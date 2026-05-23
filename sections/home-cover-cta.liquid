@@ -1,19 +1,64 @@
+{%- liquid
+  # Resolve desktop and mobile image variants. Mobile falls back to desktop
+  # when its own image isn't set, so existing sections keep working unchanged.
+  assign desktop_img = section.settings.image
+  assign mobile_img = section.settings.image_mobile
+
+  if desktop_img == blank and mobile_img != blank
+    assign desktop_img = mobile_img
+  endif
+  if mobile_img == blank and desktop_img != blank
+    assign mobile_img = desktop_img
+  endif
+
+  # Focal points: mobile falls back to desktop when not explicitly set.
+  assign pos_x = section.settings.position_x | default: 50
+  assign pos_y = section.settings.position_y | default: 50
+  assign pos_x_m = section.settings.position_x_mobile | default: section.settings.position_x | default: 50
+  assign pos_y_m = section.settings.position_y_mobile | default: section.settings.position_y | default: 50
+
+  # Heights: mobile falls back to desktop when not explicitly set.
+  assign height_svh_m = section.settings.height_svh_mobile | default: section.settings.height_svh
+  assign min_height_px_m = section.settings.min_height_px_mobile | default: section.settings.min_height_px
+
+  # Overlay: mobile falls back to desktop when not explicitly set. Helpful when
+  # text needs to be more readable over a tighter mobile crop.
+  assign overlay_m = section.settings.overlay_strength_mobile | default: section.settings.overlay_strength
+-%}
+
 <section
   class="home-cover-cta full-width home-cover-cta--align-{{ section.settings.align }}"
-  style="--height-svh: {{ section.settings.height_svh }}svh; --min-height-px: {{ section.settings.min_height_px }}px; --overlay-from: {{ section.settings.overlay_strength | divided_by: 100.0 }};"
+  style="
+    --height-svh: {{ section.settings.height_svh }}svh;
+    --min-height-px: {{ section.settings.min_height_px }}px;
+    --height-svh-m: {{ height_svh_m }}svh;
+    --min-height-px-m: {{ min_height_px_m }}px;
+    --overlay-from: {{ section.settings.overlay_strength | divided_by: 100.0 }};
+    --overlay-from-m: {{ overlay_m | divided_by: 100.0 }};
+  "
 >
-  {%- if section.settings.image != blank -%}
-    <img
-      src="{{ section.settings.image | image_url: width: 1920 }}"
-      srcset="{{ section.settings.image | image_url: width: 800 }} 800w, {{ section.settings.image | image_url: width: 1280 }} 1280w, {{ section.settings.image | image_url: width: 1920 }} 1920w, {{ section.settings.image | image_url: width: 2560 }} 2560w"
-      sizes="100vw"
-      alt="{{ section.settings.image.alt | escape }}"
-      width="{{ section.settings.image.width }}"
-      height="{{ section.settings.image.height }}"
-      loading="lazy"
-      decoding="async"
-      class="home-cover-cta__image"
-    >
+  {%- if desktop_img != blank or mobile_img != blank -%}
+    <picture class="home-cover-cta__picture">
+      {%- if mobile_img != blank -%}
+        <source
+          media="(max-width: 767px)"
+          srcset="{{ mobile_img | image_url: width: 600 }} 600w, {{ mobile_img | image_url: width: 900 }} 900w, {{ mobile_img | image_url: width: 1200 }} 1200w"
+          sizes="100vw"
+        >
+      {%- endif -%}
+      <img
+        src="{{ desktop_img | image_url: width: 1920 }}"
+        srcset="{{ desktop_img | image_url: width: 800 }} 800w, {{ desktop_img | image_url: width: 1280 }} 1280w, {{ desktop_img | image_url: width: 1920 }} 1920w, {{ desktop_img | image_url: width: 2560 }} 2560w"
+        sizes="100vw"
+        alt="{{ desktop_img.alt | escape }}"
+        width="{{ desktop_img.width }}"
+        height="{{ desktop_img.height }}"
+        loading="lazy"
+        decoding="async"
+        class="home-cover-cta__image"
+        style="--pos-x: {{ pos_x }}%; --pos-y: {{ pos_y }}%; --pos-x-m: {{ pos_x_m }}%; --pos-y-m: {{ pos_y_m }}%;"
+      >
+    </picture>
   {%- else -%}
     <div class="home-cover-cta__image home-cover-cta__image--placeholder" aria-hidden="true"></div>
   {%- endif -%}
@@ -50,8 +95,25 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    height: var(--height-svh, 60svh);
-    min-height: var(--min-height-px, 460px);
+    /* Mobile-first sizing. */
+    height: var(--height-svh-m, 60svh);
+    min-height: var(--min-height-px-m, 460px);
+  }
+
+  @media (min-width: 768px) {
+    .home-cover-cta {
+      height: var(--height-svh, 60svh);
+      min-height: var(--min-height-px, 460px);
+    }
+  }
+
+  /* <picture> is a block; restyle it to behave like the previous <img>. */
+  .home-cover-cta__picture {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 
   .home-cover-cta__image {
@@ -60,36 +122,62 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    /* Mobile-first focal point. */
+    object-position: var(--pos-x-m, 50%) var(--pos-y-m, 50%);
+  }
+
+  @media (min-width: 768px) {
+    .home-cover-cta__image {
+      object-position: var(--pos-x, 50%) var(--pos-y, 50%);
+    }
   }
 
   .home-cover-cta__image--placeholder {
     background: linear-gradient(135deg, oklch(0.3 0.03 70), oklch(0.15 0.01 60));
   }
 
-  /* Default overlay ratios match React's beyond-cosmetics gradient (from-black/X
-     via-black/0.43X to-black/0.14X). Bottom-aligned content needs a strong floor
-     and a light top. */
+  /* Default overlay (mobile-first, uses mobile overlay strength). */
   .home-cover-cta__overlay {
     position: absolute;
     inset: 0;
     background: linear-gradient(
       to top,
-      rgb(0 0 0 / var(--overlay-from, 0.7)),
-      rgb(0 0 0 / calc(var(--overlay-from, 0.7) * 0.43)) 50%,
-      rgb(0 0 0 / calc(var(--overlay-from, 0.7) * 0.14))
+      rgb(0 0 0 / var(--overlay-from-m, 0.7)),
+      rgb(0 0 0 / calc(var(--overlay-from-m, 0.7) * 0.43)) 50%,
+      rgb(0 0 0 / calc(var(--overlay-from-m, 0.7) * 0.14))
     );
   }
 
-  /* Center-aligned content needs darker midtones and top to keep text readable
-     across the whole visual area — matches React's ritual gradient
-     (from-black via-black/55 to-black/40). */
+  @media (min-width: 768px) {
+    .home-cover-cta__overlay {
+      background: linear-gradient(
+        to top,
+        rgb(0 0 0 / var(--overlay-from, 0.7)),
+        rgb(0 0 0 / calc(var(--overlay-from, 0.7) * 0.43)) 50%,
+        rgb(0 0 0 / calc(var(--overlay-from, 0.7) * 0.14))
+      );
+    }
+  }
+
+  /* Center-aligned overlay (stronger floor + top for readability). */
   .home-cover-cta--align-center .home-cover-cta__overlay {
     background: linear-gradient(
       to top,
-      rgb(0 0 0 / var(--overlay-from, 1)),
-      rgb(0 0 0 / calc(var(--overlay-from, 1) * 0.55)) 50%,
-      rgb(0 0 0 / calc(var(--overlay-from, 1) * 0.40))
+      rgb(0 0 0 / var(--overlay-from-m, 1)),
+      rgb(0 0 0 / calc(var(--overlay-from-m, 1) * 0.55)) 50%,
+      rgb(0 0 0 / calc(var(--overlay-from-m, 1) * 0.40))
     );
+  }
+
+  @media (min-width: 768px) {
+    .home-cover-cta--align-center .home-cover-cta__overlay {
+      background: linear-gradient(
+        to top,
+        rgb(0 0 0 / var(--overlay-from, 1)),
+        rgb(0 0 0 / calc(var(--overlay-from, 1) * 0.55)) 50%,
+        rgb(0 0 0 / calc(var(--overlay-from, 1) * 0.40))
+      );
+    }
   }
 
   .home-cover-cta__inner {
@@ -97,7 +185,13 @@
     inset: 0;
     display: flex;
     align-items: flex-end;
-    padding-block: 4rem;
+    padding-block: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .home-cover-cta__inner {
+      padding-block: 4rem;
+    }
   }
 
   @media (min-width: 1024px) {
@@ -118,8 +212,6 @@
     align-items: flex-end;
   }
 
-  /* Default content width matches React's max-w-xl on the beyond-cosmetics cover.
-     The center-aligned variant (ritual hero) uses max-w-2xl. */
   .home-cover-cta__content {
     max-width: 36rem;
   }
@@ -129,15 +221,28 @@
   }
 
   .home-cover-cta__heading {
-    margin-top: 1.5rem;
-    font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+    margin-top: 1rem;
+    font-size: clamp(2rem, 8vw, 2.75rem);
     line-height: 1.05;
     color: #fff;
   }
 
+  @media (min-width: 768px) {
+    .home-cover-cta__heading {
+      margin-top: 1.5rem;
+      font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+    }
+  }
+
   .home-cover-cta--align-center .home-cover-cta__heading {
-    font-size: clamp(3rem, 6.5vw, 4.5rem);
+    font-size: clamp(2.25rem, 9vw, 3rem);
     line-height: 1;
+  }
+
+  @media (min-width: 768px) {
+    .home-cover-cta--align-center .home-cover-cta__heading {
+      font-size: clamp(3rem, 6.5vw, 4.5rem);
+    }
   }
 
   .home-cover-cta__heading em {
@@ -146,10 +251,19 @@
   }
 
   .home-cover-cta__body {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
     color: rgb(255 255 255 / 0.85);
-    line-height: 1.65;
+    line-height: 1.6;
     max-width: 28rem;
+    font-size: 0.9375rem;
+  }
+
+  @media (min-width: 768px) {
+    .home-cover-cta__body {
+      margin-top: 1.5rem;
+      line-height: 1.65;
+      font-size: 1rem;
+    }
   }
 
   .home-cover-cta__body > p {
@@ -158,15 +272,23 @@
 
   .home-cover-cta__cta {
     display: inline-block;
-    margin-top: 2.5rem;
-    padding: 1rem 2.25rem;
+    margin-top: 1.75rem;
+    padding: 0.875rem 1.75rem;
     background-color: var(--primary);
     color: var(--primary-foreground);
     text-transform: uppercase;
     letter-spacing: 0.22em;
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-weight: 500;
     transition: background-color 0.3s ease;
+  }
+
+  @media (min-width: 768px) {
+    .home-cover-cta__cta {
+      margin-top: 2.5rem;
+      padding: 1rem 2.25rem;
+      font-size: 0.75rem;
+    }
   }
 
   .home-cover-cta__cta:hover,
@@ -181,9 +303,65 @@
   "tag": "section",
   "settings": [
     {
+      "type": "header",
+      "content": "Desktop image"
+    },
+    {
       "type": "image_picker",
       "id": "image",
       "label": "t:labels.image"
+    },
+    {
+      "type": "range",
+      "id": "position_x",
+      "label": "Desktop — horizontal focal point",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "position_y",
+      "label": "Desktop — vertical focal point",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "0 = top, 50 = center, 100 = bottom."
+    },
+    {
+      "type": "header",
+      "content": "Mobile image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image (optional)",
+      "info": "Recommended: 9:16 or 3:4 vertical crop. If empty, the desktop image is used with the mobile focal point below."
+    },
+    {
+      "type": "range",
+      "id": "position_x_mobile",
+      "label": "Mobile — horizontal focal point",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "position_y_mobile",
+      "label": "Mobile — vertical focal point",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Lower this (25–35) to keep the subject visible when a wide desktop image gets cropped to mobile."
     },
     {
       "type": "header",
@@ -227,7 +405,7 @@
     },
     {
       "type": "header",
-      "content": "t:general.layout"
+      "content": "Layout"
     },
     {
       "type": "select",
@@ -241,9 +419,13 @@
       "default": "end"
     },
     {
+      "type": "header",
+      "content": "Layout — Desktop"
+    },
+    {
       "type": "range",
       "id": "height_svh",
-      "label": "t:labels.min_height_svh",
+      "label": "Desktop height (svh)",
       "min": 40,
       "max": 100,
       "step": 5,
@@ -253,7 +435,7 @@
     {
       "type": "range",
       "id": "min_height_px",
-      "label": "t:labels.min_height_px",
+      "label": "Desktop min height (px)",
       "min": 360,
       "max": 800,
       "step": 20,
@@ -263,12 +445,48 @@
     {
       "type": "range",
       "id": "overlay_strength",
-      "label": "t:labels.overlay_strength",
+      "label": "Desktop overlay strength",
       "min": 0,
       "max": 100,
       "step": 5,
       "unit": "%",
       "default": 70
+    },
+    {
+      "type": "header",
+      "content": "Layout — Mobile"
+    },
+    {
+      "type": "range",
+      "id": "height_svh_mobile",
+      "label": "Mobile height (svh)",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "svh",
+      "default": 65,
+      "info": "Lower this if the section feels too tall on phones."
+    },
+    {
+      "type": "range",
+      "id": "min_height_px_mobile",
+      "label": "Mobile min height (px)",
+      "min": 320,
+      "max": 700,
+      "step": 20,
+      "unit": "px",
+      "default": 420
+    },
+    {
+      "type": "range",
+      "id": "overlay_strength_mobile",
+      "label": "Mobile overlay strength",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 75,
+      "info": "Often needs to be a touch stronger than desktop so the heading stays readable over tight mobile crops."
     }
   ],
   "presets": [
