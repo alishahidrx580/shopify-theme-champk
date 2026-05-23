@@ -244,6 +244,10 @@
       "type": "home-cover-cta",
       "settings": {
         "image": "shopify://shop_images/Prompt_Recreate_this_reference_image_as_202605231949.jpg",
+        "position_x": 50,
+        "position_y": 50,
+        "position_x_mobile": 50,
+        "position_y_mobile": 50,
         "eyebrow": "Beyond Cosmetics",
         "heading_lead": "Each product activates a",
         "heading_emphasis": "specific skin function.",
@@ -254,7 +258,10 @@
         "align": "end",
         "height_svh": 60,
         "min_height_px": 460,
-        "overlay_strength": 70
+        "overlay_strength": 70,
+        "height_svh_mobile": 65,
+        "min_height_px_mobile": 420,
+        "overlay_strength_mobile": 75
       }
     },
     "split-not-cosmetic": {
@@ -353,6 +360,11 @@
       "type": "home-cover-cta",
       "settings": {
         "image": "shopify://shop_images/Prompt_Recreate_this_reference_image_as_202605232010.jpg",
+        "position_x": 50,
+        "position_y": 50,
+        "image_mobile": "shopify://shop_images/Reframe_and_recompose_this_16_9_202605232043.jpg",
+        "position_x_mobile": 50,
+        "position_y_mobile": 50,
         "eyebrow": "The Ritual",
         "heading_lead": "Skincare that",
         "heading_emphasis": "works with",
@@ -363,7 +375,10 @@
         "align": "center",
         "height_svh": 80,
         "min_height_px": 520,
-        "overlay_strength": 100
+        "overlay_strength": 100,
+        "height_svh_mobile": 65,
+        "min_height_px_mobile": 420,
+        "overlay_strength_mobile": 75
       }
     },
     "newsletter": {
