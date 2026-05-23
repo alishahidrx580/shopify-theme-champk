@@ -18,10 +18,6 @@
             "image": "shopify://shop_images/Woman_with_a_glowing_skin.jpg"
           }
         },
-        "hero_image_zWA4zA": {
-          "type": "hero_image",
-          "settings": {}
-        },
         "hero_image_iUmdEi": {
           "type": "hero_image",
           "settings": {}
@@ -37,7 +33,6 @@
       },
       "block_order": [
         "hero_image_cVJWxQ",
-        "hero_image_zWA4zA",
         "hero_image_iUmdEi",
         "hero_image_aFDx6y",
         "hero_image_xzi7wF"
