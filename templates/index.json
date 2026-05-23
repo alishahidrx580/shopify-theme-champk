@@ -226,6 +226,7 @@
       "settings": {
         "layout_style": "contained",
         "padding_size": "default",
+        "image": "shopify://shop_images/Prompt_Recreate_this_reference_image_as_202605231941.jpg",
         "image_side": "right",
         "image_frame": "natural",
         "image_position": "center center",
