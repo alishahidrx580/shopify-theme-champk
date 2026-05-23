@@ -15,7 +15,9 @@
         "hero_image_cVJWxQ": {
           "type": "hero_image",
           "settings": {
-            "image": "shopify://shop_images/Woman_with_a_glowing_skin.jpg"
+            "image": "shopify://shop_images/Woman_with_a_glowing_skin.jpg",
+            "position_x": 50,
+            "position_y": 50
           }
         }
       },
@@ -23,6 +25,10 @@
         "hero_image_cVJWxQ"
       ],
       "settings": {
+        "position_x": 50,
+        "position_y": 100,
+        "rotation_seconds": 6,
+        "fade_ms": 800,
         "eyebrow": "Developed with French Formulation Standards",
         "heading_lead": "Intelligent Skincare.",
         "heading_break": true,
