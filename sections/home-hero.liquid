@@ -1,10 +1,45 @@
 {%- liquid
   # Build the hero image pool: section image + non-blank blocks.
-  # Rotation now happens client-side at a configurable interval so the
-  # visitor sees images change live, not just between page loads.
+  # Rotation happens client-side at a configurable interval, with Ken Burns
+  # (slow zoom + gentle pan) motion on every slide for a cinematic feel.
 
   assign rotation_seconds = section.settings.rotation_seconds | default: 6
   assign fade_ms = section.settings.fade_ms | default: 800
+
+  # Ken Burns preset resolution.
+  # Each preset defines: zoom_from, zoom_to, duration_s.
+  assign kb_preset = section.settings.kb_preset | default: 'whisper'
+
+  if kb_preset == 'whisper'
+    assign kb_zoom_from = 1.00
+    assign kb_zoom_to = 1.06
+    assign kb_duration_s = 18
+  elsif kb_preset == 'editorial'
+    assign kb_zoom_from = 1.00
+    assign kb_zoom_to = 1.10
+    assign kb_duration_s = 14
+  elsif kb_preset == 'cinematic'
+    assign kb_zoom_from = 1.00
+    assign kb_zoom_to = 1.18
+    assign kb_duration_s = 11
+  elsif kb_preset == 'lively'
+    assign kb_zoom_from = 1.00
+    assign kb_zoom_to = 1.25
+    assign kb_duration_s = 9
+  elsif kb_preset == 'custom'
+    assign kb_zoom_from = 1.00
+    assign kb_zoom_to_raw = section.settings.kb_zoom_to | default: 110
+    assign kb_zoom_to = kb_zoom_to_raw | times: 1.0 | divided_by: 100.0
+    assign kb_duration_s = section.settings.kb_duration_s | default: 14
+  elsif kb_preset == 'off'
+    assign kb_zoom_from = 1.00
+    assign kb_zoom_to = 1.00
+    assign kb_duration_s = 1
+  else
+    assign kb_zoom_from = 1.00
+    assign kb_zoom_to = 1.06
+    assign kb_duration_s = 18
+  endif
 
   # Determine first/initial image for SSR (LCP-friendly).
   assign initial_image = section.settings.image
@@ -24,14 +59,20 @@
 -%}
 
 <section
-  class="home-hero full-width"
-  style="--min-height-svh: {{ section.settings.min_height_svh }}svh; --min-height-px: {{ section.settings.min_height_px }}px;"
+  class="home-hero full-width{% if kb_preset == 'off' %} home-hero--no-motion{% endif %}"
+  style="
+    --min-height-svh: {{ section.settings.min_height_svh }}svh;
+    --min-height-px: {{ section.settings.min_height_px }}px;
+    --kb-zoom-from: {{ kb_zoom_from }};
+    --kb-zoom-to: {{ kb_zoom_to }};
+    --kb-duration: {{ kb_duration_s }}s;
+  "
   data-rotation-ms="{{ rotation_seconds | times: 1000 }}"
   data-fade-ms="{{ fade_ms }}"
 >
   <div class="home-hero__media" aria-hidden="true">
     {%- if initial_image != blank -%}
-      {%- # First slide: eager-loaded for LCP -%}
+      {%- # First slide: eager-loaded for LCP. data-kb-dir cycles 0–3 to vary pan direction. -%}
       <img
         src="{{ initial_image | image_url: width: 1920 }}"
         srcset="{{ initial_image | image_url: width: 800 }} 800w, {{ initial_image | image_url: width: 1280 }} 1280w, {{ initial_image | image_url: width: 1920 }} 1920w, {{ initial_image | image_url: width: 2560 }} 2560w"
@@ -45,17 +86,17 @@
         class="home-hero__image is-active"
         style="object-position: {{ initial_pos_x }}% {{ initial_pos_y }}%;"
         data-slide="0"
+        data-kb-dir="0"
       >
 
-      {%- # Remaining slides: lazy-loaded, faded in by JS on rotation -%}
       {%- assign slide_index = 1 -%}
 
-      {%- # If section image was used as initial, include all blocks next -%}
       {%- if section.settings.image != blank -%}
         {%- for block in section.blocks -%}
           {%- if block.settings.image != blank -%}
             {%- assign bx = block.settings.position_x | default: 50 -%}
             {%- assign by = block.settings.position_y | default: 50 -%}
+            {%- assign kb_dir = slide_index | modulo: 4 -%}
             <img
               src="{{ block.settings.image | image_url: width: 1920 }}"
               srcset="{{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1280 }} 1280w, {{ block.settings.image | image_url: width: 1920 }} 1920w, {{ block.settings.image | image_url: width: 2560 }} 2560w"
@@ -68,12 +109,12 @@
               class="home-hero__image"
               style="object-position: {{ bx }}% {{ by }}%;"
               data-slide="{{ slide_index }}"
+              data-kb-dir="{{ kb_dir }}"
             >
             {%- assign slide_index = slide_index | plus: 1 -%}
           {%- endif -%}
         {%- endfor -%}
       {%- else -%}
-        {%- # Section image was blank: first block is the initial, render remaining blocks -%}
         {%- assign first_block_used = false -%}
         {%- for block in section.blocks -%}
           {%- if block.settings.image != blank -%}
@@ -82,6 +123,7 @@
             {%- else -%}
               {%- assign bx = block.settings.position_x | default: 50 -%}
               {%- assign by = block.settings.position_y | default: 50 -%}
+              {%- assign kb_dir = slide_index | modulo: 4 -%}
               <img
                 src="{{ block.settings.image | image_url: width: 1920 }}"
                 srcset="{{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1280 }} 1280w, {{ block.settings.image | image_url: width: 1920 }} 1920w, {{ block.settings.image | image_url: width: 2560 }} 2560w"
@@ -94,6 +136,7 @@
                 class="home-hero__image"
                 style="object-position: {{ bx }}% {{ by }}%;"
                 data-slide="{{ slide_index }}"
+                data-kb-dir="{{ kb_dir }}"
               >
               {%- assign slide_index = slide_index | plus: 1 -%}
             {%- endif -%}
@@ -169,17 +212,38 @@
     object-position: 50% 50%;
     opacity: 0;
     transition: opacity var(--hero-fade-ms, 800ms) ease-in-out;
-    transform: scale(1.02);
-    will-change: opacity;
+    transform: scale(var(--kb-zoom-from, 1));
+    transform-origin: 50% 50%;
+    will-change: opacity, transform;
   }
 
   .home-hero__image.is-active {
     opacity: 1;
+    /* Animation is applied only to the visible slide, restarting each cycle. */
+    animation: home-hero-kb var(--kb-duration, 18s) ease-out forwards;
+  }
+
+  /* Pan direction varies by slide so consecutive images don't feel identical.
+     Each direction uses a different transform-origin to shift the zoom focus. */
+  .home-hero__image[data-kb-dir="0"].is-active { transform-origin: 70% 30%; } /* zooms toward top-right */
+  .home-hero__image[data-kb-dir="1"].is-active { transform-origin: 30% 70%; } /* zooms toward bottom-left */
+  .home-hero__image[data-kb-dir="2"].is-active { transform-origin: 30% 30%; } /* zooms toward top-left */
+  .home-hero__image[data-kb-dir="3"].is-active { transform-origin: 70% 70%; } /* zooms toward bottom-right */
+
+  @keyframes home-hero-kb {
+    from { transform: scale(var(--kb-zoom-from, 1)); }
+    to   { transform: scale(var(--kb-zoom-to, 1.06)); }
+  }
+
+  .home-hero--no-motion .home-hero__image.is-active {
+    animation: none;
+    transform: scale(1.02);
   }
 
   .home-hero__image--placeholder {
     background: linear-gradient(135deg, oklch(0.25 0.02 70), oklch(0.15 0.01 60));
     opacity: 1;
+    animation: none;
   }
 
   .home-hero__overlay {
@@ -313,18 +377,15 @@
   @media (prefers-reduced-motion: reduce) {
     .home-hero__image {
       transition: none;
+      animation: none !important;
+      transform: scale(1.02) !important;
     }
   }
 {% endstylesheet %}
 
 {% javascript %}
   (function () {
-    const hero = document.currentScript && document.currentScript.closest
-      ? document.currentScript.closest('.home-hero')
-      : document.querySelector('.home-hero');
-
-    // Fallback: grab all .home-hero sections on page (usually one).
-    const heroes = hero ? [hero] : Array.from(document.querySelectorAll('.home-hero'));
+    const heroes = Array.from(document.querySelectorAll('.home-hero'));
 
     heroes.forEach((root) => {
       const slides = root.querySelectorAll('.home-hero__image');
@@ -333,7 +394,6 @@
       const rotationMs = parseInt(root.dataset.rotationMs, 10) || 6000;
       const fadeMs = parseInt(root.dataset.fadeMs, 10) || 800;
 
-      // Apply fade duration to each slide via CSS custom property.
       slides.forEach((s) => s.style.setProperty('--hero-fade-ms', fadeMs + 'ms'));
 
       let current = 0;
@@ -342,6 +402,9 @@
       function showSlide(next) {
         if (next === current) return;
         slides[current].classList.remove('is-active');
+        // Force reflow so the Ken Burns animation restarts when the slide
+        // becomes active again on the next cycle.
+        void slides[next].offsetWidth;
         slides[next].classList.add('is-active');
         current = next;
       }
@@ -363,7 +426,6 @@
         }
       }
 
-      // Pause when tab is hidden to save battery / avoid jumpy returns.
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
           stop();
@@ -371,11 +433,6 @@
           start();
         }
       });
-
-      // Respect reduced motion: still rotate, but no fade.
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        slides.forEach((s) => (s.style.transition = 'none'));
-      }
 
       start();
     });
@@ -439,6 +496,47 @@
       "step": 50,
       "unit": "ms",
       "default": 800
+    },
+    {
+      "type": "header",
+      "content": "Motion (Ken Burns)"
+    },
+    {
+      "type": "select",
+      "id": "kb_preset",
+      "label": "Motion preset",
+      "options": [
+        { "value": "whisper",   "label": "Whisper — barely there (recommended for luxury)" },
+        { "value": "editorial", "label": "Editorial — tasteful, magazine-like" },
+        { "value": "cinematic", "label": "Cinematic — bold, dramatic" },
+        { "value": "lively",    "label": "Lively — energetic, modern" },
+        { "value": "custom",    "label": "Custom — use sliders below" },
+        { "value": "off",       "label": "Off — no motion" }
+      ],
+      "default": "whisper",
+      "info": "Whisper: 1.00→1.06 over 18s · Editorial: 1.00→1.10 over 14s · Cinematic: 1.00→1.18 over 11s · Lively: 1.00→1.25 over 9s."
+    },
+    {
+      "type": "range",
+      "id": "kb_zoom_to",
+      "label": "Custom — max zoom",
+      "min": 102,
+      "max": 140,
+      "step": 1,
+      "unit": "%",
+      "default": 110,
+      "info": "Only used when preset is set to 'Custom'. 102 = 1.02× zoom, 140 = 1.40× zoom."
+    },
+    {
+      "type": "range",
+      "id": "kb_duration_s",
+      "label": "Custom — zoom duration",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "s",
+      "default": 14,
+      "info": "Only used when preset is set to 'Custom'. Tip: keep this longer than the rotation interval for the smoothest feel."
     },
     {
       "type": "header",
