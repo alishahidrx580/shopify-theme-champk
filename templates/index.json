@@ -17,7 +17,10 @@
           "settings": {
             "image": "shopify://shop_images/Good_thinking___if_Nano_202605231602.jpg",
             "position_x": 50,
-            "position_y": 1
+            "position_y": 1,
+            "image_mobile": "shopify://shop_images/need_this_image_for_9_16_202605231654.jpg",
+            "position_x_mobile": 50,
+            "position_y_mobile": 50
           }
         },
         "hero_image_h474QN": {
@@ -25,7 +28,9 @@
           "settings": {
             "image": "shopify://shop_images/Here_s_the_updated_prompt_with_202605231524.jpg",
             "position_x": 50,
-            "position_y": 55
+            "position_y": 55,
+            "position_x_mobile": 50,
+            "position_y_mobile": 50
           }
         },
         "hero_image_MG9Trz": {
@@ -33,7 +38,9 @@
           "settings": {
             "image": "shopify://shop_images/Prompt__Transform_this_reference_image_202605231347_7bf9eb8f-d871-4bc0-b3db-e60a209cf369.jpg",
             "position_x": 50,
-            "position_y": 0
+            "position_y": 0,
+            "position_x_mobile": 50,
+            "position_y_mobile": 50
           }
         },
         "hero_image_cVJWxQ": {
@@ -41,7 +48,9 @@
           "settings": {
             "image": "shopify://shop_images/Woman_with_a_glowing_skin.jpg",
             "position_x": 50,
-            "position_y": 4
+            "position_y": 4,
+            "position_x_mobile": 50,
+            "position_y_mobile": 50
           }
         }
       },
@@ -54,11 +63,14 @@
       "settings": {
         "position_x": 50,
         "position_y": 50,
+        "position_x_mobile": 50,
+        "position_y_mobile": 50,
         "rotation_seconds": 7,
         "fade_ms": 800,
         "kb_preset": "editorial",
         "kb_zoom_to": 110,
         "kb_duration_s": 14,
+        "kb_preset_mobile": "whisper",
         "eyebrow": "Developed with French Formulation Standards",
         "heading_lead": "Intelligent Skincare.",
         "heading_break": true,
@@ -69,7 +81,9 @@
         "cta_secondary_label": "The Science",
         "cta_secondary_url": "/pages/research-and-philosophy",
         "min_height_svh": 72,
-        "min_height_px": 480
+        "min_height_px": 480,
+        "min_height_svh_mobile": 80,
+        "min_height_px_mobile": 520
       }
     },
     "featured-products": {
