@@ -1,60 +1,127 @@
+{%- liquid
+  # The manifesto reads best as a proper editorial statement with hierarchy:
+  # eyebrow → big italic headline phrase → supporting body copy → ornament.
+  # Splitting headline and body into two fields gives real typographic
+  # control (different sizes, weights, line-heights) instead of one huge wall.
+-%}
+
 <section class="home-manifesto full-width">
   <div class="home-manifesto__inner cham-container">
+    {%- if section.settings.eyebrow != blank -%}
+      <div class="home-manifesto__eyebrow-wrap" data-reveal>
+        <span class="eyebrow home-manifesto__eyebrow">{{ section.settings.eyebrow }}</span>
+      </div>
+    {%- endif -%}
+
     <div class="home-manifesto__grid">
-      <div class="home-manifesto__eyebrow-col" data-reveal>
-        {%- if section.settings.eyebrow != blank -%}
-          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <div class="home-manifesto__headline-col" data-reveal data-reveal-delay="80">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="home-manifesto__heading font-display">{{ section.settings.heading }}</h2>
         {%- endif -%}
       </div>
-      <div class="home-manifesto__copy" data-reveal data-reveal-delay="120">
-        <h2 class="home-manifesto__heading font-display">{{ section.settings.heading }}</h2>
+
+      <div class="home-manifesto__body-col" data-reveal data-reveal-delay="160">
+        {%- if section.settings.body != blank -%}
+          <div class="home-manifesto__body">{{ section.settings.body }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.signature != blank -%}
+          <div class="home-manifesto__signature">
+            <span class="home-manifesto__signature-rule" aria-hidden="true"></span>
+            <span class="home-manifesto__signature-text">{{ section.settings.signature }}</span>
+          </div>
+        {%- endif -%}
       </div>
     </div>
+
+    {%- if section.settings.show_ornament -%}
+      <div class="home-manifesto__ornament" aria-hidden="true" data-reveal data-reveal-delay="220">
+        <svg viewBox="0 0 120 24" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <line x1="0" y1="12" x2="48" y2="12" stroke="currentColor" stroke-width="0.5" />
+          <circle cx="60" cy="12" r="3" stroke="currentColor" stroke-width="0.5" fill="none" />
+          <circle cx="60" cy="12" r="1" fill="currentColor" />
+          <line x1="72" y1="12" x2="120" y2="12" stroke="currentColor" stroke-width="0.5" />
+        </svg>
+      </div>
+    {%- endif -%}
   </div>
 </section>
 
 {% stylesheet %}
   .home-manifesto {
-    padding-block: 8rem;
+    /* Mobile-first vertical rhythm. */
+    padding-block: 5rem;
+  }
+
+  @media (min-width: 768px) {
+    .home-manifesto {
+      padding-block: 7rem;
+    }
   }
 
   @media (min-width: 1024px) {
     .home-manifesto {
-      padding-block: 11rem;
+      padding-block: 10rem;
     }
   }
 
+  /* Eyebrow sits above the grid as a quiet anchor, centered or left-aligned. */
+  .home-manifesto__eyebrow-wrap {
+    margin-bottom: 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .home-manifesto__eyebrow-wrap {
+      margin-bottom: 3.5rem;
+    }
+  }
+
+  /* Eyebrow inherits its base styles from the global .eyebrow class. */
+
+  /* Mobile-first: single column stack. Desktop: 12-col editorial grid. */
   .home-manifesto__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 3rem;
-    align-items: end;
+    gap: 2.5rem;
   }
 
   @media (min-width: 1024px) {
     .home-manifesto__grid {
       grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 4rem;
+      align-items: start;
     }
 
-    .home-manifesto__eyebrow-col {
-      grid-column: span 3;
+    .home-manifesto__headline-col {
+      grid-column: 1 / span 7;
     }
 
-    .home-manifesto__copy {
-      grid-column: span 9;
+    .home-manifesto__body-col {
+      grid-column: 8 / span 5;
+      padding-top: 1rem; /* Optical alignment with headline cap-height. */
     }
   }
 
+  /* Headline: hero-scale but with a max-width so lines stay readable. */
   .home-manifesto__heading {
-    font-size: clamp(2.25rem, 5.5vw, 4.5rem);
-    line-height: 1.05;
+    font-size: clamp(2rem, 8vw, 2.75rem);
+    line-height: 1.1;
     color: var(--foreground);
     margin: 0;
+    max-width: 18ch;
+  }
+
+  @media (min-width: 768px) {
+    .home-manifesto__heading {
+      font-size: clamp(2.5rem, 6vw, 3.75rem);
+      line-height: 1.05;
+    }
   }
 
   @media (min-width: 1024px) {
     .home-manifesto__heading {
-      font-size: clamp(3rem, 5.5vw, 4.5rem);
+      font-size: clamp(3rem, 4.5vw, 4.25rem);
+      line-height: 1.02;
     }
   }
 
@@ -65,6 +132,71 @@
 
   .home-manifesto__heading p {
     margin: 0;
+  }
+
+  /* Body copy: clearly smaller, comfortable line-length, softer color. */
+  .home-manifesto__body {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+    max-width: 38ch;
+  }
+
+  @media (min-width: 768px) {
+    .home-manifesto__body {
+      font-size: 1.0625rem;
+      line-height: 1.8;
+    }
+  }
+
+  .home-manifesto__body > p {
+    margin: 0;
+  }
+
+  .home-manifesto__body > p + p {
+    margin-top: 1rem;
+  }
+
+  /* Optional signature line ("— CHAM" or founder name) adds editorial weight. */
+  .home-manifesto__signature {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .home-manifesto__signature-rule {
+    flex: 0 0 2.5rem;
+    height: 1px;
+    background-color: var(--primary);
+  }
+
+  .home-manifesto__signature-text {
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--primary);
+    font-weight: 500;
+  }
+
+  /* Decorative ornament rule line — adds a quiet "design moment" below copy. */
+  .home-manifesto__ornament {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+    color: var(--primary);
+    opacity: 0.7;
+  }
+
+  @media (min-width: 1024px) {
+    .home-manifesto__ornament {
+      margin-top: 6rem;
+    }
+  }
+
+  .home-manifesto__ornament svg {
+    width: 7.5rem;
+    height: 1.5rem;
   }
 {% endstylesheet %}
 
@@ -83,7 +215,37 @@
       "type": "richtext",
       "id": "heading",
       "label": "t:sections.home_manifesto.heading_label",
-      "default": "<p>Our products are crafted for <em>natural radiance.</em> Each Cham formulation is designed to complement your skin's natural rhythm, so it looks softer, calmer, and naturally luminous.</p>"
+      "info": "Short headline phrase only. Use <em> for the italic gold emphasis.",
+      "default": "<p>Crafted for <em>natural radiance.</em></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Supporting body copy",
+      "info": "The full manifesto paragraph — appears smaller and softer next to the headline.",
+      "default": "<p>Each Cham formulation is designed to complement your skin's natural rhythm, so it looks softer, calmer, and naturally luminous.</p><p>We work with restraint, choosing ingredients for what they do — not how they perform on a label.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Signature"
+    },
+    {
+      "type": "text",
+      "id": "signature",
+      "label": "Signature line",
+      "info": "Optional. e.g. 'The Cham Atelier' or a founder name.",
+      "default": "The Cham Atelier"
+    },
+    {
+      "type": "header",
+      "content": "Ornament"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ornament",
+      "label": "Show decorative ornament",
+      "info": "A small centered rule-line with a gold dot, placed below the manifesto.",
+      "default": true
     }
   ],
   "presets": [
