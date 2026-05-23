@@ -1,37 +1,23 @@
 {%- liquid
-  # Build the random hero rotation pool: section image + non-blank blocks.
-  # The pick changes each render via `now | date: '%s' | modulo: pool_size`.
-  # Cart-personalized pages (this homepage renders cart.item_count in the header)
-  # aren't edge-cached, so each visit triggers a fresh render and a fresh pick.
-  assign hero_image = section.settings.image
+  # Build the hero image pool: section image + non-blank blocks.
+  # Rotation now happens client-side at a configurable interval so the
+  # visitor sees images change live, not just between page loads.
 
-  assign pool_size = 0
-  if section.settings.image != blank
-    assign pool_size = pool_size | plus: 1
-  endif
-  for block in section.blocks
-    if block.settings.image != blank
-      assign pool_size = pool_size | plus: 1
-    endif
-  endfor
+  assign rotation_seconds = section.settings.rotation_seconds | default: 6
+  assign fade_ms = section.settings.fade_ms | default: 800
 
-  if pool_size > 1
-    assign now_seconds = 'now' | date: '%s' | plus: 0
-    assign target_index = now_seconds | modulo: pool_size
+  # Determine first/initial image for SSR (LCP-friendly).
+  assign initial_image = section.settings.image
+  assign initial_pos_x = section.settings.position_x | default: 50
+  assign initial_pos_y = section.settings.position_y | default: 50
 
-    assign current_index = 0
-    if section.settings.image != blank
-      if current_index == target_index
-        assign hero_image = section.settings.image
-      endif
-      assign current_index = current_index | plus: 1
-    endif
+  if initial_image == blank
     for block in section.blocks
       if block.settings.image != blank
-        if current_index == target_index
-          assign hero_image = block.settings.image
-        endif
-        assign current_index = current_index | plus: 1
+        assign initial_image = block.settings.image
+        assign initial_pos_x = block.settings.position_x | default: 50
+        assign initial_pos_y = block.settings.position_y | default: 50
+        break
       endif
     endfor
   endif
@@ -40,23 +26,84 @@
 <section
   class="home-hero full-width"
   style="--min-height-svh: {{ section.settings.min_height_svh }}svh; --min-height-px: {{ section.settings.min_height_px }}px;"
+  data-rotation-ms="{{ rotation_seconds | times: 1000 }}"
+  data-fade-ms="{{ fade_ms }}"
 >
-  {%- if hero_image != blank -%}
-    <img
-      src="{{ hero_image | image_url: width: 1920 }}"
-      srcset="{{ hero_image | image_url: width: 800 }} 800w, {{ hero_image | image_url: width: 1280 }} 1280w, {{ hero_image | image_url: width: 1920 }} 1920w, {{ hero_image | image_url: width: 2560 }} 2560w"
-      sizes="100vw"
-      alt="{{ hero_image.alt | default: 'general.brand.name' | t | escape }}"
-      width="{{ hero_image.width }}"
-      height="{{ hero_image.height }}"
-      loading="eager"
-      fetchpriority="high"
-      decoding="async"
-      class="home-hero__image"
-    >
-  {%- else -%}
-    <div class="home-hero__image home-hero__image--placeholder" aria-hidden="true"></div>
-  {%- endif -%}
+  <div class="home-hero__media" aria-hidden="true">
+    {%- if initial_image != blank -%}
+      {%- # First slide: eager-loaded for LCP -%}
+      <img
+        src="{{ initial_image | image_url: width: 1920 }}"
+        srcset="{{ initial_image | image_url: width: 800 }} 800w, {{ initial_image | image_url: width: 1280 }} 1280w, {{ initial_image | image_url: width: 1920 }} 1920w, {{ initial_image | image_url: width: 2560 }} 2560w"
+        sizes="100vw"
+        alt="{{ initial_image.alt | default: 'general.brand.name' | t | escape }}"
+        width="{{ initial_image.width }}"
+        height="{{ initial_image.height }}"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        class="home-hero__image is-active"
+        style="object-position: {{ initial_pos_x }}% {{ initial_pos_y }}%;"
+        data-slide="0"
+      >
+
+      {%- # Remaining slides: lazy-loaded, faded in by JS on rotation -%}
+      {%- assign slide_index = 1 -%}
+
+      {%- # If section image was used as initial, include all blocks next -%}
+      {%- if section.settings.image != blank -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image != blank -%}
+            {%- assign bx = block.settings.position_x | default: 50 -%}
+            {%- assign by = block.settings.position_y | default: 50 -%}
+            <img
+              src="{{ block.settings.image | image_url: width: 1920 }}"
+              srcset="{{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1280 }} 1280w, {{ block.settings.image | image_url: width: 1920 }} 1920w, {{ block.settings.image | image_url: width: 2560 }} 2560w"
+              sizes="100vw"
+              alt="{{ block.settings.image.alt | default: 'general.brand.name' | t | escape }}"
+              width="{{ block.settings.image.width }}"
+              height="{{ block.settings.image.height }}"
+              loading="lazy"
+              decoding="async"
+              class="home-hero__image"
+              style="object-position: {{ bx }}% {{ by }}%;"
+              data-slide="{{ slide_index }}"
+            >
+            {%- assign slide_index = slide_index | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- # Section image was blank: first block is the initial, render remaining blocks -%}
+        {%- assign first_block_used = false -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image != blank -%}
+            {%- if first_block_used == false -%}
+              {%- assign first_block_used = true -%}
+            {%- else -%}
+              {%- assign bx = block.settings.position_x | default: 50 -%}
+              {%- assign by = block.settings.position_y | default: 50 -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 1920 }}"
+                srcset="{{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1280 }} 1280w, {{ block.settings.image | image_url: width: 1920 }} 1920w, {{ block.settings.image | image_url: width: 2560 }} 2560w"
+                sizes="100vw"
+                alt="{{ block.settings.image.alt | default: 'general.brand.name' | t | escape }}"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+                loading="lazy"
+                decoding="async"
+                class="home-hero__image"
+                style="object-position: {{ bx }}% {{ by }}%;"
+                data-slide="{{ slide_index }}"
+              >
+              {%- assign slide_index = slide_index | plus: 1 -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- else -%}
+      <div class="home-hero__image home-hero__image--placeholder is-active" aria-hidden="true"></div>
+    {%- endif -%}
+  </div>
 
   <div class="home-hero__overlay" aria-hidden="true"></div>
 
@@ -106,28 +153,45 @@
     overflow: hidden;
   }
 
+  .home-hero__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
   .home-hero__image {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: 50% 50%;
+    opacity: 0;
+    transition: opacity var(--hero-fade-ms, 800ms) ease-in-out;
     transform: scale(1.02);
+    will-change: opacity;
+  }
+
+  .home-hero__image.is-active {
+    opacity: 1;
   }
 
   .home-hero__image--placeholder {
     background: linear-gradient(135deg, oklch(0.25 0.02 70), oklch(0.15 0.01 60));
+    opacity: 1;
   }
 
   .home-hero__overlay {
     position: absolute;
     inset: 0;
     background: linear-gradient(to top, rgb(0 0 0 / 1), rgb(0 0 0 / 0.4) 50%, rgb(0 0 0 / 0.6));
+    z-index: 1;
   }
 
   .home-hero__inner {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     height: 100%;
     max-width: var(--page-max-width);
     margin-inline: auto;
@@ -150,8 +214,6 @@
     margin-bottom: 1.5rem;
   }
 
-  /* Hero uses the eyebrow typography but not the accent bar — matches React's
-     bare <p className="eyebrow"> usage (vs the <Eyebrow> component elsewhere). */
   .home-hero__eyebrow::before {
     display: none;
   }
@@ -225,13 +287,6 @@
     color: var(--primary-glow);
   }
 
-  /* Constrained-height viewports (short laptops, hub displays, landscape):
-     the heading scales with viewport WIDTH, so the bottom-aligned content stack
-     outgrows the reduced-height hero and its top lines clip behind the header.
-     Below this height, tie the display type to viewport HEIGHT, tighten the
-     vertical spacing, and reserve header clearance so the full message stays
-     visible. The clip can occur on any viewport up to ~900px tall. Scoped to
-     wider screens so tall, narrow phones keep the width-based mobile size. */
   @media (max-height: 900px) and (min-width: 768px) {
     .home-hero__inner {
       padding-top: calc(var(--header-height, 4.5rem) + 0.75rem);
@@ -254,7 +309,78 @@
       margin-top: 1.5rem;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-hero__image {
+      transition: none;
+    }
+  }
 {% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    const hero = document.currentScript && document.currentScript.closest
+      ? document.currentScript.closest('.home-hero')
+      : document.querySelector('.home-hero');
+
+    // Fallback: grab all .home-hero sections on page (usually one).
+    const heroes = hero ? [hero] : Array.from(document.querySelectorAll('.home-hero'));
+
+    heroes.forEach((root) => {
+      const slides = root.querySelectorAll('.home-hero__image');
+      if (slides.length <= 1) return;
+
+      const rotationMs = parseInt(root.dataset.rotationMs, 10) || 6000;
+      const fadeMs = parseInt(root.dataset.fadeMs, 10) || 800;
+
+      // Apply fade duration to each slide via CSS custom property.
+      slides.forEach((s) => s.style.setProperty('--hero-fade-ms', fadeMs + 'ms'));
+
+      let current = 0;
+      let timer = null;
+
+      function showSlide(next) {
+        if (next === current) return;
+        slides[current].classList.remove('is-active');
+        slides[next].classList.add('is-active');
+        current = next;
+      }
+
+      function tick() {
+        const next = (current + 1) % slides.length;
+        showSlide(next);
+      }
+
+      function start() {
+        stop();
+        timer = window.setInterval(tick, rotationMs);
+      }
+
+      function stop() {
+        if (timer) {
+          window.clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      // Pause when tab is hidden to save battery / avoid jumpy returns.
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          stop();
+        } else {
+          start();
+        }
+      });
+
+      // Respect reduced motion: still rotate, but no fade.
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        slides.forEach((s) => (s.style.transition = 'none'));
+      }
+
+      start();
+    });
+  })();
+{% endjavascript %}
 
 {% schema %}
 {
@@ -266,7 +392,53 @@
       "type": "image_picker",
       "id": "image",
       "label": "t:labels.image",
-      "info": "Recommended: 1920×1280 portrait. The image bleeds under the header."
+      "info": "Recommended: 1920×1280 or 16:9. Use the focal point sliders below to adjust which part stays visible."
+    },
+    {
+      "type": "range",
+      "id": "position_x",
+      "label": "Main image — horizontal focal point",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "0 = far left, 50 = center, 100 = far right."
+    },
+    {
+      "type": "range",
+      "id": "position_y",
+      "label": "Main image — vertical focal point",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "0 = top, 50 = center, 100 = bottom. Lower this if the top of your 16:9 image is getting cut."
+    },
+    {
+      "type": "header",
+      "content": "Rotation"
+    },
+    {
+      "type": "range",
+      "id": "rotation_seconds",
+      "label": "Seconds between image changes",
+      "min": 2,
+      "max": 30,
+      "step": 1,
+      "unit": "s",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "fade_ms",
+      "label": "Fade duration (ms)",
+      "min": 200,
+      "max": 2000,
+      "step": 50,
+      "unit": "ms",
+      "default": 800
     },
     {
       "type": "header",
@@ -363,7 +535,29 @@
           "type": "image_picker",
           "id": "image",
           "label": "t:labels.image",
-          "info": "Add multiple blocks to enable random hero rotation. The section image above also joins the pool. If only one image exists overall, it shows every time."
+          "info": "Add multiple blocks to enable rotation. The section image above also joins the pool."
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "Horizontal focal point",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50,
+          "info": "0 = far left, 50 = center, 100 = far right."
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "Vertical focal point",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50,
+          "info": "0 = top, 50 = center, 100 = bottom. Lower this if the top of your 16:9 image is getting cut."
         }
       ]
     }
