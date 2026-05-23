@@ -12,6 +12,14 @@
     "hero": {
       "type": "home-hero",
       "blocks": {
+        "hero_image_h474QN": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Here_s_the_updated_prompt_with_202605231524.jpg",
+            "position_x": 50,
+            "position_y": 45
+          }
+        },
         "hero_image_MG9Trz": {
           "type": "hero_image",
           "settings": {
@@ -30,6 +38,7 @@
         }
       },
       "block_order": [
+        "hero_image_h474QN",
         "hero_image_MG9Trz",
         "hero_image_cVJWxQ"
       ],
