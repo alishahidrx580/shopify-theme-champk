@@ -352,6 +352,7 @@
     "cover-ritual": {
       "type": "home-cover-cta",
       "settings": {
+        "image": "shopify://shop_images/Prompt_Recreate_this_reference_image_as_202605232010.jpg",
         "eyebrow": "The Ritual",
         "heading_lead": "Skincare that",
         "heading_emphasis": "works with",
