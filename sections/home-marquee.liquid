@@ -1,12 +1,35 @@
-<section class="home-marquee full-width">
-  <div class="home-marquee__track">
-    {%- comment -%} Duplicate the blocks twice for a seamless infinite loop. {%- endcomment -%}
+{%- liquid
+  # Editorial marquee: a quiet scrolling band of brand values rendered in
+  # serif italics, separated by a custom gold ornament. The strip uses the
+  # CHAM cream/peach palette with hairline rules and edge fades for a
+  # restrained, luxury feel — not the typical fast Shopify marquee.
+
+  assign scroll_seconds = section.settings.scroll_seconds | default: 70
+-%}
+
+<section
+  class="home-marquee full-width"
+  style="--marquee-duration: {{ scroll_seconds }}s;"
+>
+  <div class="home-marquee__track" aria-hidden="false">
+    {%- comment -%}
+      Duplicate the blocks twice for a seamless infinite loop.
+      The track translates by exactly -50% so the second copy lands where
+      the first started — making the seam invisible.
+    {%- endcomment -%}
     {%- for repeat in (1..2) -%}
       {%- for block in section.blocks -%}
-        <span class="home-marquee__item font-display" {{ block.shopify_attributes }}>
-          {{ block.settings.text }}
-          <span class="home-marquee__separator" aria-hidden="true">✺</span>
-        </span>
+        <div class="home-marquee__item" {{ block.shopify_attributes }}>
+          <span class="home-marquee__text font-display">{{ block.settings.text }}</span>
+          <span class="home-marquee__ornament" aria-hidden="true">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none">
+              {%- comment -%} Refined gold flourish: four-petal star with center dot. {%- endcomment -%}
+              <path d="M16 4 L17.5 14.5 L28 16 L17.5 17.5 L16 28 L14.5 17.5 L4 16 L14.5 14.5 Z"
+                    fill="currentColor" opacity="0.85" />
+              <circle cx="16" cy="16" r="1.25" fill="currentColor" />
+            </svg>
+          </span>
+        </div>
       {%- endfor -%}
     {%- endfor -%}
   </div>
@@ -14,42 +37,118 @@
 
 {% stylesheet %}
   .home-marquee {
+    position: relative;
     overflow: hidden;
-    border-block: 1px solid var(--border);
-    padding-block: 1.5rem;
+    /* Hairline rules — thinner and softer than solid borders for luxury feel. */
+    border-block: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+    /* Mobile-first vertical breathing. */
+    padding-block: 1.75rem;
     background-color: var(--background);
+  }
+
+  @media (min-width: 768px) {
+    .home-marquee {
+      padding-block: 2.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .home-marquee {
+      padding-block: 2.75rem;
+    }
+  }
+
+  /* Soft fade-to-background gradients on the left and right edges —
+     the text appears to drift in/out from nothing instead of hitting a
+     hard frame edge. Classic editorial finish. */
+  .home-marquee::before,
+  .home-marquee::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(3rem, 8vw, 8rem);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .home-marquee::before {
+    left: 0;
+    background: linear-gradient(
+      to right,
+      var(--background) 0%,
+      color-mix(in oklab, var(--background) 60%, transparent) 60%,
+      transparent 100%
+    );
+  }
+
+  .home-marquee::after {
+    right: 0;
+    background: linear-gradient(
+      to left,
+      var(--background) 0%,
+      color-mix(in oklab, var(--background) 60%, transparent) 60%,
+      transparent 100%
+    );
   }
 
   .home-marquee__track {
     display: flex;
-    gap: 4rem;
-    white-space: nowrap;
-    animation: marquee-scroll 40s linear infinite;
+    align-items: center;
     width: max-content;
+    animation: home-marquee-scroll var(--marquee-duration, 70s) linear infinite;
+    will-change: transform;
+  }
+
+  /* Pause on hover so visitors can actually read a tagline they like. */
+  .home-marquee:hover .home-marquee__track {
+    animation-play-state: paused;
   }
 
   .home-marquee__item {
-    font-size: 1.5rem;
-    line-height: 1;
-    color: color-mix(in oklab, var(--foreground) 85%, transparent);
     display: inline-flex;
     align-items: center;
-    gap: 4rem;
+    /* The ornament sits to the right of each item, separated by symmetric gaps. */
+    gap: clamp(2.25rem, 5vw, 4rem);
+    padding-inline: clamp(1.125rem, 2.5vw, 2rem);
   }
 
-  @media (min-width: 1024px) {
-    .home-marquee__item {
-      font-size: 1.875rem;
-    }
+  .home-marquee__text {
+    /* Editorial serif italic — uses your font-display + italic for brand poetry feel. */
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 3.2vw, 2rem);
+    line-height: 1;
+    letter-spacing: 0.005em;
+    color: color-mix(in oklab, var(--foreground) 85%, transparent);
+    white-space: nowrap;
   }
 
-  .home-marquee__separator {
+  .home-marquee__ornament {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: var(--primary);
+    flex-shrink: 0;
+  }
+
+  .home-marquee__ornament svg {
+    /* Ornament scales with text size for visual harmony. */
+    width: clamp(0.875rem, 1.6vw, 1.125rem);
+    height: clamp(0.875rem, 1.6vw, 1.125rem);
+    display: block;
+  }
+
+  @keyframes home-marquee-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .home-marquee__track {
       animation: none;
+      /* When motion is reduced, center the first set of items as a static row. */
+      transform: translate3d(0, 0, 0);
     }
   }
 {% endstylesheet %}
@@ -58,7 +157,23 @@
 {
   "name": "t:sections.home_marquee.name",
   "tag": "section",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "range",
+      "id": "scroll_seconds",
+      "label": "Scroll duration",
+      "min": 30,
+      "max": 120,
+      "step": 5,
+      "unit": "s",
+      "default": 70,
+      "info": "Higher = slower, more editorial. Lower = faster, more energetic. 70s is the luxury sweet spot."
+    }
+  ],
   "blocks": [
     {
       "type": "marquee_item",
