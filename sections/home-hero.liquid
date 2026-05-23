@@ -219,8 +219,10 @@
 
   .home-hero__image.is-active {
     opacity: 1;
-    /* Animation is applied only to the visible slide, restarting each cycle. */
-    animation: home-hero-kb var(--kb-duration, 18s) ease-out forwards;
+    /* Animation runs continuously while the slide is active: zoom in, zoom
+       out, repeat. `alternate` reverses direction each iteration so motion
+       never visibly stops. Duration controls one half-cycle (in OR out). */
+    animation: home-hero-kb var(--kb-duration, 18s) ease-in-out infinite alternate;
   }
 
   /* Pan direction varies by slide so consecutive images don't feel identical.
