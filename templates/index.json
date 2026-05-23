@@ -12,13 +12,17 @@
     "hero": {
       "type": "home-hero",
       "blocks": {
+        "hero_image_cKMKFz": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/Want_to_Conceal_Acne_With_Makeup_Like_a_Pro__6.jpg"
+          }
+        },
         "hero_image_iEF4Hp": {
           "type": "hero_image",
-          "settings": {}
-        },
-        "hero_image_df7R8y": {
-          "type": "hero_image",
-          "settings": {}
+          "settings": {
+            "image": "shopify://shop_images/Every_Beauty_Girl_Needs_This_in_Her_Vanity_Trust_Me.jpg"
+          }
         },
         "hero_image_MbEFeG": {
           "type": "hero_image",
@@ -50,8 +54,8 @@
         }
       },
       "block_order": [
+        "hero_image_cKMKFz",
         "hero_image_iEF4Hp",
-        "hero_image_df7R8y",
         "hero_image_MbEFeG",
         "hero_image_tjPBqK",
         "hero_image_cVJWxQ",
