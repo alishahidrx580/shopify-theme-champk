@@ -68,13 +68,76 @@
     {%- if collection.products_count > 0 -%}
       <div class="main-collection__grid" data-collection-grid>
         {%- for product in collection.products -%}
-          {%- assign cat_value = product.metafields.custom.category | default: product.type -%}
-          {%- assign eager = false -%}
-          {%- if forloop.index0 < 3 -%}{%- assign eager = true -%}{%- endif -%}
+          {%- liquid
+            # Build a space-separated list of all categories this product belongs to.
+            # Categories are collected from three sources, all lowercased:
+            #   1. Tags starting with "category:" (e.g. "category:face") → "face"
+            #      Tags also match the plain category name (e.g. tag "Face" → "face")
+            #   2. The custom.category metafield (single string OR list of strings)
+            #   3. The built-in Product type
+            # A product can match multiple categories — useful for "face and body" items.
+
+            assign cat_list = ''
+
+            # --- 1. Tags ---
+            for tag in product.tags
+              assign tag_lower = tag | downcase | strip
+              if tag_lower contains 'category:'
+                assign tag_value = tag_lower | remove_first: 'category:' | strip
+                if tag_value != blank
+                  assign cat_list = cat_list | append: ' ' | append: tag_value
+                endif
+              else
+                # Allow plain tags that match a configured category name to count too.
+                # e.g. a product tagged "Face" matches the "Face" filter.
+                for cat in categories
+                  assign cat_check = cat | strip | downcase
+                  if cat_check != blank and tag_lower == cat_check
+                    assign cat_list = cat_list | append: ' ' | append: tag_lower
+                  endif
+                endfor
+              endif
+            endfor
+
+            # --- 2. Metafield (custom.category) ---
+            # Supports both single-value text and list-of-text metafields.
+            assign mf = product.metafields.custom.category
+            if mf != blank
+              # If it's a list, mf.value is an array; if single, mf.value is a string.
+              if mf.value.size and mf.value.first
+                # List type
+                for mf_item in mf.value
+                  assign mf_val = mf_item | downcase | strip
+                  if mf_val != blank
+                    assign cat_list = cat_list | append: ' ' | append: mf_val
+                  endif
+                endfor
+              else
+                # Single value
+                assign mf_val = mf | downcase | strip
+                if mf_val != blank
+                  assign cat_list = cat_list | append: ' ' | append: mf_val
+                endif
+              endif
+            endif
+
+            # --- 3. Product type ---
+            if product.type != blank
+              assign type_val = product.type | downcase | strip
+              assign cat_list = cat_list | append: ' ' | append: type_val
+            endif
+
+            assign cat_list = cat_list | strip
+
+            assign eager = false
+            if forloop.index0 < 3
+              assign eager = true
+            endif
+          -%}
           <div
             class="main-collection__item"
             data-collection-item
-            data-category="{{ cat_value | downcase | escape }}"
+            data-categories="{{ cat_list | escape }}"
             data-reveal
             data-reveal-delay="{{ forloop.index0 | times: 80 }}"
           >
@@ -236,8 +299,12 @@
       function applyFilter(value) {
         let visible = 0;
         items.forEach((item) => {
-          const cat = item.getAttribute('data-category') || '';
-          const match = value === 'all' || cat === value;
+          // Each item carries a space-separated list of categories it belongs to,
+          // already lowercased server-side. A product matches a filter if the
+          // filter value appears as a whole word in that list.
+          const catsAttr = item.getAttribute('data-categories') || '';
+          const cats = catsAttr.split(/\s+/).filter(Boolean);
+          const match = value === 'all' || cats.indexOf(value) !== -1;
           if (match) {
             item.removeAttribute('data-hidden');
             visible += 1;
@@ -314,7 +381,7 @@
       "type": "text",
       "id": "filter_categories",
       "label": "t:labels.filter_categories",
-      "info": "t:labels.filter_categories_info",
+      "info": "Comma-separated. Assign each product to a category using any of: tag (e.g. 'category:face' or just 'Face'), the custom.category metafield (single or list), or the Product type field.",
       "default": "Face, Body, Treatment"
     },
     {
