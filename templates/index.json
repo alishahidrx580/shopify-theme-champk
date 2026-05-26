@@ -93,8 +93,8 @@
       "type": "home-featured-products",
       "settings": {
         "eyebrow": "The Collection",
-        "heading_lead": "Three formulations. Each with a",
-        "heading_emphasis": "purpose.",
+        "heading_lead": "Three formulations",
+        "heading_emphasis": "Each with a purpose",
         "collection": "",
         "products_to_show": 3,
         "view_all_label": "View all",
@@ -142,11 +142,11 @@
     "manifesto": {
       "type": "home-manifesto",
       "settings": {
-        "eyebrow": "About Cham",
-        "heading": "<p>Most skincare treats the surface. CHAM formulates differently — around how skin already wants to behave. Our products support the skin's natural recovery signals, so what emerges is real radiance. Not a finish. Not a filter.</p>",
-        "body": "",
+        "eyebrow": "A different approach",
+        "heading": "<p>Skincare that works <em>with your skin</em><br/></p>",
+        "body": "<p><br/>Most skincare treats the surface. CHAM formulates differently — around how skin already wants to behave. Our products support the skin's natural recovery signals, so what emerges is real radiance. Not a finish. Not a filter.<br/><br/></p>",
         "signature": "",
-        "show_ornament": true
+        "show_ornament": false
       }
     },
     "split-texture": {
@@ -203,8 +203,8 @@
       ],
       "settings": {
         "eyebrow": "Composition Principles",
-        "heading_lead": "Balanced for",
-        "heading_emphasis": "Optimum Glow"
+        "heading_lead": "Three principles",
+        "heading_emphasis": "One result"
       }
     },
     "split-intel-skincare": {
@@ -298,11 +298,11 @@
         "image_frame": "portrait",
         "image_position": "center center",
         "background": "surface",
-        "eyebrow": "The Gift Edit",
-        "heading_lead": "Gift of",
-        "heading_emphasis": "lasting radiance.",
-        "body": "<p>Considered formulations, presented in keepsake packaging — for the people whose skin you'd want to look as quietly luminous as your own.</p>",
-        "cta_label": "Build Your Gift",
+        "eyebrow": "The Gift",
+        "heading_lead": "The Gift of",
+        "heading_emphasis": "Quiet Radiance",
+        "body": "<p>Considered formulations, presented in keepsake packaging. For the people whose skin you would want to look as quietly luminous as your own.<br/></p>",
+        "cta_label": "Build a gift",
         "cta_url": "/pages/gifts",
         "cta_style": "solid"
       }
