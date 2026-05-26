@@ -78,10 +78,10 @@
         "heading_lead": "Intelligent Skincare.",
         "heading_break": true,
         "heading_emphasis": "Radiance revealed.",
-        "body": "<p>Precisely formulated to help your skin look calm, soft, and naturally radiant.</p>",
-        "cta_primary_label": "Shop Now",
+        "body": "<p>Precisely formulated to support the skin's natural recovery rhythms. Three products. One quiet result.<br/><br/><br/></p>",
+        "cta_primary_label": "Begin the ritual →",
         "cta_primary_url": "/collections/all",
-        "cta_secondary_label": "The Science",
+        "cta_secondary_label": "The science behind CHAM",
         "cta_secondary_url": "/pages/research-and-philosophy",
         "min_height_svh": 72,
         "min_height_px": 480,
@@ -135,13 +135,18 @@
         "item_3",
         "item_4"
       ],
-      "settings": {}
+      "settings": {
+        "scroll_seconds": 70
+      }
     },
     "manifesto": {
       "type": "home-manifesto",
       "settings": {
         "eyebrow": "About Cham",
-        "heading": "<p>Our products are crafted for <em>natural radiance.</em> Each Cham formulation is designed to complement your skin's natural rhythm, so it looks softer, calmer, and naturally luminous.</p>"
+        "heading": "<p>Our products are crafted for <em>natural radiance.</em> Each Cham formulation is designed to complement your skin's natural rhythm, so it looks softer, calmer, and naturally luminous.</p>",
+        "body": "<p>Each Cham formulation is designed to complement your skin's natural rhythm, so it looks softer, calmer, and naturally luminous.</p><p>We work with restraint, choosing ingredients for what they do — not how they perform on a label.</p>",
+        "signature": "The Cham Atelier",
+        "show_ornament": true
       }
     },
     "split-texture": {
