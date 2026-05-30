@@ -80,6 +80,15 @@
 
 <a href="{{ card_url }}" class="product-card">
   <div class="product-card__media">
+    {%- unless placeholder -%}
+      {%- comment -%} TEMP DEBUG — remove after diagnosing. {%- endcomment -%}
+      <div style="position:absolute;z-index:99;background:#fff;color:#000;font-size:9px;padding:4px;max-width:100%;max-height:100%;overflow:auto;line-height:1.3;font-family:monospace;">
+        mf exists: {{ product.metafields.custom.card_image | json }}<br>---<br>
+        mf.value: {{ product.metafields.custom.card_image.value | json }}<br>---<br>
+        mf.type: {{ product.metafields.custom.card_image.type }}<br>---<br>
+        url test: {{ product.metafields.custom.card_image.value | image_url: width: 100 }}
+      </div>
+    {%- endunless -%}
     {%- if placeholder -%}
       {{ primary_placeholder | placeholder_svg_tag: 'product-card__placeholder product-card__img product-card__img--primary' }}
       {{ secondary_placeholder | placeholder_svg_tag: 'product-card__placeholder product-card__img product-card__img--secondary' }}
