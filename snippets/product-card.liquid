@@ -36,20 +36,44 @@
     assign card_title = product.metafields.custom.short_name | default: product.title
     assign card_tagline = product.metafields.custom.tagline
     assign card_category = product.metafields.custom.category | default: product.type
-    # Primary = the product's featured image (consistent across collection
-    # pages AND homepage section contexts, where images[0] order can differ).
-    # Secondary = the first image that is NOT the featured one, so the hover
-    # always swaps to a genuinely different shot.
+
+    # === Image selection with explicit metafield control ===
+    # File-type metafields return a MediaImage via .value. We resolve each
+    # candidate explicitly, then fall back to featured/gallery if unset.
+
     assign primary_image = product.featured_image
+    assign card_image_mf = product.metafields.custom.card_image
+    if card_image_mf != blank and card_image_mf.value != blank
+      assign primary_image = card_image_mf.value
+    endif
+
     assign secondary_image = blank
-    for img in product.images
-      unless img == primary_image
-        assign secondary_image = img
-        break
-      endunless
-    endfor
+    assign hover_image_mf = product.metafields.custom.card_hover_image
+    if hover_image_mf != blank and hover_image_mf.value != blank
+      assign secondary_image = hover_image_mf.value
+    endif
+
+    # Fallback hover: first gallery image that differs from the primary.
+    if secondary_image == blank
+      for img in product.images
+        unless img == primary_image
+          assign secondary_image = img
+          break
+        endunless
+      endfor
+    endif
     if secondary_image == blank
       assign secondary_image = primary_image
+    endif
+
+    # Normalize: a File→Image metafield value is a MediaImage; its renderable
+    # image lives on `.image`. Product images and featured_image are already
+    # the right type. This guard makes image_url work for all cases.
+    if primary_image.image != blank
+      assign primary_image = primary_image.image
+    endif
+    if secondary_image.image != blank
+      assign secondary_image = secondary_image.image
     endif
   endif
 -%}
@@ -66,8 +90,8 @@
           srcset="{{ primary_image | image_url: width: 400 }} 400w, {{ primary_image | image_url: width: 800 }} 800w, {{ primary_image | image_url: width: 1200 }} 1200w"
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           alt="{{ product.title | escape }}"
-          width="{{ primary_image.width }}"
-          height="{{ primary_image.height }}"
+          width="{{ primary_image.width | default: 800 }}"
+          height="{{ primary_image.height | default: 1000 }}"
           {% if eager %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
           decoding="async"
           class="product-card__img product-card__img--primary"
@@ -80,8 +104,8 @@
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           alt=""
           aria-hidden="true"
-          width="{{ secondary_image.width }}"
-          height="{{ secondary_image.height }}"
+          width="{{ secondary_image.width | default: 800 }}"
+          height="{{ secondary_image.height | default: 1000 }}"
           loading="lazy"
           decoding="async"
           class="product-card__img product-card__img--secondary"
