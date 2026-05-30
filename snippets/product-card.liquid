@@ -36,11 +36,21 @@
     assign card_title = product.metafields.custom.short_name | default: product.title
     assign card_tagline = product.metafields.custom.tagline
     assign card_category = product.metafields.custom.category | default: product.type
-    # Use explicit media order: first image is primary, second is the hover image.
-    # This avoids the featured_image mismatch where the "set as featured" image
-    # differs from image position 1 in the gallery.
-    assign primary_image = product.images[0]
-    assign secondary_image = product.images[1] | default: product.images[0]
+    # Primary = the product's featured image (consistent across collection
+    # pages AND homepage section contexts, where images[0] order can differ).
+    # Secondary = the first image that is NOT the featured one, so the hover
+    # always swaps to a genuinely different shot.
+    assign primary_image = product.featured_image
+    assign secondary_image = blank
+    for img in product.images
+      unless img == primary_image
+        assign secondary_image = img
+        break
+      endunless
+    endfor
+    if secondary_image == blank
+      assign secondary_image = primary_image
+    endif
   endif
 -%}
 
