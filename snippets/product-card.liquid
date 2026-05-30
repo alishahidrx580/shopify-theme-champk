@@ -37,84 +37,62 @@
     assign card_tagline = product.metafields.custom.tagline
     assign card_category = product.metafields.custom.category | default: product.type
 
-    # === Image selection with explicit metafield control ===
-    # File-type metafields return a MediaImage via .value. We resolve each
-    # candidate explicitly, then fall back to featured/gallery if unset.
+    # === Image selection ===
+    # The card_image / card_hover_image metafields are file_reference type,
+    # whose .value resolves to an image URL string that image_url accepts.
+    # We work in URL strings throughout to avoid object-vs-string comparison
+    # bugs. Fall back to featured image / gallery when metafields are unset.
 
-    assign primary_image = product.featured_image
-    assign card_image_mf = product.metafields.custom.card_image
-    if card_image_mf != blank and card_image_mf.value != blank
-      assign primary_image = card_image_mf.value
-    endif
-
-    assign secondary_image = blank
-    assign hover_image_mf = product.metafields.custom.card_hover_image
-    if hover_image_mf != blank and hover_image_mf.value != blank
-      assign secondary_image = hover_image_mf.value
+    # Primary image URL
+    assign primary_url = blank
+    if product.metafields.custom.card_image.value != blank
+      assign primary_url = product.metafields.custom.card_image.value
+    elsif product.featured_image != blank
+      assign primary_url = product.featured_image
     endif
 
-    # Fallback hover: first gallery image that differs from the primary.
-    if secondary_image == blank
-      for img in product.images
-        unless img == primary_image
-          assign secondary_image = img
-          break
-        endunless
-      endfor
-    endif
-    if secondary_image == blank
-      assign secondary_image = primary_image
-    endif
-
-    # Normalize: a File→Image metafield value is a MediaImage; its renderable
-    # image lives on `.image`. Product images and featured_image are already
-    # the right type. This guard makes image_url work for all cases.
-    if primary_image.image != blank
-      assign primary_image = primary_image.image
-    endif
-    if secondary_image.image != blank
-      assign secondary_image = secondary_image.image
+    # Secondary (hover) image URL
+    assign secondary_url = blank
+    if product.metafields.custom.card_hover_image.value != blank
+      assign secondary_url = product.metafields.custom.card_hover_image.value
+    else
+      # Fallback: first gallery image (position 2 if it exists, else position 1)
+      assign second_gallery = product.images[1] | default: product.images[0]
+      if second_gallery != blank
+        assign secondary_url = second_gallery
+      endif
     endif
   endif
 -%}
 
 <a href="{{ card_url }}" class="product-card">
   <div class="product-card__media">
-    {%- unless placeholder -%}
-      {%- comment -%} TEMP DEBUG — remove after diagnosing. {%- endcomment -%}
-      <div style="position:absolute;z-index:99;background:#fff;color:#000;font-size:9px;padding:4px;max-width:100%;max-height:100%;overflow:auto;line-height:1.3;font-family:monospace;">
-        mf exists: {{ product.metafields.custom.card_image | json }}<br>---<br>
-        mf.value: {{ product.metafields.custom.card_image.value | json }}<br>---<br>
-        mf.type: {{ product.metafields.custom.card_image.type }}<br>---<br>
-        url test: {{ product.metafields.custom.card_image.value | image_url: width: 100 }}
-      </div>
-    {%- endunless -%}
     {%- if placeholder -%}
       {{ primary_placeholder | placeholder_svg_tag: 'product-card__placeholder product-card__img product-card__img--primary' }}
       {{ secondary_placeholder | placeholder_svg_tag: 'product-card__placeholder product-card__img product-card__img--secondary' }}
     {%- else -%}
-      {%- if primary_image -%}
+      {%- if primary_url != blank -%}
         <img
-          src="{{ primary_image | image_url: width: 800 }}"
-          srcset="{{ primary_image | image_url: width: 400 }} 400w, {{ primary_image | image_url: width: 800 }} 800w, {{ primary_image | image_url: width: 1200 }} 1200w"
+          src="{{ primary_url | image_url: width: 800 }}"
+          srcset="{{ primary_url | image_url: width: 400 }} 400w, {{ primary_url | image_url: width: 800 }} 800w, {{ primary_url | image_url: width: 1200 }} 1200w"
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           alt="{{ product.title | escape }}"
-          width="{{ primary_image.width | default: 800 }}"
-          height="{{ primary_image.height | default: 1000 }}"
+          width="800"
+          height="1000"
           {% if eager %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
           decoding="async"
           class="product-card__img product-card__img--primary"
         >
       {%- endif -%}
-      {%- if secondary_image and secondary_image != primary_image -%}
+      {%- if secondary_url != blank and secondary_url != primary_url -%}
         <img
-          src="{{ secondary_image | image_url: width: 800 }}"
-          srcset="{{ secondary_image | image_url: width: 400 }} 400w, {{ secondary_image | image_url: width: 800 }} 800w"
+          src="{{ secondary_url | image_url: width: 800 }}"
+          srcset="{{ secondary_url | image_url: width: 400 }} 400w, {{ secondary_url | image_url: width: 800 }} 800w"
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           alt=""
           aria-hidden="true"
-          width="{{ secondary_image.width | default: 800 }}"
-          height="{{ secondary_image.height | default: 1000 }}"
+          width="800"
+          height="1000"
           loading="lazy"
           decoding="async"
           class="product-card__img product-card__img--secondary"
