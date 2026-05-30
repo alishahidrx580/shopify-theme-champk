@@ -146,12 +146,16 @@
   }
 
   .product-card__img--primary {
+    opacity: 1;
     transition: opacity 0.7s ease;
+    z-index: 1;
   }
 
   .product-card__img--secondary {
+    opacity: 0;
     transform: scale(1.05);
-    transition: transform 1.2s ease;
+    transition: opacity 0.7s ease, transform 1.2s ease;
+    z-index: 2;
   }
 
   .product-card:hover .product-card__img--primary,
@@ -161,6 +165,7 @@
 
   .product-card:hover .product-card__img--secondary,
   .product-card:focus-visible .product-card__img--secondary {
+    opacity: 1;
     transform: scale(1);
   }
 
