@@ -5,6 +5,11 @@
 
   Hover swaps the primary image for the secondary image with a soft zoom.
 
+  Primary  = product.images[0] (the FIRST image in the product's media order)
+  Secondary = product.images[1] (the SECOND image in the product's media order)
+  This intentionally uses media ORDER, not featured_image, so the card always
+  matches the order you set by dragging images in the product's Media section.
+
   @param {product} [product] - The product to render
   @param {boolean} [placeholder] - Render placeholder mode
   @param {number} [index] - 1-based index, used for placeholder variation
@@ -31,8 +36,11 @@
     assign card_title = product.metafields.custom.short_name | default: product.title
     assign card_tagline = product.metafields.custom.tagline
     assign card_category = product.metafields.custom.category | default: product.type
-    assign primary_image = product.featured_image
-    assign secondary_image = product.images[1] | default: product.featured_image
+    # Use explicit media order: first image is primary, second is the hover image.
+    # This avoids the featured_image mismatch where the "set as featured" image
+    # differs from image position 1 in the gallery.
+    assign primary_image = product.images[0]
+    assign secondary_image = product.images[1] | default: product.images[0]
   endif
 -%}
 

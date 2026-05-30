@@ -1,7 +1,26 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
-      "type": "main-collection"
+      "type": "main-collection",
+      "settings": {
+        "eyebrow": "The Collection",
+        "heading_lead": "Formulations",
+        "heading_emphasis": "for skin that performs",
+        "heading_tail": "",
+        "body": "<p>Each product activates a specific skin function. Together, they create visible brightness, smoother texture and long-term glow.</p>",
+        "show_filters": true,
+        "filter_categories": "Face, Body, Treatment",
+        "filter_all_label": "All"
+      }
     }
   },
   "order": [
