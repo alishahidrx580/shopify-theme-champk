@@ -12,7 +12,26 @@
     "main": {
       "type": "main-product",
       "settings": {
-        "free_shipping_override": 0
+        "free_shipping_override": 0,
+        "gallery_fit": "cover",
+        "image_1_x": 50,
+        "image_1_y": 50,
+        "image_2_x": 50,
+        "image_2_y": 50,
+        "image_3_x": 50,
+        "image_3_y": 50,
+        "image_4_x": 50,
+        "image_4_y": 50,
+        "image_5_x": 50,
+        "image_5_y": 50,
+        "image_6_x": 50,
+        "image_6_y": 86,
+        "image_7_x": 50,
+        "image_7_y": 50,
+        "image_8_x": 50,
+        "image_8_y": 50,
+        "gallery_focal_x": 50,
+        "gallery_focal_y": 50
       }
     },
     "video": {
