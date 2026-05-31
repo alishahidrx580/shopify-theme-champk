@@ -34,6 +34,15 @@
 
   assign volume_note = 'products.volume_inclusive_taxes' | t: volume: volume
   assign shipping_note = 'products.free_shipping_note' | t: amount: threshold_money
+
+  # === Gallery image fit + focal position ===
+  # gallery_fit: cover (fill, may crop) or contain (show full, may letterbox).
+  # Per-image position is read from metafields in the gallery loop below; the
+  # section sliders provide a global fallback. focal_x / focal_y are the final
+  # default (center) when neither a metafield nor a slider is set.
+  assign gallery_fit = section.settings.gallery_fit | default: 'cover'
+  assign focal_x = section.settings.gallery_focal_x | default: 50
+  assign focal_y = section.settings.gallery_focal_y | default: 50
 -%}
 
 <section class="main-product full-width" data-product-section data-product-handle="{{ product.handle }}">
@@ -86,6 +95,29 @@
         >
           {%- if product.images.size > 0 -%}
             {%- for image in product.images -%}
+              {%- liquid
+                # Per-image position — automatic per product via metafields.
+                # For each image (by its order in Media) read integer metafields:
+                #   custom.img1_x / custom.img1_y  -> image 1
+                #   custom.img2_x / custom.img2_y  -> image 2  ... etc.
+                # 0 = left/top, 50 = center, 100 = right/bottom.
+                # Because these live on the product, values are per-product with
+                # no template duplication. If a metafield is unset, fall back to
+                # the section slider, then to the global default (center).
+                assign mf_x = 'img' | append: forloop.index | append: '_x'
+                assign mf_y = 'img' | append: forloop.index | append: '_y'
+                assign sx = product.metafields.custom[mf_x].value
+                assign sy = product.metafields.custom[mf_y].value
+                if sx == blank
+                  assign slider_x = 'image_' | append: forloop.index | append: '_x'
+                  assign sx = section.settings[slider_x] | default: focal_x
+                endif
+                if sy == blank
+                  assign slider_y = 'image_' | append: forloop.index | append: '_y'
+                  assign sy = section.settings[slider_y] | default: focal_y
+                endif
+                assign img_focal = sx | append: '% ' | append: sy | append: '%'
+              -%}
               <img
                 src="{{ image | image_url: width: 1200 }}"
                 srcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 1200 }} 1200w, {{ image | image_url: width: 1800 }} 1800w"
@@ -94,6 +126,7 @@
                 width="{{ image.width }}"
                 height="{{ image.height }}"
                 class="main-product__main-img {% if forloop.first %}is-active{% endif %}"
+                style="object-fit: {{ gallery_fit }}; object-position: {{ img_focal }};"
                 data-gallery-image
                 data-index="{{ forloop.index0 }}"
                 data-zoom-src="{{ image | image_url: width: 2400 }}"
@@ -852,6 +885,7 @@
     background: transparent;
     border: 0;
     color: inherit;
+    appearance: textfield;
     -moz-appearance: textfield;
   }
 
@@ -1047,6 +1081,141 @@
       "step": 100,
       "unit": "₹",
       "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Gallery image fit"
+    },
+    {
+      "type": "select",
+      "id": "gallery_fit",
+      "label": "Image fit",
+      "info": "Fill = crops to fill the 4:5 frame. Show full = whole image visible, may letterbox.",
+      "options": [
+        { "value": "cover", "label": "Fill frame (crop)" },
+        { "value": "contain", "label": "Show full image (no crop)" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "header",
+      "content": "Per-image position"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each slider pair controls one image by its order in the product's Media. Image 1 = first image, Image 2 = second, and so on. X: 0 = left, 50 = center, 100 = right. Y: 0 = top, 50 = center, 100 = bottom."
+    },
+    {
+      "type": "range",
+      "id": "image_1_x",
+      "label": "Image 1 — horizontal",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_1_y",
+      "label": "Image 1 — vertical",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_2_x",
+      "label": "Image 2 — horizontal",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_2_y",
+      "label": "Image 2 — vertical",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_3_x",
+      "label": "Image 3 — horizontal",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_3_y",
+      "label": "Image 3 — vertical",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_4_x",
+      "label": "Image 4 — horizontal",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_4_y",
+      "label": "Image 4 — vertical",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_5_x",
+      "label": "Image 5 — horizontal",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_5_y",
+      "label": "Image 5 — vertical",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_6_x",
+      "label": "Image 6 — horizontal",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_6_y",
+      "label": "Image 6 — vertical",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_7_x",
+      "label": "Image 7 — horizontal",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_7_y",
+      "label": "Image 7 — vertical",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_8_x",
+      "label": "Image 8 — horizontal",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_8_y",
+      "label": "Image 8 — vertical",
+      "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Default position (images 9+)"
+    },
+    {
+      "type": "range",
+      "id": "gallery_focal_x",
+      "label": "Default horizontal",
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "gallery_focal_y",
+      "label": "Default vertical",
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50
     }
   ],
   "disabled_on": {
