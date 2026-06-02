@@ -11,29 +11,29 @@
 -%}
 
 <section class="product-sensory full-width">
-  <div class="product-sensory__inner cham-container">
-    <div class="product-sensory__grid">
-      <div class="product-sensory__media-col" data-reveal>
-        <div class="product-sensory__media">
-          {%- if sensory_image != blank -%}
-            <img
-              src="{{ sensory_image | image_url: width: 1200 }}"
-              srcset="{{ sensory_image | image_url: width: 600 }} 600w, {{ sensory_image | image_url: width: 1200 }} 1200w, {{ sensory_image | image_url: width: 1800 }} 1800w"
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              alt="{{ product.title | append: ' sensory experience' | escape }}"
-              width="{{ sensory_image.width | default: 1200 }}"
-              height="{{ sensory_image.height | default: 1200 }}"
-              loading="lazy"
-              decoding="async"
-              class="product-sensory__img"
-            >
-          {%- else -%}
-            {{ 'product-1' | placeholder_svg_tag: 'product-sensory__img product-sensory__img--placeholder' }}
-          {%- endif -%}
-        </div>
+  <div class="product-sensory__grid">
+    <div class="product-sensory__media-col" data-reveal>
+      <div class="product-sensory__media">
+        {%- if sensory_image != blank -%}
+          <img
+            src="{{ sensory_image | image_url: width: 1400 }}"
+            srcset="{{ sensory_image | image_url: width: 700 }} 700w, {{ sensory_image | image_url: width: 1400 }} 1400w, {{ sensory_image | image_url: width: 2000 }} 2000w"
+            sizes="(min-width: 1024px) 55vw, 100vw"
+            alt="{{ product.title | append: ' sensory experience' | escape }}"
+            width="{{ sensory_image.width | default: 1400 }}"
+            height="{{ sensory_image.height | default: 1600 }}"
+            loading="lazy"
+            decoding="async"
+            class="product-sensory__img"
+          >
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'product-sensory__img product-sensory__img--placeholder' }}
+        {%- endif -%}
       </div>
+    </div>
 
-      <div class="product-sensory__copy-col" data-reveal data-reveal-delay="120">
+    <div class="product-sensory__copy-col" data-reveal data-reveal-delay="120">
+      <div class="product-sensory__copy-inner">
         {%- if section.settings.eyebrow != blank -%}
           <span class="eyebrow">{{ section.settings.eyebrow }}</span>
         {%- endif -%}
@@ -62,36 +62,44 @@
 </section>
 
 {% stylesheet %}
+  /* La Mer "Shake to Rejuvenate": full-bleed split, large image one side,
+     big serif heading + copy the other, vertically centered. */
   .product-sensory {
     width: 100%;
-    background-color: var(--surface);
-    padding-block: 6rem;
+    padding-block: 4rem;
   }
 
   @media (min-width: 1024px) {
     .product-sensory {
-      padding-block: 9rem;
+      padding-block: 6rem;
     }
   }
 
   .product-sensory__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
     align-items: center;
   }
 
   @media (min-width: 1024px) {
     .product-sensory__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 4rem;
+      grid-template-columns: 55% 45%;
+      gap: 0;
     }
   }
 
   .product-sensory__media {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
-    background-color: var(--background);
+    background-color: var(--surface);
+  }
+
+  @media (min-width: 1024px) {
+    .product-sensory__media {
+      aspect-ratio: 4 / 5;
+      height: 100%;
+    }
   }
 
   .product-sensory__img {
@@ -102,25 +110,29 @@
   }
 
   .product-sensory__img--placeholder {
-    color: color-mix(in oklab, var(--primary) 25%, var(--background));
+    color: color-mix(in oklab, var(--primary) 25%, var(--surface));
+  }
+
+  .product-sensory__copy-col {
+    padding-inline: var(--page-padding-inline, 1.25rem);
   }
 
   @media (min-width: 1024px) {
     .product-sensory__copy-col {
-      padding-inline-start: 1.5rem;
+      padding-inline: 4.5rem;
     }
+  }
+
+  .product-sensory__copy-inner {
+    max-width: 30rem;
   }
 
   .product-sensory__heading {
     margin-top: 1.5rem;
-    font-size: 2.25rem;
-    line-height: 1.05;
-  }
-
-  @media (min-width: 1024px) {
-    .product-sensory__heading {
-      font-size: 3rem;
-    }
+    font-size: clamp(2.75rem, 6.5vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.015em;
   }
 
   .product-sensory__heading em {
@@ -129,10 +141,10 @@
   }
 
   .product-sensory__line {
-    margin-top: 1.5rem;
-    font-size: 1.125rem;
-    line-height: 1.55;
-    color: color-mix(in oklab, var(--foreground) 85%, transparent);
+    margin-top: 1.75rem;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
   }
 
   .product-sensory__line + .product-sensory__line {
