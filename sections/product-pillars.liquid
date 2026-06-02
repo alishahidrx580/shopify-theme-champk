@@ -32,29 +32,25 @@
 {% stylesheet %}
   .product-pillars {
     background-color: var(--surface);
-    padding-block: 6rem;
+    padding-block: 7rem;
   }
 
   @media (min-width: 1024px) {
     .product-pillars {
-      padding-block: 9rem;
+      padding-block: 11rem;
     }
   }
 
   .product-pillars__head {
-    max-width: 48rem;
+    max-width: 60rem;
   }
 
   .product-pillars__heading {
-    font-size: 2.25rem;
-    line-height: 1.05;
-    margin-top: 1.5rem;
-  }
-
-  @media (min-width: 1024px) {
-    .product-pillars__heading {
-      font-size: 3.75rem;
-    }
+    font-size: clamp(2.75rem, 6.5vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.015em;
+    margin-top: 1.75rem;
   }
 
   .product-pillars__heading em {
@@ -65,9 +61,9 @@
   .product-pillars__grid {
     display: grid;
     grid-template-columns: 1fr;
-    column-gap: 2.5rem;
-    row-gap: 3rem;
-    margin-top: 4rem;
+    column-gap: 3rem;
+    row-gap: 3.5rem;
+    margin-top: 4.5rem;
   }
 
   @media (min-width: 768px) {
@@ -78,13 +74,13 @@
 
   @media (min-width: 1024px) {
     .product-pillars__grid {
-      margin-top: 5rem;
+      margin-top: 6rem;
     }
   }
 
   .product-pillars__item {
     border-top: 1px solid var(--border);
-    padding-top: 2rem;
+    padding-top: 2.25rem;
   }
 
   .product-pillars__number {
@@ -93,21 +89,22 @@
   }
 
   .product-pillars__title {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 300;
     line-height: 1.1;
-    margin-top: 0.75rem;
+    margin-top: 1rem;
   }
 
   @media (min-width: 1024px) {
     .product-pillars__title {
-      font-size: 1.875rem;
+      font-size: 2.25rem;
     }
   }
 
   .product-pillars__body {
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     color: color-mix(in oklab, var(--foreground) 75%, transparent);
-    line-height: 1.65;
+    line-height: 1.7;
   }
 {% endstylesheet %}
 
