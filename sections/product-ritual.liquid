@@ -7,76 +7,56 @@
 
 <section class="product-ritual full-width">
   <div class="product-ritual__inner cham-container">
-    <div class="product-ritual__grid">
-      <div class="product-ritual__head" data-reveal>
-        {%- if section.settings.eyebrow != blank -%}
-          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
-        {%- endif -%}
-        <h2 class="product-ritual__heading font-display">
-          {{- section.settings.heading_lead -}}
-          {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
-        </h2>
-        {%- if section.settings.body != blank -%}
-          <div class="product-ritual__body">{{ section.settings.body }}</div>
-        {%- endif -%}
-      </div>
-
-      {%- if steps != blank and steps.size > 0 -%}
-        <ol class="product-ritual__steps">
-          {%- for step in steps -%}
-            {%- assign num = '0' | append: forloop.index | slice: -2, 2 -%}
-            <li class="product-ritual__step" data-reveal data-reveal-delay="{{ forloop.index0 | times: 60 }}">
-              <span class="product-ritual__step-number font-display">{{ num }}</span>
-              <p class="product-ritual__step-body">{{ step }}</p>
-            </li>
-          {%- endfor -%}
-        </ol>
+    <div class="product-ritual__head" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h2 class="product-ritual__heading font-display">
+        {{- section.settings.heading_lead -}}
+        {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+      </h2>
+      {%- if section.settings.body != blank -%}
+        <div class="product-ritual__body">{{ section.settings.body }}</div>
       {%- endif -%}
     </div>
+
+    {%- if steps != blank and steps.size > 0 -%}
+      <ol class="product-ritual__steps">
+        {%- for step in steps -%}
+          {%- assign num = '0' | append: forloop.index | slice: -2, 2 -%}
+          <li class="product-ritual__step" data-reveal data-reveal-delay="{{ forloop.index0 | times: 80 }}">
+            <span class="product-ritual__step-number font-display">{{ num }}</span>
+            <p class="product-ritual__step-body">{{ step }}</p>
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
   </div>
 </section>
 
 {% stylesheet %}
   .product-ritual {
     width: 100%;
-    padding-block: 6rem;
+    background-color: var(--surface);
+    padding-block: 7rem;
   }
 
   @media (min-width: 1024px) {
     .product-ritual {
-      padding-block: 9rem;
+      padding-block: 11rem;
     }
   }
 
-  .product-ritual__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-
-  @media (min-width: 1024px) {
-    .product-ritual__grid {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 4rem;
-    }
-    .product-ritual__head {
-      grid-column: span 4;
-    }
-    .product-ritual__steps {
-      grid-column: span 8;
-    }
+  .product-ritual__head {
+    max-width: 60rem;
   }
 
   .product-ritual__heading {
-    margin-top: 1rem;
-    font-size: 2.25rem;
-    line-height: 1.05;
-  }
-
-  @media (min-width: 1024px) {
-    .product-ritual__heading {
-      font-size: 3rem;
-    }
+    margin-top: 1.75rem;
+    font-size: clamp(2.75rem, 6.5vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.015em;
   }
 
   .product-ritual__heading em {
@@ -85,9 +65,11 @@
   }
 
   .product-ritual__body {
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
+    max-width: 36rem;
     color: color-mix(in oklab, var(--foreground) 75%, transparent);
-    line-height: 1.65;
+    line-height: 1.7;
+    font-size: 1.0625rem;
   }
 
   .product-ritual__body > p {
@@ -95,38 +77,65 @@
   }
 
   .product-ritual__steps {
-    display: grid;
-    grid-template-columns: 1fr;
-    column-gap: 2.5rem;
-    row-gap: 2rem;
-    margin: 0;
+    margin: 4.5rem 0 0;
     padding: 0;
     list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 1024px) {
     .product-ritual__steps {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 6rem;
     }
   }
 
+  /* Each step a full-width row with a hairline divider, La Mer restraint. */
   .product-ritual__step {
-    display: flex;
-    gap: 1.25rem;
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    gap: 1.5rem;
+    align-items: baseline;
+    padding-block: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (min-width: 768px) {
+    .product-ritual__step {
+      grid-template-columns: 8rem 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .product-ritual__step:last-child {
+    border-bottom: 1px solid var(--border);
   }
 
   .product-ritual__step-number {
     color: var(--primary);
-    font-size: 1.5rem;
-    width: 2.5rem;
-    flex-shrink: 0;
+    font-size: 2rem;
+    font-weight: 300;
     line-height: 1;
   }
 
+  @media (min-width: 768px) {
+    .product-ritual__step-number {
+      font-size: 2.75rem;
+    }
+  }
+
   .product-ritual__step-body {
-    color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    line-height: 1.65;
-    padding-top: 0.25rem;
+    color: color-mix(in oklab, var(--foreground) 82%, transparent);
+    line-height: 1.7;
+    font-size: 1.0625rem;
+    max-width: 44rem;
+  }
+
+  @media (min-width: 768px) {
+    .product-ritual__step-body {
+      font-size: 1.25rem;
+    }
   }
 {% endstylesheet %}
 
