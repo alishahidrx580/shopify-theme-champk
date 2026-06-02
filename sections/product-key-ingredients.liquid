@@ -32,12 +32,12 @@
             <div class="product-key-ingredients__media">
               {%- if card_image != blank -%}
                 <img
-                  src="{{ card_image | image_url: width: 800 }}"
-                  srcset="{{ card_image | image_url: width: 400 }} 400w, {{ card_image | image_url: width: 800 }} 800w, {{ card_image | image_url: width: 1200 }} 1200w"
+                  src="{{ card_image | image_url: width: 900 }}"
+                  srcset="{{ card_image | image_url: width: 450 }} 450w, {{ card_image | image_url: width: 900 }} 900w, {{ card_image | image_url: width: 1400 }} 1400w"
                   sizes="(min-width: 768px) 33vw, 100vw"
                   alt="{{ ingredient.name | escape }}"
-                  width="{{ card_image.width | default: 800 }}"
-                  height="{{ card_image.height | default: 1000 }}"
+                  width="{{ card_image.width | default: 900 }}"
+                  height="{{ card_image.height | default: 1100 }}"
                   loading="lazy"
                   decoding="async"
                   class="product-key-ingredients__img"
@@ -45,8 +45,8 @@
               {%- else -%}
                 {{ 'product-1' | placeholder_svg_tag: 'product-key-ingredients__img product-key-ingredients__img--placeholder' }}
               {%- endif -%}
+              <h3 class="product-key-ingredients__name font-display">{{ ingredient.name }}</h3>
             </div>
-            <h3 class="product-key-ingredients__name font-display">{{ ingredient.name }}</h3>
             <p class="product-key-ingredients__role">{{ ingredient.role }}</p>
           </article>
         {%- endfor -%}
@@ -58,29 +58,25 @@
 {% stylesheet %}
   .product-key-ingredients {
     width: 100%;
-    padding-block: 6rem;
+    padding-block: 7rem;
   }
 
   @media (min-width: 1024px) {
     .product-key-ingredients {
-      padding-block: 9rem;
+      padding-block: 11rem;
     }
   }
 
   .product-key-ingredients__head {
-    max-width: 42rem;
+    max-width: 60rem;
   }
 
   .product-key-ingredients__heading {
-    margin-top: 1rem;
-    font-size: 2.25rem;
-    line-height: 1.05;
-  }
-
-  @media (min-width: 1024px) {
-    .product-key-ingredients__heading {
-      font-size: 3rem;
-    }
+    margin-top: 1.75rem;
+    font-size: clamp(2.75rem, 6.5vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.015em;
   }
 
   .product-key-ingredients__heading em {
@@ -89,21 +85,23 @@
   }
 
   .product-key-ingredients__body {
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
+    max-width: 38rem;
     color: color-mix(in oklab, var(--foreground) 75%, transparent);
-    line-height: 1.65;
+    line-height: 1.7;
+    font-size: 1.0625rem;
   }
 
   .product-key-ingredients__body > p {
     margin: 0;
   }
 
+  /* La Mer: tight, edge-to-edge image grid with minimal gap. */
   .product-key-ingredients__grid {
-    margin-top: 3.5rem;
+    margin-top: 4rem;
     display: grid;
     grid-template-columns: 1fr;
-    column-gap: 2rem;
-    row-gap: 3rem;
+    gap: 0.5rem;
   }
 
   @media (min-width: 768px) {
@@ -114,15 +112,16 @@
 
   @media (min-width: 1024px) {
     .product-key-ingredients__grid {
-      margin-top: 4.5rem;
+      margin-top: 5.5rem;
     }
   }
 
+  /* Image with the ingredient name overlaid bottom-left, La Mer style. */
   .product-key-ingredients__media {
+    position: relative;
     aspect-ratio: 4 / 5;
     overflow: hidden;
     background-color: var(--surface);
-    margin-bottom: 1.5rem;
   }
 
   .product-key-ingredients__img {
@@ -136,14 +135,30 @@
   }
 
   .product-key-ingredients__name {
-    font-size: 1.5rem;
-    line-height: 1.15;
+    position: absolute;
+    left: 1.5rem;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    color: #fff;
+    font-size: 1.75rem;
+    font-weight: 300;
+    line-height: 1.1;
+    text-shadow: 0 1px 18px rgb(0 0 0 / 0.35);
+  }
+
+  @media (min-width: 1024px) {
+    .product-key-ingredients__name {
+      font-size: 2rem;
+      left: 2rem;
+      bottom: 2rem;
+    }
   }
 
   .product-key-ingredients__role {
-    margin-top: 0.75rem;
+    margin-top: 1.25rem;
+    padding-inline: 0.25rem;
     color: color-mix(in oklab, var(--foreground) 75%, transparent);
-    line-height: 1.65;
+    line-height: 1.7;
   }
 {% endstylesheet %}
 
