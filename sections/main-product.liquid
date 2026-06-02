@@ -689,13 +689,15 @@
 
   .main-product__title {
     margin-top: 1.25rem;
-    font-size: 2.25rem;
-    line-height: 1.05;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.015em;
   }
 
   @media (min-width: 1024px) {
     .main-product__title {
-      font-size: 3.75rem;
+      font-size: clamp(3.25rem, 4vw, 4.5rem);
     }
   }
 
