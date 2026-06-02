@@ -34,25 +34,6 @@
         "gallery_focal_y": 50
       }
     },
-    "video": {
-      "type": "product-video",
-      "settings": {
-        "video_url": "",
-        "eyebrow": "See it in motion",
-        "heading_lead": "Texture, finish,",
-        "heading_emphasis": "ritual.",
-        "body": ""
-      }
-    },
-    "marketplaces": {
-      "type": "marketplace-badges",
-      "settings": {
-        "eyebrow": "Also Available On",
-        "heading": "",
-        "note": "Same Cham, same standards — wherever you choose to shop.",
-        "dev_preview": false
-      }
-    },
     "pillars": {
       "type": "product-pillars",
       "settings": {
@@ -87,6 +68,16 @@
         "body": "<p>A few unhurried minutes, twice a day. Consistency is what skin responds to.</p>"
       }
     },
+    "pairs_with": {
+      "type": "product-pairs-with",
+      "settings": {
+        "eyebrow": "Pairs Beautifully With",
+        "heading": "Complete the ritual",
+        "products_to_show": 3,
+        "view_all_label": "View all",
+        "view_all_url": ""
+      }
+    },
     "faq": {
       "type": "product-faq",
       "settings": {
@@ -117,27 +108,25 @@
         "heading_emphasis": "yours."
       }
     },
-    "pairs_with": {
-      "type": "product-pairs-with",
+    "marketplaces": {
+      "type": "marketplace-badges",
       "settings": {
-        "eyebrow": "Pairs Beautifully With",
-        "heading": "Complete the ritual",
-        "products_to_show": 3,
-        "view_all_label": "View all",
-        "view_all_url": ""
+        "eyebrow": "Also Available On",
+        "heading": "",
+        "note": "Same Cham, same standards — wherever you choose to shop.",
+        "dev_preview": false
       }
     }
   },
   "order": [
     "main",
-    "video",
-    "marketplaces",
     "pillars",
     "key_ingredients",
     "sensory",
     "ritual",
+    "pairs_with",
     "faq",
     "reviews",
-    "pairs_with"
+    "marketplaces"
   ]
 }
