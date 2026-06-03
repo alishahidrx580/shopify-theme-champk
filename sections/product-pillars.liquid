@@ -1,5 +1,4 @@
 {%- liquid
-  assign pillars = product.metafields.custom.pillars.value
   assign stat_value = section.settings.stat_value
   assign stat_footnote = section.settings.stat_footnote
   assign intro = section.settings.intro
@@ -32,21 +31,21 @@
       {%- endif -%}
     </div>
 
-    {%- comment -%} ===== Image cards grid ===== {%- endcomment -%}
-    {%- if pillars != blank and pillars.size > 0 -%}
+    {%- comment -%} ===== Image cards grid (theme-editor blocks) ===== {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
       <div class="product-pillars__grid">
-        {%- for pillar in pillars -%}
-          {%- assign pillar_image = pillar.image -%}
-          <article class="product-pillars__item" data-reveal data-reveal-delay="{{ forloop.index0 | times: 100 }}">
+        {%- for block in section.blocks -%}
+          {%- assign card_image = block.settings.image -%}
+          <article class="product-pillars__item" data-reveal data-reveal-delay="{{ forloop.index0 | times: 100 }}" {{ block.shopify_attributes }}>
             <div class="product-pillars__media">
-              {%- if pillar_image != blank -%}
+              {%- if card_image != blank -%}
                 <img
-                  src="{{ pillar_image | image_url: width: 900 }}"
-                  srcset="{{ pillar_image | image_url: width: 450 }} 450w, {{ pillar_image | image_url: width: 900 }} 900w, {{ pillar_image | image_url: width: 1300 }} 1300w"
+                  src="{{ card_image | image_url: width: 900 }}"
+                  srcset="{{ card_image | image_url: width: 450 }} 450w, {{ card_image | image_url: width: 900 }} 900w, {{ card_image | image_url: width: 1300 }} 1300w"
                   sizes="(min-width: 768px) 30vw, 100vw"
-                  alt="{{ pillar.title | escape }}"
-                  width="{{ pillar_image.width | default: 900 }}"
-                  height="{{ pillar_image.height | default: 1125 }}"
+                  alt="{{ block.settings.title | escape }}"
+                  width="{{ card_image.width | default: 900 }}"
+                  height="{{ card_image.height | default: 1125 }}"
                   class="product-pillars__img"
                   loading="lazy"
                   decoding="async"
@@ -55,8 +54,12 @@
                 {{ 'image' | placeholder_svg_tag: 'product-pillars__img product-pillars__img--placeholder' }}
               {%- endif -%}
             </div>
-            <h3 class="product-pillars__title">{{ pillar.title }}</h3>
-            <p class="product-pillars__body">{{ pillar.body }}</p>
+            {%- if block.settings.title != blank -%}
+              <h3 class="product-pillars__title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.body != blank -%}
+              <p class="product-pillars__body">{{ block.settings.body }}</p>
+            {%- endif -%}
           </article>
         {%- endfor -%}
       </div>
@@ -230,19 +233,60 @@
       "id": "intro",
       "label": "Intro paragraph",
       "default": "From sea-sourced ferments to proprietary complexes, discover what makes it special."
-    },
-    {
-      "type": "header",
-      "content": "Cards"
-    },
-    {
-      "type": "paragraph",
-      "content": "Cards are pulled from the product's \"pillars\" metafield. Add an image field named \"image\" to each pillar entry to show the photo above its title and body."
     }
   ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Ingredient name"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body",
+          "default": "A short description of this ingredient or complex and what it does for the skin."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
   "presets": [
     {
-      "name": "t:sections.product_pillars.presets_default"
+      "name": "t:sections.product_pillars.presets_default",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "title": "Miracle Broth\u2122",
+            "body": "It all comes back to our visible youth-renewing elixir, with our unique blend of sustainably harvested Giant Sea Kelp, vitamins and minerals to rejuvenate skin."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Infinity Oil Complex",
+            "body": "Our concentration of 8 high-potency oils works to saturate skin with lipids and fatty acids that support skin to help balance and rebuild skin's moisture barrier."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Hydro Fusion Complex",
+            "body": "Our marine and peptide powered complex enhances skin's elasticity and density, revealing a smoother surface and youthful vibrancy."
+          }
+        }
+      ]
     }
   ],
   "enabled_on": {
