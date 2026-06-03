@@ -1,32 +1,61 @@
 {%- liquid
-  assign steps = product.metafields.custom.steps.value
-  if steps == blank
-    assign steps = product.metafields.custom.steps
-  endif
+  assign step_count = section.blocks.size
 -%}
 
 <section class="product-ritual full-width">
   <div class="product-ritual__inner cham-container">
-    <div class="product-ritual__head" data-reveal>
-      {%- if section.settings.eyebrow != blank -%}
-        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
-      {%- endif -%}
-      <h2 class="product-ritual__heading font-display">
-        {{- section.settings.heading_lead -}}
-        {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
-      </h2>
-      {%- if section.settings.body != blank -%}
-        <div class="product-ritual__body">{{ section.settings.body }}</div>
-      {%- endif -%}
-    </div>
+    {%- if section.settings.eyebrow != blank or section.settings.heading_lead != blank or section.settings.body != blank -%}
+      <div class="product-ritual__head" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading_lead != blank or section.settings.heading_emphasis != blank -%}
+          <h2 class="product-ritual__heading font-display">
+            {{- section.settings.heading_lead -}}
+            {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.body != blank -%}
+          <div class="product-ritual__body rte">{{ section.settings.body }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
 
-    {%- if steps != blank and steps.size > 0 -%}
-      <ol class="product-ritual__steps">
-        {%- for step in steps -%}
+    {%- if step_count > 0 -%}
+      <ol class="product-ritual__steps is-count-{{ step_count }}">
+        {%- for block in section.blocks -%}
           {%- assign num = '0' | append: forloop.index | slice: -2, 2 -%}
-          <li class="product-ritual__step" data-reveal data-reveal-delay="{{ forloop.index0 | times: 80 }}">
-            <span class="product-ritual__step-number font-display">{{ num }}</span>
-            <p class="product-ritual__step-body">{{ step }}</p>
+          {%- assign step_image = block.settings.image -%}
+          <li class="product-ritual__step" data-reveal data-reveal-delay="{{ forloop.index0 | times: 80 }}" {{ block.shopify_attributes }}>
+            <div class="product-ritual__step-head">
+              <span class="product-ritual__step-number font-display">{{ num }}</span>
+              <span class="product-ritual__step-rail" aria-hidden="true"></span>
+            </div>
+
+            <div class="product-ritual__step-media">
+              {%- if step_image != blank -%}
+                <img
+                  src="{{ step_image | image_url: width: 900 }}"
+                  srcset="{{ step_image | image_url: width: 450 }} 450w, {{ step_image | image_url: width: 900 }} 900w, {{ step_image | image_url: width: 1300 }} 1300w"
+                  sizes="(min-width: 768px) 32vw, 100vw"
+                  alt="{{ block.settings.title | escape }}"
+                  width="{{ step_image.width | default: 900 }}"
+                  height="{{ step_image.height | default: 1125 }}"
+                  class="product-ritual__step-img"
+                  loading="lazy"
+                  decoding="async"
+                >
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'product-ritual__step-img product-ritual__step-img--placeholder' }}
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.title != blank -%}
+              <h3 class="product-ritual__step-title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.body != blank -%}
+              <p class="product-ritual__step-body">{{ block.settings.body }}</p>
+            {%- endif -%}
           </li>
         {%- endfor -%}
       </ol>
@@ -38,25 +67,26 @@
   .product-ritual {
     width: 100%;
     background-color: var(--surface);
-    padding-block: 7rem;
+    padding-block: 6rem;
   }
 
   @media (min-width: 1024px) {
     .product-ritual {
-      padding-block: 11rem;
+      padding-block: 9rem;
     }
   }
 
+  /* === Restrained header (no oversized display heading) === */
   .product-ritual__head {
-    max-width: 60rem;
+    max-width: 52rem;
   }
 
   .product-ritual__heading {
-    margin-top: 1.75rem;
-    font-size: clamp(2.75rem, 6.5vw, 5.5rem);
+    margin-top: 1rem;
+    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
     font-weight: 300;
-    line-height: 1.0;
-    letter-spacing: -0.015em;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
   }
 
   .product-ritual__heading em {
@@ -65,77 +95,96 @@
   }
 
   .product-ritual__body {
-    margin-top: 1.75rem;
-    max-width: 36rem;
+    margin-top: 1.25rem;
+    max-width: 34rem;
     color: color-mix(in oklab, var(--foreground) 75%, transparent);
     line-height: 1.7;
-    font-size: 1.0625rem;
   }
 
-  .product-ritual__body > p {
-    margin: 0;
-  }
+  .product-ritual__body > p { margin: 0; }
+  .product-ritual__body > p + p { margin-top: 1rem; }
 
+  /* === Step cards === */
   .product-ritual__steps {
-    margin: 4.5rem 0 0;
-    padding: 0;
     list-style: none;
+    margin: 3rem 0 0;
+    padding: 0;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  @media (min-width: 1024px) {
-    .product-ritual__steps {
-      margin-top: 6rem;
-    }
-  }
-
-  /* Each step a full-width row with a hairline divider, La Mer restraint. */
-  .product-ritual__step {
-    display: grid;
-    grid-template-columns: 4rem 1fr;
-    gap: 1.5rem;
-    align-items: baseline;
-    padding-block: 2rem;
-    border-top: 1px solid var(--border);
+    column-gap: 1.5rem;
+    row-gap: 3rem;
   }
 
   @media (min-width: 768px) {
-    .product-ritual__step {
-      grid-template-columns: 8rem 1fr;
-      gap: 3rem;
+    .product-ritual__steps {
+      margin-top: 4rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    /* Count-aware columns so 1–6 cards always look balanced, not stretched. */
+    .product-ritual__steps.is-count-1 {
+      grid-template-columns: minmax(0, 32rem);
+      justify-content: center;
+    }
+    .product-ritual__steps.is-count-2,
+    .product-ritual__steps.is-count-4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  .product-ritual__step:last-child {
-    border-bottom: 1px solid var(--border);
+  /* Number + hairline rail across the top — aligns across the row so the
+     steps read as one connected sequence. */
+  .product-ritual__step-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .product-ritual__step-number {
+    flex: none;
     color: var(--primary);
-    font-size: 2rem;
+    font-size: 1.375rem;
     font-weight: 300;
     line-height: 1;
+    letter-spacing: 0.04em;
   }
 
-  @media (min-width: 768px) {
-    .product-ritual__step-number {
-      font-size: 2.75rem;
-    }
+  .product-ritual__step-rail {
+    flex: 1 1 auto;
+    height: 1px;
+    background-color: color-mix(in oklab, var(--primary) 45%, var(--border));
+  }
+
+  .product-ritual__step-media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: color-mix(in oklab, var(--foreground) 6%, var(--surface));
+  }
+
+  .product-ritual__step-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .product-ritual__step-img--placeholder {
+    color: color-mix(in oklab, var(--primary) 25%, var(--surface));
+  }
+
+  .product-ritual__step-title {
+    margin-top: 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--foreground);
   }
 
   .product-ritual__step-body {
-    color: color-mix(in oklab, var(--foreground) 82%, transparent);
+    margin-top: 0.75rem;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
     line-height: 1.7;
-    font-size: 1.0625rem;
-    max-width: 44rem;
-  }
-
-  @media (min-width: 768px) {
-    .product-ritual__step-body {
-      font-size: 1.25rem;
-    }
   }
 {% endstylesheet %}
 
@@ -169,9 +218,58 @@
       "default": "<p>A few unhurried minutes, twice a day. Consistency is what skin responds to.</p>"
     }
   ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Step title"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Instruction",
+          "default": "Describe what to do in this step of the routine."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
   "presets": [
     {
-      "name": "t:sections.product_ritual.presets_default"
+      "name": "t:sections.product_ritual.name",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Cleanse",
+            "body": "Start with freshly cleansed, slightly damp skin to help the formula absorb."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Warm",
+            "body": "Dispense and gently warm between fingertips to activate the formula."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Press",
+            "body": "Press evenly over face and neck, then breathe and let it settle."
+          }
+        }
+      ]
     }
   ],
   "enabled_on": {
