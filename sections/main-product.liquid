@@ -140,26 +140,9 @@
           <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
           <input type="hidden" name="quantity" value="1">
 
-          {%- comment -%} ----- Size as a dropdown (La Mer "Choose Size") ----- {%- endcomment -%}
-          <div class="main-product__select-wrap">
-            <select class="main-product__select" data-variant-select aria-label="Choose size">
-              {%- for variant in product.variants -%}
-                <option
-                  value="{{ variant.id }}"
-                  data-price="{{ variant.price | money }}"
-                  data-price-cents="{{ variant.price }}"
-                  data-installment="{{ variant.price | divided_by: 4 | money }}"
-                  data-available="{{ variant.available }}"
-                  {% if variant.id == current_variant.id %}selected{% endif %}
-                  {% unless variant.available %}disabled{% endunless %}
-                >
-                  {% if product.has_only_default_variant %}{{ variant.price | money }}{% else %}{{ variant.title }} / {{ variant.price | money }}{% endif %}
-                </option>
-              {%- endfor -%}
-            </select>
-            <svg class="main-product__select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
+          {%- comment -%} ----- Size / price (static, single — no dropdown) ----- {%- endcomment -%}
+          <div class="main-product__size-line">
+            <span data-variant-label>{{ variant_label }}</span>
           </div>
 
           {%- comment -%} ----- Replenishment / subscription (structural expandable) ----- {%- endcomment -%}
@@ -219,8 +202,7 @@
 
         {%- comment -%} ----- Accordions: Benefits · Ingredients · How to use ----- {%- endcomment -%}
         <div class="main-product__accordion">
-          {%- if claims_list != blank or science_note != blank -%}
-            <details class="main-product__accordion-item">
+          <details class="main-product__accordion-item">
               <summary class="main-product__accordion-summary">
                 <span>Benefits</span>
                 <span class="main-product__accordion-icon" aria-hidden="true">
@@ -240,10 +222,8 @@
                 {%- if science_note != blank -%}<div class="rte">{{ science_note }}</div>{%- endif -%}
               </div>
             </details>
-          {%- endif -%}
 
-          {%- if full_ingredients != blank -%}
-            <details class="main-product__accordion-item">
+          <details class="main-product__accordion-item">
               <summary class="main-product__accordion-summary">
                 <span>Ingredients</span>
                 <span class="main-product__accordion-icon" aria-hidden="true">
@@ -254,10 +234,8 @@
               </summary>
               <div class="main-product__accordion-body main-product__accordion-body--ingredients">{{ full_ingredients }}</div>
             </details>
-          {%- endif -%}
 
-          {%- if how_to_use != blank -%}
-            <details class="main-product__accordion-item">
+          <details class="main-product__accordion-item">
               <summary class="main-product__accordion-summary">
                 <span>How to use</span>
                 <span class="main-product__accordion-icon" aria-hidden="true">
@@ -268,7 +246,6 @@
               </summary>
               <div class="main-product__accordion-body">{{ how_to_use }}</div>
             </details>
-          {%- endif -%}
         </div>
       </div>
     </div>
@@ -279,18 +256,6 @@
     <div class="main-product__sticky-inner cham-container">
       <span class="main-product__sticky-title font-display">{{ short_name }}</span>
       <div class="main-product__sticky-actions">
-        <div class="main-product__select-wrap main-product__select-wrap--sticky">
-          <select class="main-product__select" data-variant-select-sticky aria-label="Choose size">
-            {%- for variant in product.variants -%}
-              <option value="{{ variant.id }}" {% if variant.id == current_variant.id %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
-                {% if product.has_only_default_variant %}{{ variant.price | money }}{% else %}{{ variant.title }} / {{ variant.price | money }}{% endif %}
-              </option>
-            {%- endfor -%}
-          </select>
-          <svg class="main-product__select-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
         <button type="button" class="main-product__atc main-product__atc--sticky" data-atc-sticky {% if current_variant.available == false %}disabled{% endif %}>
           <span data-atc-label>{% if current_variant.available %}{{ atc_label }}{% else %}{{ sold_out_label }}{% endif %}</span>
           <span class="main-product__atc-price" data-atc-price>{{ variant_label }}</span>
@@ -489,31 +454,13 @@
     .main-product__see-more { display: none; }
   }
 
-  /* === Size dropdown === */
-  .main-product__select-wrap {
-    position: relative;
+  /* === Size / price line (static, no dropdown) === */
+  .main-product__size-line {
     margin-top: 1.75rem;
-  }
-  .main-product__select {
-    width: 100%;
-    appearance: none;
-    -webkit-appearance: none;
-    background: transparent;
-    border: 0;
+    padding: 0.85rem 0;
     border-bottom: 1px solid var(--border);
-    padding: 0.85rem 2rem 0.85rem 0;
     font-size: 0.95rem;
     color: var(--foreground);
-    cursor: pointer;
-  }
-  .main-product__select:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
-  .main-product__select-icon {
-    position: absolute;
-    right: 0.25rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--foreground);
-    pointer-events: none;
   }
 
   /* === Replenishment expandable === */
@@ -682,10 +629,6 @@
     flex: 1 1 auto;
     justify-content: flex-end;
   }
-  .main-product__select-wrap--sticky { margin-top: 0; min-width: 8rem; }
-  @media (max-width: 1023px) {
-    .main-product__select-wrap--sticky { display: none; }
-  }
   .main-product__atc--sticky {
     margin-top: 0;
     min-height: 3rem;
@@ -704,50 +647,12 @@
     if (!section) return;
 
     var form        = section.querySelector('[data-product-form]');
-    var variantId   = section.querySelector('[data-variant-id]');
-    var selects     = section.querySelectorAll('[data-variant-select], [data-variant-select-sticky]');
-    var atcButtons  = section.querySelectorAll('[data-atc], [data-atc-sticky]');
     var stickyBar   = section.querySelector('[data-sticky-bar]');
     var header      = section.querySelector('.main-product__header');
     var description = section.querySelector('[data-description]');
     var seeMore     = section.querySelector('[data-see-more]');
     var track       = section.querySelector('[data-gallery-track]');
     var progress    = section.querySelector('[data-gallery-progress]');
-
-    function $$(sel) { return section.querySelectorAll(sel); }
-
-    /* ---- Variant selection (keeps both dropdowns + both ATC buttons in sync) ---- */
-    function selectVariant(id, sourceEl) {
-      var opt = section.querySelector('[data-variant-select] option[value="' + id + '"]');
-      if (!opt) return;
-
-      if (variantId) variantId.value = id;
-
-      selects.forEach(function (s) { if (s !== sourceEl) s.value = id; });
-
-      var price       = opt.getAttribute('data-price');
-      var installment = opt.getAttribute('data-installment');
-      var available   = opt.getAttribute('data-available') === 'true';
-
-      $$('[data-atc-price]').forEach(function (el) {
-        el.textContent = opt.parentNode.querySelector('option[value="' + id + '"]').textContent.trim();
-      });
-      $$('[data-installment]').forEach(function (el) { if (installment) el.textContent = installment; });
-
-      atcButtons.forEach(function (btn) {
-        var label = btn.querySelector('[data-atc-label]');
-        btn.disabled = !available;
-        if (label) {
-          label.textContent = available
-            ? (btn.getAttribute('data-atc-label') || label.textContent)
-            : (btn.getAttribute('data-sold-out-label') || 'Sold out');
-        }
-      });
-    }
-
-    selects.forEach(function (s) {
-      s.addEventListener('change', function () { selectVariant(this.value, this); });
-    });
 
     /* ---- Add to bag (AJAX) ---- */
     function addToCart(btn) {
