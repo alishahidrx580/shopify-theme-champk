@@ -1,12 +1,6 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
 
-  assign has_compare = false
-  if current_variant.compare_at_price > current_variant.price
-    assign has_compare = true
-    assign save_percent = current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price | round
-  endif
-
   assign threshold = section.settings.free_shipping_override
   if threshold == 0 or threshold == blank
     assign threshold = settings.free_shipping_threshold
@@ -15,8 +9,6 @@
 
   assign short_name = product.metafields.custom.short_name | default: product.title
   assign hero_statement = product.metafields.custom.hero_statement
-  assign volume = product.metafields.custom.volume
-  assign ingredient_list = product.metafields.custom.ingredients.value
   assign science_note = product.metafields.custom.science_note
   assign how_to_use = product.metafields.custom.how_to_use
   assign full_ingredients = product.metafields.custom.full_ingredients
@@ -24,8 +16,7 @@
   assign claims_list = product.metafields.custom.claims.value
 
   assign price_formatted = current_variant.price | money
-  assign price_sentinel = '__PDP_PRICE__'
-  assign atc_label = 'products.add_to_bag' | t | default: 'Add to bag'
+  assign atc_label = 'Add to bag'
   assign sold_out_label = 'products.sold_out' | t
 
   # Variant label shown on the size control + add-to-bag, e.g. "1 oz. / $295"
@@ -37,7 +28,6 @@
 
   assign installment_each = current_variant.price | divided_by: 4 | money
 
-  assign volume_note = 'products.volume_inclusive_taxes' | t: volume: volume
   assign shipping_note = 'products.free_shipping_note' | t: amount: threshold_money
 
   # === Gallery image fit + per-image focal position (unchanged data source) ===
@@ -130,8 +120,8 @@
 
         {%- if product.description != blank -%}
           <div class="main-product__description rte" data-description>{{ product.description }}</div>
-          <button type="button" class="main-product__see-more" data-see-more aria-expanded="false">
-            {{ 'products.see_more' | t | default: 'See more' }}
+          <button type="button" class="main-product__see-more" data-see-more aria-expanded="false" data-more="See more" data-less="See less">
+            See more
           </button>
         {%- endif -%}
 
@@ -152,7 +142,7 @@
 
           {%- comment -%} ----- Size as a dropdown (La Mer "Choose Size") ----- {%- endcomment -%}
           <div class="main-product__select-wrap">
-            <select class="main-product__select" data-variant-select aria-label="{{ 'products.choose_size' | t | default: 'Choose size' }}">
+            <select class="main-product__select" data-variant-select aria-label="Choose size">
               {%- for variant in product.variants -%}
                 <option
                   value="{{ variant.id }}"
@@ -175,7 +165,7 @@
           {%- comment -%} ----- Replenishment / subscription (structural expandable) ----- {%- endcomment -%}
           <details class="main-product__replenishment">
             <summary class="main-product__replenishment-summary">
-              <span>{{ 'products.replenishment' | t | default: 'Replenishment' }}:</span>
+              <span>Replenishment:</span>
               <span class="main-product__replenishment-icon" aria-hidden="true">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -186,7 +176,7 @@
               {%- if product.selling_plan_groups.size > 0 -%}
                 <label class="main-product__plan">
                   <input type="radio" name="selling_plan" value="" data-selling-plan checked>
-                  <span>{{ 'products.one_time_purchase' | t | default: 'One-time purchase' }}</span>
+                  <span>One-time purchase</span>
                 </label>
                 {%- for group in product.selling_plan_groups -%}
                   {%- for plan in group.selling_plans -%}
@@ -198,7 +188,7 @@
                 {%- endfor -%}
               {%- else -%}
                 <p class="main-product__replenishment-note">
-                  {{ 'products.replenishment_note' | t | default: 'Subscribe to receive this product on a recurring schedule. No subscription plans are set up for this product yet.' }}
+                  Subscribe to receive this product on a recurring schedule. No subscription plans are set up for this product yet.
                 </p>
               {%- endif -%}
             </div>
@@ -219,9 +209,9 @@
 
           {%- comment -%} ----- Afterpay installments line ----- {%- endcomment -%}
           <p class="main-product__installments">
-            {{ 'products.installments' | t: amount: installment_each | default: 'or 4 installments' }}
+            or 4 installments of
             <span data-installment>{{ installment_each }}</span>
-            {{ 'products.installments_by' | t | default: 'by Afterpay' }}
+            by Afterpay
           </p>
         </form>
 
@@ -232,7 +222,7 @@
           {%- if claims_list != blank or science_note != blank -%}
             <details class="main-product__accordion-item">
               <summary class="main-product__accordion-summary">
-                <span>{{ 'sections.main_product.accordion_benefits' | t | default: 'Benefits' }}</span>
+                <span>Benefits</span>
                 <span class="main-product__accordion-icon" aria-hidden="true">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -255,7 +245,7 @@
           {%- if full_ingredients != blank -%}
             <details class="main-product__accordion-item">
               <summary class="main-product__accordion-summary">
-                <span>{{ 'sections.main_product.accordion_ingredients' | t | default: 'Ingredients' }}</span>
+                <span>Ingredients</span>
                 <span class="main-product__accordion-icon" aria-hidden="true">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -269,7 +259,7 @@
           {%- if how_to_use != blank -%}
             <details class="main-product__accordion-item">
               <summary class="main-product__accordion-summary">
-                <span>{{ 'sections.main_product.accordion_how' | t | default: 'How to use' }}</span>
+                <span>How to use</span>
                 <span class="main-product__accordion-icon" aria-hidden="true">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -290,7 +280,7 @@
       <span class="main-product__sticky-title font-display">{{ short_name }}</span>
       <div class="main-product__sticky-actions">
         <div class="main-product__select-wrap main-product__select-wrap--sticky">
-          <select class="main-product__select" data-variant-select-sticky aria-label="{{ 'products.choose_size' | t | default: 'Choose size' }}">
+          <select class="main-product__select" data-variant-select-sticky aria-label="Choose size">
             {%- for variant in product.variants -%}
               <option value="{{ variant.id }}" {% if variant.id == current_variant.id %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
                 {% if product.has_only_default_variant %}{{ variant.price | money }}{% else %}{{ variant.title }} / {{ variant.price | money }}{% endif %}
@@ -490,6 +480,7 @@
     .main-product__description.is-clamped {
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
