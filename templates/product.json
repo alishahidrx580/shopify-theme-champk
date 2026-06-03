@@ -36,10 +36,41 @@
     },
     "pillars": {
       "type": "product-pillars",
+      "blocks": {
+        "card_Qapj6n": {
+          "type": "card",
+          "settings": {
+            "title": "Ingredient name",
+            "body": "A short description of this ingredient or complex and what it does for the skin."
+          }
+        },
+        "card_8f6X9B": {
+          "type": "card",
+          "settings": {
+            "title": "Ingredient name",
+            "body": "A short description of this ingredient or complex and what it does for the skin."
+          }
+        },
+        "card_TkUcjU": {
+          "type": "card",
+          "settings": {
+            "title": "Ingredient name",
+            "body": "A short description of this ingredient or complex and what it does for the skin."
+          }
+        }
+      },
+      "block_order": [
+        "card_Qapj6n",
+        "card_8f6X9B",
+        "card_TkUcjU"
+      ],
       "settings": {
+        "stat_value": "96% of women said their skin immediately looked smoother.*",
+        "stat_footnote": "*Consumer testing on 102 women after using product once.",
         "eyebrow": "CONSIDERED FORMULATION",
         "heading_lead": "Formulated around how your skin",
-        "heading_emphasis": "naturally behaves."
+        "heading_emphasis": "naturally behaves.",
+        "intro": "From sea-sourced ferments to proprietary complexes, discover what makes it special."
       }
     },
     "key_ingredients": {
