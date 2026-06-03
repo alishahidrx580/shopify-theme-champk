@@ -1,200 +1,292 @@
 {%- liquid
-  assign key_ingredients = product.metafields.custom.key_ingredients.value
-  assign gallery_size = product.images.size
+  assign heading_lead = section.settings.heading_lead
+  assign heading_emphasis = section.settings.heading_emphasis
+  assign claim = section.settings.claim
+  assign footnote = section.settings.footnote
+  assign video = section.settings.video
+  assign video_url = section.settings.video_url
+  assign image = section.settings.image
+  assign media_position = section.settings.media_position | default: 'left'
+  assign autoplay = section.settings.autoplay
+  assign loop_video = section.settings.loop
+  assign controls = section.settings.show_controls
+
+  assign autoplay_flag = '0'
+  if autoplay
+    assign autoplay_flag = '1'
+  endif
+  assign loop_flag = '0'
+  if loop_video
+    assign loop_flag = '1'
+  endif
+  assign controls_flag = '0'
+  if controls
+    assign controls_flag = '1'
+  endif
+  # Vimeo "background" mode hides controls; invert the controls flag for it.
+  assign vimeo_bg = '1'
+  if controls
+    assign vimeo_bg = '0'
+  endif
 -%}
 
-<section class="product-key-ingredients full-width">
-  <div class="product-key-ingredients__inner cham-container">
-    <div class="product-key-ingredients__head" data-reveal>
-      {%- if section.settings.eyebrow != blank -%}
-        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
-      {%- endif -%}
-      <h2 class="product-key-ingredients__heading font-display">
-        {{- section.settings.heading_lead -}}
-        {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
-      </h2>
-      {%- if section.settings.body != blank -%}
-        <div class="product-key-ingredients__body">{{ section.settings.body }}</div>
-      {%- endif -%}
-    </div>
+<section class="product-feature-media full-width product-feature-media--media-{{ media_position }}">
+  <div class="product-feature-media__inner cham-container">
+    <div class="product-feature-media__grid">
 
-    {%- if key_ingredients != blank and key_ingredients.size > 0 -%}
-      <div class="product-key-ingredients__grid">
-        {%- for ingredient in key_ingredients -%}
-          {%- liquid
-            assign card_image = ingredient.image
-            if card_image == blank and gallery_size > 0
-              assign cycle_idx = forloop.index | modulo: gallery_size
-              assign card_image = product.images[cycle_idx]
-            endif
-          -%}
-          <article class="product-key-ingredients__card" data-reveal data-reveal-delay="{{ forloop.index0 | times: 100 }}">
-            <div class="product-key-ingredients__media">
-              {%- if card_image != blank -%}
-                <img
-                  src="{{ card_image | image_url: width: 900 }}"
-                  srcset="{{ card_image | image_url: width: 450 }} 450w, {{ card_image | image_url: width: 900 }} 900w, {{ card_image | image_url: width: 1400 }} 1400w"
-                  sizes="(min-width: 768px) 33vw, 100vw"
-                  alt="{{ ingredient.name | escape }}"
-                  width="{{ card_image.width | default: 900 }}"
-                  height="{{ card_image.height | default: 1100 }}"
-                  loading="lazy"
-                  decoding="async"
-                  class="product-key-ingredients__img"
-                >
-              {%- else -%}
-                {{ 'product-1' | placeholder_svg_tag: 'product-key-ingredients__img product-key-ingredients__img--placeholder' }}
-              {%- endif -%}
-              <h3 class="product-key-ingredients__name font-display">{{ ingredient.name }}</h3>
-            </div>
-            <p class="product-key-ingredients__role">{{ ingredient.role }}</p>
-          </article>
-        {%- endfor -%}
+      {%- comment -%} ===== Media (video / external embed / image) ===== {%- endcomment -%}
+      <div class="product-feature-media__media" data-reveal>
+        {%- if video != blank -%}
+          {{ video | video_tag: image_size: '1200x', autoplay: autoplay, loop: loop_video, muted: true, controls: controls, playsinline: true, preload: 'metadata', class: 'product-feature-media__video' }}
+        {%- elsif video_url != blank -%}
+          <div class="product-feature-media__embed">
+            {%- if video_url.type == 'youtube' -%}
+              <iframe
+                src="https://www.youtube.com/embed/{{ video_url.id }}?autoplay={{ autoplay_flag }}&mute=1&loop={{ loop_flag }}&playlist={{ video_url.id }}&controls={{ controls_flag }}&playsinline=1&modestbranding=1&rel=0"
+                title="{{ heading_lead | escape }}"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            {%- elsif video_url.type == 'vimeo' -%}
+              <iframe
+                src="https://player.vimeo.com/video/{{ video_url.id }}?autoplay={{ autoplay_flag }}&muted=1&loop={{ loop_flag }}&background={{ vimeo_bg }}&playsinline=1"
+                title="{{ heading_lead | escape }}"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            {%- endif -%}
+          </div>
+        {%- elsif image != blank -%}
+          <img
+            src="{{ image | image_url: width: 1200 }}"
+            srcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 1200 }} 1200w, {{ image | image_url: width: 1800 }} 1800w"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            alt="{{ heading_lead | escape }}"
+            width="{{ image.width | default: 1200 }}"
+            height="{{ image.height | default: 1500 }}"
+            class="product-feature-media__img"
+            loading="lazy"
+            decoding="async"
+          >
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'product-feature-media__img product-feature-media__img--placeholder' }}
+        {%- endif -%}
       </div>
-    {%- endif -%}
+
+      {%- comment -%} ===== Text ===== {%- endcomment -%}
+      <div class="product-feature-media__text" data-reveal data-reveal-delay="120">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="product-feature-media__heading font-display">
+          {{- heading_lead -}}
+          {%- if heading_emphasis != blank %} <em>{{ heading_emphasis }}</em>{%- endif -%}
+        </h2>
+        {%- if claim != blank -%}
+          <p class="product-feature-media__claim">{{ claim }}</p>
+        {%- endif -%}
+        {%- if footnote != blank -%}
+          <div class="product-feature-media__footnote rte">{{ footnote }}</div>
+        {%- endif -%}
+      </div>
+
+    </div>
   </div>
 </section>
 
 {% stylesheet %}
-  .product-key-ingredients {
+  .product-feature-media {
     width: 100%;
-    padding-block: 7rem;
+    padding-block: 5rem;
   }
 
   @media (min-width: 1024px) {
-    .product-key-ingredients {
-      padding-block: 11rem;
+    .product-feature-media {
+      padding-block: 8rem;
     }
   }
 
-  .product-key-ingredients__head {
-    max-width: 60rem;
-  }
-
-  .product-key-ingredients__heading {
-    margin-top: 1.75rem;
-    font-size: clamp(2.75rem, 6.5vw, 5.5rem);
-    font-weight: 300;
-    line-height: 1.0;
-    letter-spacing: -0.015em;
-  }
-
-  .product-key-ingredients__heading em {
-    color: var(--primary);
-    font-style: italic;
-  }
-
-  .product-key-ingredients__body {
-    margin-top: 1.75rem;
-    max-width: 38rem;
-    color: color-mix(in oklab, var(--foreground) 75%, transparent);
-    line-height: 1.7;
-    font-size: 1.0625rem;
-  }
-
-  .product-key-ingredients__body > p {
-    margin: 0;
-  }
-
-  /* La Mer: tight, edge-to-edge image grid with minimal gap. */
-  .product-key-ingredients__grid {
-    margin-top: 4rem;
+  .product-feature-media__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
-
-  @media (min-width: 768px) {
-    .product-key-ingredients__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+    gap: 2.5rem;
+    align-items: center;
   }
 
   @media (min-width: 1024px) {
-    .product-key-ingredients__grid {
-      margin-top: 5.5rem;
+    .product-feature-media__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4.5rem;
     }
   }
 
-  /* Image with the ingredient name overlaid bottom-left, La Mer style. */
-  .product-key-ingredients__media {
+  /* === Media === */
+  .product-feature-media__media {
     position: relative;
     aspect-ratio: 4 / 5;
     overflow: hidden;
     background-color: var(--surface);
   }
 
-  .product-key-ingredients__img {
+  .product-feature-media__video,
+  .product-feature-media__img,
+  .product-feature-media__media video {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
 
-  .product-key-ingredients__img--placeholder {
+  .product-feature-media__embed,
+  .product-feature-media__embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .product-feature-media__img--placeholder {
     color: color-mix(in oklab, var(--primary) 30%, var(--surface));
   }
 
-  .product-key-ingredients__name {
-    position: absolute;
-    left: 1.5rem;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    color: #fff;
-    font-size: 1.75rem;
-    font-weight: 300;
-    line-height: 1.1;
-    text-shadow: 0 1px 18px rgb(0 0 0 / 0.35);
-  }
-
+  /* Media side: left by default, right when toggled (desktop only). */
   @media (min-width: 1024px) {
-    .product-key-ingredients__name {
-      font-size: 2rem;
-      left: 2rem;
-      bottom: 2rem;
-    }
+    .product-feature-media--media-right .product-feature-media__media { order: 2; }
   }
 
-  .product-key-ingredients__role {
-    margin-top: 1.25rem;
-    padding-inline: 0.25rem;
-    color: color-mix(in oklab, var(--foreground) 75%, transparent);
-    line-height: 1.7;
+  /* === Text === */
+  .product-feature-media__heading {
+    margin-top: 1.5rem;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
   }
+
+  .product-feature-media__heading em {
+    color: var(--primary);
+    font-style: italic;
+    text-transform: none;
+  }
+
+  .product-feature-media__claim {
+    margin-top: 1.75rem;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    color: color-mix(in oklab, var(--foreground) 90%, transparent);
+  }
+
+  .product-feature-media__footnote {
+    margin-top: 1.5rem;
+    max-width: 34rem;
+    color: var(--muted-foreground);
+    line-height: 1.7;
+    font-size: 0.9375rem;
+  }
+
+  .product-feature-media__footnote > p { margin: 0; }
+  .product-feature-media__footnote > p + p { margin-top: 1rem; }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:sections.product_key_ingredients.name",
+  "name": "Feature media (video)",
   "tag": "section",
   "settings": [
     {
+      "type": "select",
+      "id": "media_position",
+      "label": "Media position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
       "type": "text",
       "id": "eyebrow",
-      "label": "t:labels.eyebrow",
-      "default": "Key Ingredients"
+      "label": "t:labels.eyebrow"
     },
     {
       "type": "text",
       "id": "heading_lead",
       "label": "t:labels.heading_lead",
-      "default": "A short, considered list —"
+      "default": "Shake to Rejuvenate"
     },
     {
       "type": "text",
       "id": "heading_emphasis",
-      "label": "t:labels.heading_emphasis",
-      "default": "no single hero."
+      "label": "t:labels.heading_emphasis"
+    },
+    {
+      "type": "text",
+      "id": "claim",
+      "label": "Claim line",
+      "default": "Improves visible signs of collagen and elastin loss.*"
     },
     {
       "type": "richtext",
-      "id": "body",
-      "label": "t:labels.body",
-      "default": "<p>Skin response depends on how ingredients interact within a formulation. We focus on synergy, base quality and stability — never isolating one ingredient at the expense of the system.</p>"
+      "id": "footnote",
+      "label": "Footnote",
+      "default": "<p>*This oil helps address visible signs of collagen and elastin loss by improving the look of lines and wrinkles and skin's firm feel.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "paragraph",
+      "content": "Use a Shopify-hosted video for the best edge-to-edge fit. A YouTube/Vimeo link or an image can be used instead. If more than one is set, video wins, then the external link, then the image."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video (Shopify-hosted)"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "label": "Video link (YouTube or Vimeo)",
+      "accept": ["youtube", "vimeo"]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image (fallback / poster)"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay (muted)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "Show playback controls",
+      "default": false
     }
   ],
   "presets": [
     {
-      "name": "t:sections.product_key_ingredients.presets_default"
+      "name": "Feature media (video)"
     }
   ],
   "enabled_on": {
