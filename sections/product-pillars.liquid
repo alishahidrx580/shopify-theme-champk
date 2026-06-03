@@ -1,9 +1,24 @@
 {%- liquid
   assign pillars = product.metafields.custom.pillars.value
+  assign stat_value = section.settings.stat_value
+  assign stat_footnote = section.settings.stat_footnote
+  assign intro = section.settings.intro
 -%}
 
 <section class="product-pillars full-width">
   <div class="product-pillars__inner cham-container">
+
+    {%- comment -%} ===== Big editorial stat claim ===== {%- endcomment -%}
+    {%- if stat_value != blank -%}
+      <div class="product-pillars__stat-block" data-reveal>
+        <p class="product-pillars__stat font-display">{{ stat_value }}</p>
+        {%- if stat_footnote != blank -%}
+          <p class="product-pillars__stat-note">{{ stat_footnote }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} ===== Section heading + intro ("Inside the Science") ===== {%- endcomment -%}
     <div class="product-pillars__head" data-reveal>
       {%- if section.settings.eyebrow != blank -%}
         <span class="eyebrow">{{ section.settings.eyebrow }}</span>
@@ -12,17 +27,37 @@
         {{- section.settings.heading_lead -}}
         {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
       </h2>
+      {%- if intro != blank -%}
+        <p class="product-pillars__intro">{{ intro }}</p>
+      {%- endif -%}
     </div>
 
+    {%- comment -%} ===== Image cards grid ===== {%- endcomment -%}
     {%- if pillars != blank and pillars.size > 0 -%}
       <div class="product-pillars__grid">
         {%- for pillar in pillars -%}
-          {%- assign num = '0' | append: forloop.index | slice: -2, 2 -%}
-          <div class="product-pillars__item" data-reveal data-reveal-delay="{{ forloop.index0 | times: 100 }}">
-            <span class="product-pillars__number font-display">{{ num }}</span>
-            <h3 class="product-pillars__title font-display">{{ pillar.title }}</h3>
+          {%- assign pillar_image = pillar.image -%}
+          <article class="product-pillars__item" data-reveal data-reveal-delay="{{ forloop.index0 | times: 100 }}">
+            <div class="product-pillars__media">
+              {%- if pillar_image != blank -%}
+                <img
+                  src="{{ pillar_image | image_url: width: 900 }}"
+                  srcset="{{ pillar_image | image_url: width: 450 }} 450w, {{ pillar_image | image_url: width: 900 }} 900w, {{ pillar_image | image_url: width: 1300 }} 1300w"
+                  sizes="(min-width: 768px) 30vw, 100vw"
+                  alt="{{ pillar.title | escape }}"
+                  width="{{ pillar_image.width | default: 900 }}"
+                  height="{{ pillar_image.height | default: 1125 }}"
+                  class="product-pillars__img"
+                  loading="lazy"
+                  decoding="async"
+                >
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'product-pillars__img product-pillars__img--placeholder' }}
+              {%- endif -%}
+            </div>
+            <h3 class="product-pillars__title">{{ pillar.title }}</h3>
             <p class="product-pillars__body">{{ pillar.body }}</p>
-          </div>
+          </article>
         {%- endfor -%}
       </div>
     {%- endif -%}
@@ -32,38 +67,75 @@
 {% stylesheet %}
   .product-pillars {
     background-color: var(--surface);
-    padding-block: 7rem;
+    padding-block: 6rem;
   }
 
   @media (min-width: 1024px) {
     .product-pillars {
-      padding-block: 11rem;
+      padding-block: 9rem;
     }
   }
 
+  /* === Stat claim === */
+  .product-pillars__stat-block {
+    max-width: 64rem;
+    margin-bottom: 5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-pillars__stat-block {
+      margin-bottom: 7rem;
+    }
+  }
+
+  .product-pillars__stat {
+    font-size: clamp(2.5rem, 7vw, 6rem);
+    font-weight: 300;
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .product-pillars__stat-note {
+    margin-top: 1.75rem;
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+  }
+
+  /* === Heading + intro === */
   .product-pillars__head {
     max-width: 60rem;
   }
 
   .product-pillars__heading {
-    font-size: clamp(2.75rem, 6.5vw, 5.5rem);
+    font-size: clamp(2rem, 4vw, 3.25rem);
     font-weight: 300;
     line-height: 1.0;
     letter-spacing: -0.015em;
-    margin-top: 1.75rem;
+    margin-top: 1.25rem;
+    text-transform: uppercase;
   }
 
   .product-pillars__heading em {
     color: var(--primary);
     font-style: italic;
+    text-transform: none;
   }
 
+  .product-pillars__intro {
+    margin-top: 1.5rem;
+    max-width: 32rem;
+    color: color-mix(in oklab, var(--foreground) 70%, transparent);
+    line-height: 1.7;
+  }
+
+  /* === Cards grid === */
   .product-pillars__grid {
     display: grid;
     grid-template-columns: 1fr;
-    column-gap: 3rem;
+    column-gap: 2rem;
     row-gap: 3.5rem;
-    margin-top: 4.5rem;
+    margin-top: 3.5rem;
   }
 
   @media (min-width: 768px) {
@@ -74,35 +146,39 @@
 
   @media (min-width: 1024px) {
     .product-pillars__grid {
-      margin-top: 6rem;
+      margin-top: 4.5rem;
+      column-gap: 2.5rem;
     }
   }
 
-  .product-pillars__item {
-    border-top: 1px solid var(--border);
-    padding-top: 2.25rem;
+  .product-pillars__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: color-mix(in oklab, var(--foreground) 6%, var(--surface));
   }
 
-  .product-pillars__number {
-    color: var(--primary);
-    font-size: 1.25rem;
+  .product-pillars__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .product-pillars__img--placeholder {
+    color: color-mix(in oklab, var(--primary) 25%, var(--surface));
   }
 
   .product-pillars__title {
-    font-size: 1.75rem;
-    font-weight: 300;
-    line-height: 1.1;
-    margin-top: 1rem;
-  }
-
-  @media (min-width: 1024px) {
-    .product-pillars__title {
-      font-size: 2.25rem;
-    }
+    margin-top: 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--foreground);
   }
 
   .product-pillars__body {
-    margin-top: 1.25rem;
+    margin-top: 0.875rem;
     color: color-mix(in oklab, var(--foreground) 75%, transparent);
     line-height: 1.7;
   }
@@ -114,22 +190,54 @@
   "tag": "section",
   "settings": [
     {
+      "type": "header",
+      "content": "Stat claim"
+    },
+    {
+      "type": "text",
+      "id": "stat_value",
+      "label": "Stat headline",
+      "default": "96% of women said their skin immediately looked smoother.*"
+    },
+    {
+      "type": "text",
+      "id": "stat_footnote",
+      "label": "Stat footnote",
+      "default": "*Consumer testing on 102 women after using product once."
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
       "type": "text",
       "id": "eyebrow",
-      "label": "t:labels.eyebrow",
-      "default": "Skin Intelligence at Work"
+      "label": "t:labels.eyebrow"
     },
     {
       "type": "text",
       "id": "heading_lead",
       "label": "t:labels.heading_lead",
-      "default": "Formulated around how your skin"
+      "default": "Inside the Science"
     },
     {
       "type": "text",
       "id": "heading_emphasis",
-      "label": "t:labels.heading_emphasis",
-      "default": "naturally behaves."
+      "label": "t:labels.heading_emphasis"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro paragraph",
+      "default": "From sea-sourced ferments to proprietary complexes, discover what makes it special."
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "paragraph",
+      "content": "Cards are pulled from the product's \"pillars\" metafield. Add an image field named \"image\" to each pillar entry to show the photo above its title and body."
     }
   ],
   "presets": [
