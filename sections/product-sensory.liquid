@@ -1,172 +1,253 @@
 {%- liquid
-  assign align = section.settings.alignment | default: 'left'
-  assign width = section.settings.width | default: 'medium'
-  assign bg = section.settings.background | default: 'none'
-  assign heading_lead = section.settings.heading_lead
-  assign heading_emphasis = section.settings.heading_emphasis
-  assign body = section.settings.body
+  assign sensory_image = product.metafields.custom.sensory_image
+  if sensory_image == blank and product.images.size > 0
+    assign last_idx = product.images.size | minus: 1
+    assign sensory_image = product.images[last_idx]
+  endif
+
+  assign texture = product.metafields.custom.sensory_texture
+  assign finish = product.metafields.custom.sensory_finish
+  assign tags = product.metafields.custom.sensory_tags.value
+  assign media_position = section.settings.media_position | default: 'left'
 -%}
 
-<section class="product-body-text full-width product-body-text--align-{{ align }} product-body-text--w-{{ width }} product-body-text--bg-{{ bg }}">
-  <div class="product-body-text__inner cham-container">
-    <div class="product-body-text__block" data-reveal>
-      {%- if section.settings.eyebrow != blank -%}
-        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
-      {%- endif -%}
+<section class="product-sensory full-width product-sensory--media-{{ media_position }}">
+  <div class="product-sensory__inner cham-container">
+    <div class="product-sensory__grid">
+      <div class="product-sensory__media-col" data-reveal>
+        <div class="product-sensory__media">
+          {%- if sensory_image != blank -%}
+            <img
+              src="{{ sensory_image | image_url: width: 1400 }}"
+              srcset="{{ sensory_image | image_url: width: 700 }} 700w, {{ sensory_image | image_url: width: 1400 }} 1400w, {{ sensory_image | image_url: width: 2000 }} 2000w"
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              alt="{{ product.title | append: ' sensory experience' | escape }}"
+              width="{{ sensory_image.width | default: 1400 }}"
+              height="{{ sensory_image.height | default: 1600 }}"
+              loading="lazy"
+              decoding="async"
+              class="product-sensory__img"
+            >
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'product-sensory__img product-sensory__img--placeholder' }}
+          {%- endif -%}
+        </div>
+      </div>
 
-      {%- if heading_lead != blank or heading_emphasis != blank -%}
-        <h2 class="product-body-text__heading font-display">
-          {{- heading_lead -}}
-          {%- if heading_emphasis != blank %} <em>{{ heading_emphasis }}</em>{%- endif -%}
-        </h2>
-      {%- endif -%}
+      <div class="product-sensory__copy-col" data-reveal data-reveal-delay="120">
+        <div class="product-sensory__copy-inner">
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          {%- endif -%}
+          <h2 class="product-sensory__heading font-display">
+            {{- section.settings.heading_lead -}}
+            {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+          </h2>
 
-      {%- if body != blank -%}
-        <div class="product-body-text__body rte">{{ body }}</div>
-      {%- endif -%}
+          {%- if texture != blank -%}
+            <p class="product-sensory__line product-sensory__line--lead">{{ texture }}</p>
+          {%- endif -%}
+          {%- if finish != blank -%}
+            <p class="product-sensory__line">{{ finish }}</p>
+          {%- endif -%}
+
+          {%- if section.settings.body != blank -%}
+            <div class="product-sensory__body rte">{{ section.settings.body }}</div>
+          {%- endif -%}
+
+          {%- if tags != blank and tags.size > 0 -%}
+            <ul class="product-sensory__chips">
+              {%- for tag in tags -%}
+                <li class="product-sensory__chip">{{ tag }}</li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 {% stylesheet %}
-  .product-body-text {
+  /* La Mer "Shake to Rejuvenate": contained split, tall portrait image one
+     side, uppercase serif heading + copy the other, vertically centered. */
+  .product-sensory {
     width: 100%;
     padding-block: 4.5rem;
   }
 
   @media (min-width: 1024px) {
-    .product-body-text {
+    .product-sensory {
       padding-block: 7rem;
     }
   }
 
-  .product-body-text--bg-surface {
+  .product-sensory__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .product-sensory__grid {
+      grid-template-columns: 55% minmax(0, 1fr);
+      column-gap: 4.5rem;
+    }
+    /* Flip sides without reordering the DOM (keeps reading order intact). */
+    .product-sensory--media-right .product-sensory__grid {
+      grid-template-columns: minmax(0, 1fr) 55%;
+    }
+    .product-sensory--media-right .product-sensory__media-col { order: 2; }
+  }
+
+  /* === Media === */
+  .product-sensory__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
     background-color: var(--surface);
   }
 
-  /* === Block width === */
-  .product-body-text__block {
-    max-width: 52rem;
+  @media (min-width: 1024px) {
+    .product-sensory__media {
+      aspect-ratio: 3 / 4;
+    }
   }
 
-  .product-body-text--w-narrow .product-body-text__block { max-width: 38rem; }
-  .product-body-text--w-medium .product-body-text__block { max-width: 52rem; }
-  .product-body-text--w-wide .product-body-text__block { max-width: 64rem; }
-
-  /* === Alignment === */
-  .product-body-text--align-center .product-body-text__block {
-    margin-inline: auto;
-    text-align: center;
+  .product-sensory__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
-  .product-body-text--align-center .product-body-text__body {
-    margin-inline: auto;
+  .product-sensory__img--placeholder {
+    color: color-mix(in oklab, var(--primary) 25%, var(--surface));
   }
 
-  /* === Heading === */
-  .product-body-text__heading {
-    margin-top: 1.25rem;
-    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  /* === Copy === */
+  .product-sensory__copy-inner {
+    max-width: 30rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-sensory--media-right .product-sensory__copy-inner {
+      margin-left: auto;
+    }
+  }
+
+  .product-sensory__heading {
+    margin-top: 1.5rem;
+    font-size: clamp(2.5rem, 4.75vw, 4.25rem);
     font-weight: 300;
-    line-height: 1.1;
+    line-height: 1.0;
     letter-spacing: -0.015em;
+    text-transform: uppercase;
   }
 
-  .product-body-text__heading em {
+  .product-sensory__heading em {
     color: var(--primary);
     font-style: italic;
+    text-transform: none;
   }
 
-  /* === Body === */
-  .product-body-text__body {
-    margin-top: 1.75rem;
-    color: color-mix(in oklab, var(--foreground) 85%, transparent);
-    line-height: 1.75;
-    font-size: 1.0625rem;
+  .product-sensory__line {
+    margin-top: 1.25rem;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
   }
 
-  .product-body-text__body > :first-child { margin-top: 0; }
-  .product-body-text__body > p { margin: 0; }
-  .product-body-text__body > p + p { margin-top: 1.25rem; }
-
-  .product-body-text__body a {
-    color: var(--primary);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .product-body-text__body h3,
-  .product-body-text__body h4 {
-    font-weight: 400;
+  /* First line reads as the lead claim — slightly larger and darker. */
+  .product-sensory__line--lead {
     margin-top: 2rem;
+    font-size: 1.125rem;
+    color: color-mix(in oklab, var(--foreground) 92%, transparent);
+  }
+
+  .product-sensory__line--lead + .product-sensory__line {
+    margin-top: 0.875rem;
+  }
+
+  .product-sensory__body {
+    margin-top: 1.5rem;
+    max-width: 32rem;
+    color: var(--muted-foreground);
+    line-height: 1.7;
+    font-size: 0.9375rem;
+  }
+
+  .product-sensory__body > p { margin: 0; }
+  .product-sensory__body > p + p { margin-top: 1rem; }
+
+  .product-sensory__chips {
+    margin: 2.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+  }
+
+  .product-sensory__chip {
+    padding: 0.625rem 1rem;
+    border: 1px solid color-mix(in oklab, var(--primary) 38%, transparent);
+    color: var(--primary);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .product-sensory__chip:hover {
+    background-color: color-mix(in oklab, var(--primary) 8%, transparent);
+    border-color: color-mix(in oklab, var(--primary) 60%, transparent);
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Body text",
+  "name": "t:sections.product_sensory.name",
   "tag": "section",
   "settings": [
     {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "t:labels.eyebrow"
-    },
-    {
-      "type": "text",
-      "id": "heading_lead",
-      "label": "t:labels.heading_lead"
-    },
-    {
-      "type": "text",
-      "id": "heading_emphasis",
-      "label": "t:labels.heading_emphasis"
-    },
-    {
-      "type": "richtext",
-      "id": "body",
-      "label": "Body",
-      "default": "<p>Share the story behind the formula, the ritual, or the philosophy. Keep it considered and unhurried — a few short paragraphs read as more luxurious than one long block.</p>"
-    },
-    {
-      "type": "header",
-      "content": "Layout"
-    },
-    {
       "type": "select",
-      "id": "alignment",
-      "label": "Text alignment",
+      "id": "media_position",
+      "label": "Media position",
       "options": [
         { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" }
+        { "value": "right", "label": "Right" }
       ],
       "default": "left"
     },
     {
-      "type": "select",
-      "id": "width",
-      "label": "Content width",
-      "options": [
-        { "value": "narrow", "label": "Narrow" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "wide", "label": "Wide" }
-      ],
-      "default": "medium"
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "The Sensory Experience"
     },
     {
-      "type": "select",
-      "id": "background",
-      "label": "Background",
-      "options": [
-        { "value": "none", "label": "Default" },
-        { "value": "surface", "label": "Surface" }
-      ],
-      "default": "none"
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "How it"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis",
+      "default": "feels."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>A short paragraph describing how the formula feels on skin and the experience of using it.</p>"
     }
   ],
   "presets": [
     {
-      "name": "Body text"
+      "name": "t:sections.product_sensory.name"
     }
   ],
   "enabled_on": {
