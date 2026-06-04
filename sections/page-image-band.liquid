@@ -1,17 +1,38 @@
-<section class="page-image-band full-width" style="--margin-top: {{ section.settings.margin_top }}rem; --aspect-mobile: {{ section.settings.aspect_mobile }}; --aspect-desktop: {{ section.settings.aspect_desktop }};">
+{%- liquid
+  assign img_d = section.settings.image
+  assign img_m = section.settings.image_mobile
+  assign base = img_d | default: img_m
+  assign focal = section.settings.focal_x | append: '% ' | append: section.settings.focal_y | append: '%'
+  assign alt = base.alt | default: section.settings.alt
+-%}
+
+<section
+  class="page-image-band full-width"
+  style="--margin-top: {{ section.settings.margin_top }}rem; --aspect-mobile: {{ section.settings.aspect_mobile }}; --aspect-desktop: {{ section.settings.aspect_desktop }};"
+>
   <div class="page-image-band__frame" data-reveal>
-    {%- if section.settings.image != blank -%}
-      <img
-        src="{{ section.settings.image | image_url: width: 2400 }}"
-        srcset="{{ section.settings.image | image_url: width: 800 }} 800w, {{ section.settings.image | image_url: width: 1280 }} 1280w, {{ section.settings.image | image_url: width: 1920 }} 1920w, {{ section.settings.image | image_url: width: 2560 }} 2560w"
-        sizes="100vw"
-        alt="{{ section.settings.image.alt | escape }}"
-        width="{{ section.settings.image.width }}"
-        height="{{ section.settings.image.height }}"
-        loading="lazy"
-        decoding="async"
-        class="page-image-band__img"
-      >
+    {%- if base != blank -%}
+      <picture class="page-image-band__picture">
+        {%- if img_m != blank and img_d != blank -%}
+          <source
+            media="(max-width: 767px)"
+            srcset="{{ img_m | image_url: width: 700 }} 700w, {{ img_m | image_url: width: 1080 }} 1080w, {{ img_m | image_url: width: 1440 }} 1440w"
+            sizes="100vw"
+          >
+        {%- endif -%}
+        <img
+          src="{{ base | image_url: width: 2400 }}"
+          srcset="{{ base | image_url: width: 800 }} 800w, {{ base | image_url: width: 1280 }} 1280w, {{ base | image_url: width: 1920 }} 1920w, {{ base | image_url: width: 2560 }} 2560w"
+          sizes="100vw"
+          alt="{{ alt | escape }}"
+          width="{{ base.width }}"
+          height="{{ base.height }}"
+          loading="lazy"
+          decoding="async"
+          class="page-image-band__img"
+          style="object-position: {{ focal }};"
+        >
+      </picture>
     {%- else -%}
       <div class="page-image-band__img page-image-band__img--placeholder" aria-hidden="true"></div>
     {%- endif -%}
@@ -21,7 +42,13 @@
 {% stylesheet %}
   .page-image-band {
     width: 100%;
-    margin-top: var(--margin-top, 6rem);
+    margin-top: calc(var(--margin-top, 6rem) * 0.7);
+  }
+
+  @media (min-width: 1024px) {
+    .page-image-band {
+      margin-top: var(--margin-top, 6rem);
+    }
   }
 
   .page-image-band__frame {
@@ -29,12 +56,21 @@
     width: 100%;
     aspect-ratio: var(--aspect-mobile, 16 / 9);
     overflow: hidden;
+    background-color: var(--surface);
   }
 
   @media (min-width: 1024px) {
     .page-image-band__frame {
       aspect-ratio: var(--aspect-desktop, 21 / 8);
     }
+  }
+
+  .page-image-band__picture {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .page-image-band__img {
@@ -58,7 +94,19 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image"
+      "label": "Image (desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image (mobile)",
+      "info": "Optional. Shown on phones — use a vertical / portrait crop. Falls back to the desktop image if empty."
+    },
+    {
+      "type": "text",
+      "id": "alt",
+      "label": "Alt text",
+      "info": "Used if the image has no alt set in Files."
     },
     {
       "type": "select",
@@ -68,7 +116,9 @@
         { "value": "16 / 9", "label": "16:9 (landscape)" },
         { "value": "4 / 3", "label": "4:3" },
         { "value": "1 / 1", "label": "Square" },
-        { "value": "3 / 4", "label": "3:4 (portrait)" }
+        { "value": "4 / 5", "label": "4:5 (portrait)" },
+        { "value": "3 / 4", "label": "3:4 (portrait)" },
+        { "value": "2 / 3", "label": "2:3 (tall portrait)" }
       ],
       "default": "16 / 9"
     },
@@ -83,6 +133,26 @@
         { "value": "3 / 1", "label": "3:1 (panoramic)" }
       ],
       "default": "21 / 8"
+    },
+    {
+      "type": "header",
+      "content": "Focal point"
+    },
+    {
+      "type": "paragraph",
+      "content": "Where the image stays anchored when cropped. 0 = left/top, 50 = center, 100 = right/bottom."
+    },
+    {
+      "type": "range",
+      "id": "focal_x",
+      "label": "Horizontal",
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "focal_y",
+      "label": "Vertical",
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50
     },
     {
       "type": "range",
