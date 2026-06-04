@@ -1,18 +1,27 @@
+{%- liquid
+  assign show_rule = section.settings.show_rule
+-%}
+
 <section class="page-heading-text full-width" style="--margin-top: {{ section.settings.margin_top }}rem;">
   <div class="page-heading-text__inner">
     <div class="page-heading-text__grid">
       <div class="page-heading-text__head" data-reveal>
         {%- if section.settings.eyebrow != blank -%}
-          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          <span class="page-heading-text__eyebrow">
+            {%- if show_rule -%}<span class="page-heading-text__rule" aria-hidden="true"></span>{%- endif -%}
+            <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          </span>
         {%- endif -%}
         <h2 class="page-heading-text__heading font-display">
           {{- section.settings.heading_lead -}}
           {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
         </h2>
       </div>
-      <div class="page-heading-text__body" data-reveal data-reveal-delay="120">
-        {{ section.settings.body }}
-      </div>
+      {%- if section.settings.body != blank -%}
+        <div class="page-heading-text__body" data-reveal data-reveal-delay="120">
+          {{ section.settings.body }}
+        </div>
+      {%- endif -%}
     </div>
   </div>
 </section>
@@ -50,20 +59,39 @@
   @media (min-width: 1024px) {
     .page-heading-text__grid {
       grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 2.5rem;
+      gap: 3.5rem;
+      align-items: start;
     }
     .page-heading-text__head {
-      grid-column: span 4;
+      grid-column: span 5;
     }
     .page-heading-text__body {
-      grid-column: span 8;
+      grid-column: span 7;
     }
+  }
+
+  /* Eyebrow with gold leading rule */
+  .page-heading-text__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .page-heading-text__rule {
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background-color: var(--primary);
+    flex: none;
   }
 
   .page-heading-text__heading {
     margin-top: 1.5rem;
-    font-size: clamp(1.875rem, 4vw, 3rem);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 300;
     line-height: 1.05;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
   }
 
   .page-heading-text__heading em {
@@ -72,17 +100,14 @@
   }
 
   .page-heading-text__body {
-    color: color-mix(in oklab, var(--foreground) 85%, transparent);
-    line-height: 1.65;
+    color: color-mix(in oklab, var(--foreground) 82%, transparent);
+    line-height: 1.75;
+    font-size: 1.0625rem;
+    text-wrap: pretty;
   }
 
-  .page-heading-text__body > p {
-    margin: 0;
-  }
-
-  .page-heading-text__body > p + p {
-    margin-top: 1.5rem;
-  }
+  .page-heading-text__body > p { margin: 0; }
+  .page-heading-text__body > p + p { margin-top: 1.5rem; }
 {% endstylesheet %}
 
 {% schema %}
@@ -94,6 +119,13 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show eyebrow rule",
+      "info": "The short gold line before the eyebrow text.",
+      "default": true
     },
     {
       "type": "text",
