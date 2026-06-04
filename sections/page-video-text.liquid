@@ -11,6 +11,8 @@
       assign video_src = filename | file_url
     endif
   endif
+  assign show_rule = section.settings.show_rule
+  assign autoplay = section.settings.autoplay
 -%}
 
 {%- if video_src != blank -%}
@@ -22,7 +24,10 @@
     <div class="page-video-text__grid page-video-text--video-{{ section.settings.video_side }}">
       <div class="page-video-text__copy-col" data-reveal>
         {%- if section.settings.eyebrow != blank -%}
-          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          <span class="page-video-text__eyebrow">
+            {%- if show_rule -%}<span class="page-video-text__rule" aria-hidden="true"></span>{%- endif -%}
+            <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          </span>
         {%- endif -%}
         <h2 class="page-video-text__heading font-display">
           {{- section.settings.heading_lead -}}
@@ -35,7 +40,7 @@
       </div>
 
       <div class="page-video-text__media-col" data-reveal data-reveal-delay="150">
-        <div class="page-video-text__player" data-video-player data-playing="false" data-muted="true">
+        <div class="page-video-text__player" data-video-player data-playing="false" data-muted="true" data-autoplay="{{ autoplay }}">
             <video
               data-video
               src="{{ video_src }}"
@@ -44,6 +49,7 @@
               loop
               muted
               preload="metadata"
+              {% if autoplay %}autoplay{% endif %}
             ></video>
 
             <button class="page-video-text__overlay" data-video-toggle type="button" aria-label="Play video">
@@ -105,7 +111,7 @@
   @media (min-width: 1024px) {
     .page-video-text__grid {
       grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 4rem;
+      gap: 4.5rem;
     }
     .page-video-text--video-right .page-video-text__copy-col {
       grid-column: span 5;
@@ -125,10 +131,28 @@
     }
   }
 
+  /* Eyebrow with gold leading rule */
+  .page-video-text__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .page-video-text__rule {
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background-color: var(--primary);
+    flex: none;
+  }
+
   .page-video-text__heading {
     margin-top: 1.5rem;
     font-size: clamp(2.25rem, 5vw, 3.75rem);
+    font-weight: 300;
     line-height: 1.02;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
   }
 
   .page-video-text__heading em {
@@ -139,12 +163,13 @@
   .page-video-text__body {
     margin-top: 2rem;
     color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    line-height: 1.65;
+    line-height: 1.75;
+    font-size: 1.0625rem;
+    text-wrap: pretty;
   }
 
-  .page-video-text__body > p {
-    margin: 0;
-  }
+  .page-video-text__body > p { margin: 0; }
+  .page-video-text__body > p + p { margin-top: 1.25rem; }
 
   .page-video-text__player {
     position: relative;
@@ -180,13 +205,13 @@
     display: grid;
     place-items: center;
     background-color: rgb(0 0 0 / 0.2);
-    transition: background-color 0.3s ease, opacity 0.3s ease;
+    transition: background-color 0.3s ease, opacity 0.4s ease;
     cursor: pointer;
     border: 0;
   }
 
   .page-video-text__overlay:hover {
-    background-color: rgb(0 0 0 / 0.3);
+    background-color: rgb(0 0 0 / 0.28);
   }
 
   .page-video-text__player[data-playing="true"] .page-video-text__overlay {
@@ -203,6 +228,17 @@
     background-color: color-mix(in oklab, var(--background) 90%, transparent);
     color: var(--primary);
     box-shadow: 0 20px 60px -20px color-mix(in oklab, var(--primary) 35%, transparent);
+    transition: transform 0.4s cubic-bezier(0.2, 0.6, 0.2, 1), background-color 0.3s ease;
+  }
+
+  .page-video-text__overlay:hover .page-video-text__overlay-button {
+    transform: scale(1.06);
+    background-color: var(--background);
+  }
+
+  .page-video-text__overlay:focus-visible {
+    outline: 2px solid var(--ring, var(--primary));
+    outline-offset: -4px;
   }
 
   .page-video-text__overlay-button svg {
@@ -241,6 +277,11 @@
     background-color: var(--background);
   }
 
+  .page-video-text__control:focus-visible {
+    outline: 2px solid var(--ring, var(--primary));
+    outline-offset: 2px;
+  }
+
   /* Icon visibility toggles via data attributes */
   .page-video-text__icon {
     display: none;
@@ -261,11 +302,13 @@
 
 {% javascript %}
   (function () {
-    document.querySelectorAll('[data-video-player]').forEach((player) => {
-      const video = player.querySelector('[data-video]');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.querySelectorAll('[data-video-player]').forEach(function (player) {
+      var video = player.querySelector('[data-video]');
       if (!video) return;
-      const toggles = player.querySelectorAll('[data-video-toggle]');
-      const muteBtn = player.querySelector('[data-video-mute]');
+      var toggles = player.querySelectorAll('[data-video-toggle]');
+      var muteBtn = player.querySelector('[data-video-mute]');
 
       function setPlaying() {
         player.setAttribute('data-playing', video.paused ? 'false' : 'true');
@@ -274,27 +317,27 @@
         player.setAttribute('data-muted', video.muted ? 'true' : 'false');
       }
 
-      toggles.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
+      toggles.forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
           e.preventDefault();
           if (video.paused) {
-            video.play().catch(() => {});
+            video.play().catch(function () {});
           } else {
             video.pause();
           }
         });
       });
 
-      video.addEventListener('click', () => {
+      video.addEventListener('click', function () {
         if (video.paused) {
-          video.play().catch(() => {});
+          video.play().catch(function () {});
         } else {
           video.pause();
         }
       });
 
       if (muteBtn) {
-        muteBtn.addEventListener('click', (e) => {
+        muteBtn.addEventListener('click', function (e) {
           e.preventDefault();
           video.muted = !video.muted;
           setMuted();
@@ -306,6 +349,18 @@
 
       setPlaying();
       setMuted();
+
+      // Optional autoplay (muted, respects reduced-motion preference).
+      if (player.getAttribute('data-autoplay') === 'true' && !reduceMotion) {
+        video.muted = true;
+        setMuted();
+        var tryPlay = function () { video.play().catch(function () {}); };
+        if (video.readyState >= 2) {
+          tryPlay();
+        } else {
+          video.addEventListener('canplay', tryPlay, { once: true });
+        }
+      }
     });
   })();
 {% endjavascript %}
@@ -338,6 +393,13 @@
       "default": "right"
     },
     {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay (muted)",
+      "info": "Plays automatically, looped and muted. Respects visitors' reduced-motion setting.",
+      "default": false
+    },
+    {
       "type": "header",
       "content": "Copy"
     },
@@ -345,6 +407,13 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show eyebrow rule",
+      "info": "The short gold line before the eyebrow text.",
+      "default": true
     },
     {
       "type": "text",
