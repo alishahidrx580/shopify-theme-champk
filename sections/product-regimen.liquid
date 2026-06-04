@@ -1,0 +1,434 @@
+{%- liquid
+  assign block_count = section.blocks.size
+-%}
+
+<section class="product-regimen full-width">
+  <div class="product-regimen__inner cham-container">
+    {%- if section.settings.eyebrow != blank or section.settings.heading_lead != blank or section.settings.heading_emphasis != blank -%}
+      <div class="product-regimen__head" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading_lead != blank or section.settings.heading_emphasis != blank -%}
+          <h2 class="product-regimen__heading font-display">
+            {{- section.settings.heading_lead -}}
+            {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
+          </h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if block_count > 0 -%}
+      <div class="product-regimen__grid is-count-{{ block_count }}">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign p = block.settings.product
+            if p == blank
+              continue
+            endif
+            assign cur = p.selected_or_first_available_variant
+            assign card_desc = block.settings.description
+            if card_desc == blank
+              assign card_desc = p.description | strip_html | truncatewords: 16
+            endif
+          -%}
+          <article class="product-regimen__card" data-reveal data-reveal-delay="{{ forloop.index0 | times: 90 }}" {{ block.shopify_attributes }}>
+            <form
+              class="product-regimen__form"
+              action="{{ routes.cart_add_url }}"
+              method="post"
+              enctype="multipart/form-data"
+              data-reg-card
+            >
+              <input type="hidden" name="quantity" value="1">
+
+              <a class="product-regimen__media" href="{{ p.url }}">
+                {%- if block.settings.badge != blank -%}
+                  <span class="product-regimen__badge eyebrow eyebrow--bare">{{ block.settings.badge }}</span>
+                {%- endif -%}
+                {%- if p.featured_image != blank -%}
+                  <img
+                    src="{{ p.featured_image | image_url: width: 900 }}"
+                    srcset="{{ p.featured_image | image_url: width: 450 }} 450w, {{ p.featured_image | image_url: width: 900 }} 900w, {{ p.featured_image | image_url: width: 1300 }} 1300w"
+                    sizes="(min-width: 768px) 32vw, 100vw"
+                    alt="{{ p.title | escape }}"
+                    width="{{ p.featured_image.width | default: 900 }}"
+                    height="{{ p.featured_image.height | default: 900 }}"
+                    class="product-regimen__img"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'product-regimen__img product-regimen__img--placeholder' }}
+                {%- endif -%}
+              </a>
+
+              {%- unless p.has_only_default_variant -%}
+                <div class="product-regimen__pills" role="radiogroup" aria-label="{{ p.title | escape }} options">
+                  {%- for variant in p.variants -%}
+                    <label class="product-regimen__pill">
+                      <input
+                        type="radio"
+                        name="id"
+                        value="{{ variant.id }}"
+                        data-price="{{ variant.price | money }}"
+                        data-available="{{ variant.available }}"
+                        {% if variant.id == cur.id %}checked{% endif %}
+                        {% unless variant.available %}disabled{% endunless %}
+                      >
+                      <span>{{ variant.title }}</span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              {%- else -%}
+                <input type="hidden" name="id" value="{{ cur.id }}">
+              {%- endunless -%}
+
+              <h3 class="product-regimen__title">
+                <a href="{{ p.url }}">{{ p.title }}</a>
+              </h3>
+
+              {%- if card_desc != blank -%}
+                <p class="product-regimen__desc">{{ card_desc }}</p>
+              {%- endif -%}
+
+              <p class="product-regimen__price" data-reg-price>{{ cur.price | money }}</p>
+
+              <button
+                type="submit"
+                class="product-regimen__atc"
+                data-reg-atc
+                data-label="Add to bag"
+                data-sold="Sold out"
+                {% unless p.available %}disabled{% endunless %}
+              >
+                <span data-atc-label>{% if p.available %}Add to bag{% else %}Sold out{% endif %}</span>
+              </button>
+            </form>
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .product-regimen {
+    width: 100%;
+    padding-block: 6rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-regimen {
+      padding-block: 9rem;
+    }
+  }
+
+  .product-regimen__heading {
+    margin-top: 1rem;
+    font-size: clamp(2.25rem, 5.5vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+  }
+
+  .product-regimen__heading em {
+    color: var(--primary);
+    font-style: italic;
+    text-transform: none;
+  }
+
+  .product-regimen__grid {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2rem;
+    row-gap: 3.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .product-regimen__grid {
+      margin-top: 4rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .product-regimen__grid.is-count-1 {
+      grid-template-columns: minmax(0, 28rem);
+      justify-content: center;
+    }
+    .product-regimen__grid.is-count-2,
+    .product-regimen__grid.is-count-4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .product-regimen__form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* === Media === */
+  .product-regimen__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: var(--surface);
+  }
+
+  .product-regimen__badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1;
+    color: var(--foreground);
+    background-color: color-mix(in oklab, var(--background) 80%, transparent);
+    padding: 0.35rem 0.6rem;
+    font-size: 0.625rem;
+  }
+
+  .product-regimen__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+
+  .product-regimen__media:hover .product-regimen__img {
+    transform: scale(1.03);
+  }
+
+  .product-regimen__img--placeholder {
+    color: color-mix(in oklab, var(--primary) 25%, var(--surface));
+  }
+
+  /* === Size pills === */
+  .product-regimen__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .product-regimen__pill {
+    display: inline-flex;
+    cursor: pointer;
+  }
+
+  .product-regimen__pill input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .product-regimen__pill span {
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--border);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    transition: border-color 0.25s ease, color 0.25s ease;
+  }
+
+  .product-regimen__pill input:checked + span {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .product-regimen__pill input:focus-visible + span {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .product-regimen__pill input:disabled + span {
+    opacity: 0.4;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+
+  /* === Text === */
+  .product-regimen__title {
+    margin-top: 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--foreground);
+  }
+
+  .product-regimen__title a {
+    color: inherit;
+    transition: color 0.25s ease;
+  }
+
+  .product-regimen__title a:hover {
+    color: var(--primary);
+  }
+
+  .product-regimen__desc {
+    margin-top: 0.625rem;
+    color: color-mix(in oklab, var(--foreground) 72%, transparent);
+    line-height: 1.6;
+    font-size: 0.9375rem;
+  }
+
+  .product-regimen__price {
+    margin-top: 0.875rem;
+    color: var(--foreground);
+    font-size: 0.9375rem;
+  }
+
+  .product-regimen__atc {
+    align-self: flex-start;
+    margin-top: 1rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--foreground);
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    cursor: pointer;
+    transition: color 0.25s ease, opacity 0.25s ease;
+  }
+
+  .product-regimen__atc:hover:not([disabled]),
+  .product-regimen__atc:focus-visible:not([disabled]) {
+    color: var(--primary);
+  }
+
+  .product-regimen__atc[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    text-decoration-color: transparent;
+  }
+
+  .product-regimen__atc[data-loading="true"] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    function bindCard(card) {
+      if (card.dataset.regBound) return;
+      card.dataset.regBound = 'true';
+
+      var priceEl = card.querySelector('[data-reg-price]');
+      var atc = card.querySelector('[data-reg-atc]');
+      var label = atc ? atc.querySelector('[data-atc-label]') : null;
+
+      card.querySelectorAll('input[name="id"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          if (priceEl && radio.dataset.price) priceEl.textContent = radio.dataset.price;
+          if (atc) {
+            var available = radio.dataset.available === 'true';
+            atc.disabled = !available;
+            if (label) label.textContent = available ? (atc.dataset.label || 'Add to bag') : (atc.dataset.sold || 'Sold out');
+          }
+        });
+      });
+
+      card.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!atc || atc.disabled) return;
+        var fd = new FormData(card);
+        atc.setAttribute('data-loading', 'true');
+        fetch('/cart/add.js', { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+          .then(function (r) { return r.json(); })
+          .then(function () {
+            atc.removeAttribute('data-loading');
+            document.dispatchEvent(new CustomEvent('cart:refresh'));
+            document.dispatchEvent(new CustomEvent('cart:open'));
+          })
+          .catch(function () {
+            atc.removeAttribute('data-loading');
+            card.submit();
+          });
+      });
+    }
+
+    function init() {
+      document.querySelectorAll('[data-reg-card]').forEach(bindCard);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+    document.addEventListener('shopify:section:load', init);
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Complete your regimen",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "t:labels.heading_lead",
+      "default": "Complete your regimen"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "t:labels.heading_emphasis"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "info": "Optional label shown on the image, e.g. Best Seller."
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Short description",
+          "info": "Optional. Falls back to the product's own description if left blank."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Complete your regimen",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
