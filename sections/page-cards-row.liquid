@@ -1,144 +1,86 @@
 {%- liquid
-  assign raw_video = section.settings.video_url
-  assign video_src = ''
-  if raw_video != blank
-    assign url_prefix = raw_video | slice: 0, 4
-    if url_prefix == 'http'
-      assign video_src = raw_video
-    else
-      assign url_parts = raw_video | split: '/'
-      assign filename = url_parts | last
-      assign video_src = filename | file_url
-    endif
-  endif
+  assign block_count = section.blocks.size
+  assign eyebrow = section.settings.eyebrow
+  assign heading = section.settings.heading
   assign show_rule = section.settings.show_rule
-  assign autoplay = section.settings.autoplay
 -%}
 
-{%- if video_src != blank -%}
 <section
-  class="page-video-text full-width"
-  style="--margin-top: {{ section.settings.margin_top }}rem;"
+  class="page-cards-row full-width"
+  style="--margin-top: {{ section.settings.margin_top }}rem; --margin-bottom: {{ section.settings.margin_bottom }}rem;"
 >
-  <div class="page-video-text__inner cham-container">
-    <div class="page-video-text__grid page-video-text--video-{{ section.settings.video_side }}">
-      <div class="page-video-text__copy-col" data-reveal>
-        {%- if section.settings.eyebrow != blank -%}
-          <span class="page-video-text__eyebrow">
-            {%- if show_rule -%}<span class="page-video-text__rule" aria-hidden="true"></span>{%- endif -%}
-            <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+  <div class="page-cards-row__inner">
+    {%- if eyebrow != blank or heading != blank -%}
+      <div class="page-cards-row__head" data-reveal>
+        {%- if eyebrow != blank -%}
+          <span class="page-cards-row__eyebrow">
+            {%- if show_rule -%}<span class="page-cards-row__rule" aria-hidden="true"></span>{%- endif -%}
+            <span class="eyebrow">{{ eyebrow }}</span>
           </span>
         {%- endif -%}
-        <h2 class="page-video-text__heading font-display">
-          {{- section.settings.heading_lead -}}
-          {%- if section.settings.heading_emphasis != blank %} <em>{{ section.settings.heading_emphasis }}</em>{%- endif -%}
-          {%- if section.settings.heading_tail != blank %}{{ section.settings.heading_tail }}{%- endif -%}
-        </h2>
-        {%- if section.settings.body != blank -%}
-          <div class="page-video-text__body">{{ section.settings.body }}</div>
+        {%- if heading != blank -%}
+          <h2 class="page-cards-row__heading font-display">{{ heading }}</h2>
         {%- endif -%}
       </div>
+    {%- endif -%}
 
-      <div class="page-video-text__media-col" data-reveal data-reveal-delay="150">
-        <div class="page-video-text__player" data-video-player data-playing="false" data-muted="true" data-autoplay="{{ autoplay }}">
-            <video
-              data-video
-              src="{{ video_src }}"
-              {% if section.settings.poster != blank %}poster="{{ section.settings.poster | image_url: width: 1200 }}"{% endif %}
-              playsinline
-              loop
-              muted
-              preload="metadata"
-              {% if autoplay %}autoplay{% endif %}
-            ></video>
-
-            <button class="page-video-text__overlay" data-video-toggle type="button" aria-label="Play video">
-              <span class="page-video-text__overlay-button" aria-hidden="true">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <polygon points="6 4 20 12 6 20 6 4"/>
-                </svg>
-              </span>
-            </button>
-
-            <div class="page-video-text__controls">
-              <button class="page-video-text__control" data-video-toggle type="button" aria-label="Play/pause">
-                <svg class="page-video-text__icon page-video-text__icon--play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <polygon points="6 4 20 12 6 20 6 4"/>
-                </svg>
-                <svg class="page-video-text__icon page-video-text__icon--pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <rect x="6" y="4" width="4" height="16"/>
-                  <rect x="14" y="4" width="4" height="16"/>
-                </svg>
-              </button>
-              <button class="page-video-text__control" data-video-mute type="button" aria-label="Mute/unmute">
-                <svg class="page-video-text__icon page-video-text__icon--muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                  <line x1="23" y1="9" x2="17" y2="15"/>
-                  <line x1="17" y1="9" x2="23" y2="15"/>
-                </svg>
-                <svg class="page-video-text__icon page-video-text__icon--unmuted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                </svg>
-              </button>
-            </div>
+    <div class="page-cards-row__grid is-count-{{ block_count }}">
+      {%- for block in section.blocks -%}
+        <div
+          class="page-cards-row__card"
+          data-reveal
+          data-reveal-delay="{{ forloop.index0 | times: 90 }}"
+          {{ block.shopify_attributes }}
+        >
+          {%- if block.settings.title != blank -%}
+            <h3 class="page-cards-row__title font-display">{{ block.settings.title }}</h3>
+          {%- endif -%}
+          {%- if block.settings.body != blank -%}
+            <div class="page-cards-row__body">{{ block.settings.body }}</div>
+          {%- endif -%}
         </div>
-      </div>
+      {%- endfor -%}
     </div>
   </div>
 </section>
-{%- endif -%}
 
 {% stylesheet %}
-  .page-video-text {
+  .page-cards-row {
     width: 100%;
-    margin-top: var(--margin-top, 8rem);
+    margin-top: var(--margin-top, 6rem);
+    margin-bottom: var(--margin-bottom, 8rem);
   }
 
   @media (min-width: 1024px) {
-    .page-video-text {
-      margin-top: calc(var(--margin-top, 8rem) + 3rem);
+    .page-cards-row {
+      margin-top: calc(var(--margin-top, 6rem) + 2rem);
     }
   }
 
-  .page-video-text__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-    align-items: center;
+  .page-cards-row__inner {
+    max-width: 1100px;
+    margin-inline: auto;
+    padding-inline: var(--page-padding-inline);
   }
 
   @media (min-width: 1024px) {
-    .page-video-text__grid {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 4.5rem;
-    }
-    .page-video-text--video-right .page-video-text__copy-col {
-      grid-column: span 5;
-      order: 1;
-    }
-    .page-video-text--video-right .page-video-text__media-col {
-      grid-column: span 7;
-      order: 2;
-    }
-    .page-video-text--video-left .page-video-text__copy-col {
-      grid-column: span 5;
-      order: 2;
-    }
-    .page-video-text--video-left .page-video-text__media-col {
-      grid-column: span 7;
-      order: 1;
+    .page-cards-row__inner {
+      padding-inline: var(--page-padding-inline-lg);
     }
   }
 
-  /* Eyebrow with gold leading rule */
-  .page-video-text__eyebrow {
+  /* Optional header */
+  .page-cards-row__head {
+    margin-bottom: 3rem;
+  }
+
+  .page-cards-row__eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 1rem;
   }
 
-  .page-video-text__rule {
+  .page-cards-row__rule {
     display: inline-block;
     width: 2.5rem;
     height: 1px;
@@ -146,262 +88,69 @@
     flex: none;
   }
 
-  .page-video-text__heading {
-    margin-top: 1.5rem;
-    font-size: clamp(2.25rem, 5vw, 3.75rem);
+  .page-cards-row__heading {
+    margin-top: 1.25rem;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
     font-weight: 300;
-    line-height: 1.02;
-    letter-spacing: -0.015em;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
     text-wrap: balance;
   }
 
-  .page-video-text__heading em {
-    color: var(--primary);
-    font-style: italic;
-  }
-
-  .page-video-text__body {
-    margin-top: 2rem;
-    color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    line-height: 1.75;
-    font-size: 1.0625rem;
-    text-wrap: pretty;
-  }
-
-  .page-video-text__body > p { margin: 0; }
-  .page-video-text__body > p + p { margin-top: 1.25rem; }
-
-  .page-video-text__player {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 9 / 16;
-    background-color: #000;
-    overflow: hidden;
-  }
-
-  @media (min-width: 640px) {
-    .page-video-text__player {
-      aspect-ratio: 4 / 5;
-    }
+  /* Cards */
+  .page-cards-row__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
   }
 
   @media (min-width: 1024px) {
-    .page-video-text__player {
-      aspect-ratio: 9 / 12;
+    .page-cards-row__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    /* Count-aware so 1–6 cards always balance. */
+    .page-cards-row__grid.is-count-1 {
+      grid-template-columns: minmax(0, 32rem);
+    }
+    .page-cards-row__grid.is-count-2,
+    .page-cards-row__grid.is-count-4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  .page-video-text__player video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    cursor: pointer;
-    display: block;
+  .page-cards-row__card {
+    border-top: 1px solid var(--border);
+    padding-top: 1.75rem;
   }
 
-  .page-video-text__overlay {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    background-color: rgb(0 0 0 / 0.2);
-    transition: background-color 0.3s ease, opacity 0.4s ease;
-    cursor: pointer;
-    border: 0;
+  .page-cards-row__title {
+    font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
   }
 
-  .page-video-text__overlay:hover {
-    background-color: rgb(0 0 0 / 0.28);
+  .page-cards-row__body {
+    margin-top: 0.875rem;
+    font-size: 0.9375rem;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+    line-height: 1.7;
+    text-wrap: pretty;
   }
 
-  .page-video-text__player[data-playing="true"] .page-video-text__overlay {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .page-video-text__overlay-button {
-    width: 5rem;
-    height: 5rem;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background-color: color-mix(in oklab, var(--background) 90%, transparent);
-    color: var(--primary);
-    box-shadow: 0 20px 60px -20px color-mix(in oklab, var(--primary) 35%, transparent);
-    transition: transform 0.4s cubic-bezier(0.2, 0.6, 0.2, 1), background-color 0.3s ease;
-  }
-
-  .page-video-text__overlay:hover .page-video-text__overlay-button {
-    transform: scale(1.06);
-    background-color: var(--background);
-  }
-
-  .page-video-text__overlay:focus-visible {
-    outline: 2px solid var(--ring, var(--primary));
-    outline-offset: -4px;
-  }
-
-  .page-video-text__overlay-button svg {
-    margin-left: 4px;
-  }
-
-  .page-video-text__controls {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    display: flex;
-    gap: 0.5rem;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .page-video-text__player:hover .page-video-text__controls,
-  .page-video-text__player:focus-within .page-video-text__controls {
-    opacity: 1;
-  }
-
-  .page-video-text__control {
-    width: 2.5rem;
-    height: 2.5rem;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background-color: color-mix(in oklab, var(--background) 85%, transparent);
-    color: var(--foreground);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    border: 0;
-  }
-
-  .page-video-text__control:hover {
-    background-color: var(--background);
-  }
-
-  .page-video-text__control:focus-visible {
-    outline: 2px solid var(--ring, var(--primary));
-    outline-offset: 2px;
-  }
-
-  /* Icon visibility toggles via data attributes */
-  .page-video-text__icon {
-    display: none;
-  }
-  .page-video-text__player[data-playing="false"] .page-video-text__icon--play {
-    display: block;
-  }
-  .page-video-text__player[data-playing="true"] .page-video-text__icon--pause {
-    display: block;
-  }
-  .page-video-text__player[data-muted="true"] .page-video-text__icon--muted {
-    display: block;
-  }
-  .page-video-text__player[data-muted="false"] .page-video-text__icon--unmuted {
-    display: block;
-  }
+  .page-cards-row__body > p { margin: 0; }
+  .page-cards-row__body > p + p { margin-top: 0.75rem; }
 {% endstylesheet %}
-
-{% javascript %}
-  (function () {
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    document.querySelectorAll('[data-video-player]').forEach(function (player) {
-      var video = player.querySelector('[data-video]');
-      if (!video) return;
-      var toggles = player.querySelectorAll('[data-video-toggle]');
-      var muteBtn = player.querySelector('[data-video-mute]');
-
-      function setPlaying() {
-        player.setAttribute('data-playing', video.paused ? 'false' : 'true');
-      }
-      function setMuted() {
-        player.setAttribute('data-muted', video.muted ? 'true' : 'false');
-      }
-
-      toggles.forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
-          e.preventDefault();
-          if (video.paused) {
-            video.play().catch(function () {});
-          } else {
-            video.pause();
-          }
-        });
-      });
-
-      video.addEventListener('click', function () {
-        if (video.paused) {
-          video.play().catch(function () {});
-        } else {
-          video.pause();
-        }
-      });
-
-      if (muteBtn) {
-        muteBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-          video.muted = !video.muted;
-          setMuted();
-        });
-      }
-
-      video.addEventListener('play', setPlaying);
-      video.addEventListener('pause', setPlaying);
-
-      setPlaying();
-      setMuted();
-
-      // Optional autoplay (muted, respects reduced-motion preference).
-      if (player.getAttribute('data-autoplay') === 'true' && !reduceMotion) {
-        video.muted = true;
-        setMuted();
-        var tryPlay = function () { video.play().catch(function () {}); };
-        if (video.readyState >= 2) {
-          tryPlay();
-        } else {
-          video.addEventListener('canplay', tryPlay, { once: true });
-        }
-      }
-    });
-  })();
-{% endjavascript %}
 
 {% schema %}
 {
-  "name": "Video + text",
+  "name": "Cards row",
   "tag": "section",
   "settings": [
     {
-      "type": "text",
-      "id": "video_url",
-      "label": "Video URL",
-      "info": "Either the filename of a video uploaded to Settings → Files (e.g. cham-video.mp4), or a full https URL."
-    },
-    {
-      "type": "image_picker",
-      "id": "poster",
-      "label": "Poster image",
-      "info": "Optional. Shown before playback starts."
-    },
-    {
-      "type": "select",
-      "id": "video_side",
-      "label": "Video side",
-      "options": [
-        { "value": "left", "label": "Video left" },
-        { "value": "right", "label": "Video right" }
-      ],
-      "default": "right"
-    },
-    {
-      "type": "checkbox",
-      "id": "autoplay",
-      "label": "Autoplay (muted)",
-      "info": "Plays automatically, looped and muted. Respects visitors' reduced-motion setting.",
-      "default": false
-    },
-    {
       "type": "header",
-      "content": "Copy"
+      "content": "Header (optional)"
     },
     {
       "type": "text",
@@ -417,23 +166,8 @@
     },
     {
       "type": "text",
-      "id": "heading_lead",
-      "label": "Heading (lead)"
-    },
-    {
-      "type": "text",
-      "id": "heading_emphasis",
-      "label": "Heading (emphasis)"
-    },
-    {
-      "type": "text",
-      "id": "heading_tail",
-      "label": "Heading (after emphasis)"
-    },
-    {
-      "type": "richtext",
-      "id": "body",
-      "label": "Body"
+      "id": "heading",
+      "label": "Heading"
     },
     {
       "type": "header",
@@ -444,15 +178,44 @@
       "id": "margin_top",
       "label": "Top margin (mobile)",
       "min": 0,
-      "max": 24,
+      "max": 16,
+      "step": 1,
+      "unit": "rem",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Bottom margin",
+      "min": 0,
+      "max": 16,
       "step": 1,
       "unit": "rem",
       "default": 8
     }
   ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
   "presets": [
     {
-      "name": "Video + text"
+      "name": "Cards row"
     }
   ]
 }
