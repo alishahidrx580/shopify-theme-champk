@@ -78,16 +78,7 @@
       "settings": {
         "eyebrow": "Key Ingredients",
         "heading_lead": "A short, considered list —",
-        "heading_emphasis": "no single hero.",
-        "body": "<p>Skin response depends on how ingredients interact within a formulation. We focus on synergy, base quality and stability — never isolating one ingredient at the expense of the system.</p>"
-      }
-    },
-    "sensory": {
-      "type": "product-sensory",
-      "settings": {
-        "eyebrow": "The Sensory Experience",
-        "heading_lead": "How it",
-        "heading_emphasis": "feels."
+        "heading_emphasis": "no single hero."
       }
     },
     "ritual": {
@@ -97,6 +88,14 @@
         "heading_lead": "How to",
         "heading_emphasis": "apply.",
         "body": "<p>A few unhurried minutes, twice a day. Consistency is what skin responds to.</p>"
+      }
+    },
+    "sensory": {
+      "type": "product-sensory",
+      "settings": {
+        "eyebrow": "The Sensory Experience",
+        "heading_lead": "How it",
+        "heading_emphasis": "feels."
       }
     },
     "pairs_with": {
@@ -115,6 +114,33 @@
         "eyebrow": "Questions",
         "heading_lead": "What people",
         "heading_emphasis": "ask."
+      }
+    },
+    "regimen": {
+      "type": "product-regimen",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {}
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {}
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading_lead": "Complete your regimen",
+        "heading_emphasis": ""
       }
     },
     "reviews": {
@@ -138,26 +164,17 @@
         "heading_lead": "Loved by skin like",
         "heading_emphasis": "yours."
       }
-    },
-    "marketplaces": {
-      "type": "marketplace-badges",
-      "settings": {
-        "eyebrow": "Also Available On",
-        "heading": "",
-        "note": "Same Cham, same standards — wherever you choose to shop.",
-        "dev_preview": false
-      }
     }
   },
   "order": [
     "main",
     "pillars",
     "key_ingredients",
-    "sensory",
     "ritual",
+    "sensory",
     "pairs_with",
     "faq",
-    "reviews",
-    "marketplaces"
+    "regimen",
+    "reviews"
   ]
 }
