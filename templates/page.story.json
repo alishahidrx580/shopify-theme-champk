@@ -1,0 +1,120 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "eyebrow": "Our Story",
+        "heading_lead": "A quiet rebellion",
+        "heading_emphasis": "against louder skincare",
+        "heading_tail": ".",
+        "body": "<p>Cham Beauty began in a small laboratory outside Paris, with a single conviction: skin is not a surface to be corrected — it is a system to be supported. We watched an industry pile actives on top of actives, chasing instant glow with oils, films and fillers that vanished by morning. We wanted something else. Something true.</p>",
+        "body_size": "large",
+        "body_max_width": 48,
+        "max_width": 1100
+      }
+    },
+    "image-portrait": {
+      "type": "page-image-band",
+      "settings": {
+        "image": "shopify://shop_images/portrait.jpg",
+        "aspect_mobile": "16 / 9",
+        "aspect_desktop": "21 / 9",
+        "margin_top": 6
+      }
+    },
+    "origin": {
+      "type": "page-heading-text",
+      "settings": {
+        "eyebrow": "Origin",
+        "heading_lead": "Developed with French standards",
+        "heading_emphasis": "",
+        "body": "<p>Each Cham formula is developed in collaboration with experienced cosmetic chemists working to French formulation standards. We focus on the quality of every ingredient, the elegance of every texture, and the way each product fits into a calm, daily routine.</p><p>We do not chase hero ingredients. We compose. The base matters as much as the active. The texture matters as much as the molecule. Every detail is considered, because skin can tell.</p>",
+        "margin_top": 6
+      }
+    },
+    "quote": {
+      "type": "page-pull-quote",
+      "settings": {
+        "quote": "The most beautiful skin is the most well-spoken-to. Our work is simply to listen, then answer with precision.",
+        "attribution": "— The Cham Atelier, Paris",
+        "margin_top": 8
+      }
+    },
+    "image-ritual": {
+      "type": "page-image-band",
+      "settings": {
+        "image": "shopify://shop_images/ritual.jpg",
+        "aspect_mobile": "16 / 9",
+        "aspect_desktop": "21 / 9",
+        "margin_top": 6
+      }
+    },
+    "atelier": {
+      "type": "page-video-text",
+      "settings": {
+        "video_url": "https://cdn.shopify.com/videos/c/o/v/8548f683a508415e8a43c744bd99f5b1.mp4",
+        "poster": "shopify://shop_images/WhatsApp_Image_2026-05-12_at_6.03.00_PM.jpg",
+        "video_side": "right",
+        "eyebrow": "Inside the Atelier",
+        "heading_lead": "The ritual,",
+        "heading_emphasis": "in motion",
+        "heading_tail": ".",
+        "body": "<p>A glimpse into how Cham is made, used and felt — quiet gestures, considered textures, and the slow craft behind every formula.</p>",
+        "margin_top": 8
+      }
+    },
+    "cards": {
+      "type": "page-cards-row",
+      "blocks": {
+        "c1": {
+          "type": "card",
+          "settings": {
+            "title": "Small Batches",
+            "body": "<p>Produced in small batches with our partner laboratories to maintain quality and consistency.</p>"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "title": "Considered Formulation",
+            "body": "<p>Each product is composed for comfort, balance and a beautiful daily feel — not for instant transformation.</p>"
+          }
+        },
+        "c3": {
+          "type": "card",
+          "settings": {
+            "title": "Quiet Beauty",
+            "body": "<p>No noise. No theatre. Only what skin actually wants in a daily routine.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "settings": {
+        "margin_top": 6,
+        "margin_bottom": 8
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "image-portrait",
+    "origin",
+    "quote",
+    "image-ritual",
+    "atelier",
+    "cards"
+  ]
+}
