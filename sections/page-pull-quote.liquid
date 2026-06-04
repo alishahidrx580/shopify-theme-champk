@@ -1,13 +1,19 @@
-<section class="page-pull-quote full-width" style="--margin-top: {{ section.settings.margin_top }}rem;">
+{%- liquid
+  assign quote = section.settings.quote
+  assign attribution = section.settings.attribution
+  assign align = section.settings.text_align | default: 'left'
+-%}
+
+<section class="page-pull-quote page-pull-quote--{{ align }} full-width" style="--margin-top: {{ section.settings.margin_top }}rem;">
   <div class="page-pull-quote__inner cham-container">
-    <div data-reveal>
-      <p class="page-pull-quote__quote font-display">
-        <span class="page-pull-quote__mark" aria-hidden="true">&ldquo;</span>{{ section.settings.quote }}<span class="page-pull-quote__mark" aria-hidden="true">&rdquo;</span>
-      </p>
-      {%- if section.settings.attribution != blank -%}
-        <p class="page-pull-quote__attribution eyebrow eyebrow--bare">{{ section.settings.attribution }}</p>
-      {%- endif -%}
-    </div>
+    {%- if quote != blank -%}
+      <blockquote class="page-pull-quote__quote font-display" data-reveal>
+        <span class="page-pull-quote__mark page-pull-quote__mark--open" aria-hidden="true">&ldquo;</span>{{ quote }}<span class="page-pull-quote__mark" aria-hidden="true">&rdquo;</span>
+      </blockquote>
+    {%- endif -%}
+    {%- if attribution != blank -%}
+      <p class="page-pull-quote__attribution eyebrow eyebrow--bare" data-reveal data-reveal-delay="120">{{ attribution }}</p>
+    {%- endif -%}
   </div>
 </section>
 
@@ -24,19 +30,42 @@
   }
 
   .page-pull-quote__quote {
-    font-size: clamp(1.875rem, 4vw, 3rem);
-    line-height: 1.15;
-    max-width: 56rem;
     margin: 0;
+    max-width: 58rem;
+    font-size: clamp(2rem, 4.2vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
     color: var(--foreground);
+    text-wrap: balance;
   }
 
   .page-pull-quote__mark {
     color: var(--primary);
   }
 
+  /* Hang the opening mark slightly into the left margin for an editorial feel. */
+  .page-pull-quote__mark--open {
+    margin-left: -0.4em;
+  }
+
   .page-pull-quote__attribution {
     margin-top: 2rem;
+    color: var(--primary);
+  }
+
+  /* Centered variant */
+  .page-pull-quote--center .page-pull-quote__quote {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .page-pull-quote--center .page-pull-quote__attribution {
+    text-align: center;
+  }
+
+  .page-pull-quote--center .page-pull-quote__mark--open {
+    margin-left: 0;
   }
 {% endstylesheet %}
 
@@ -55,6 +84,16 @@
       "id": "attribution",
       "label": "Attribution",
       "info": "e.g. — The Cham Atelier, Paris"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
     },
     {
       "type": "range",
