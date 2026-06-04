@@ -27,8 +27,11 @@
     "image-portrait": {
       "type": "page-image-band",
       "settings": {
+        "alt": "",
         "aspect_mobile": "16 / 9",
         "aspect_desktop": "21 / 9",
+        "focal_x": 50,
+        "focal_y": 50,
         "margin_top": 6
       }
     },
@@ -36,6 +39,7 @@
       "type": "page-heading-text",
       "settings": {
         "eyebrow": "Origin",
+        "show_rule": false,
         "heading_lead": "Developed with French standards",
         "heading_emphasis": "",
         "body": "<p>Each Cham formula is developed in collaboration with experienced cosmetic chemists working to French formulation standards. We focus on the quality of every ingredient, the elegance of every texture, and the way each product fits into a calm, daily routine.</p><p>We do not chase hero ingredients. We compose. The base matters as much as the active. The texture matters as much as the molecule. Every detail is considered, because skin can tell.</p>",
@@ -53,8 +57,11 @@
     "image-ritual": {
       "type": "page-image-band",
       "settings": {
+        "alt": "",
         "aspect_mobile": "16 / 9",
         "aspect_desktop": "21 / 9",
+        "focal_x": 50,
+        "focal_y": 50,
         "margin_top": 6
       }
     },
