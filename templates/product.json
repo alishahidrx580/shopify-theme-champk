@@ -76,13 +76,48 @@
     "key_ingredients": {
       "type": "product-key-ingredients",
       "settings": {
+        "media_position": "left",
         "eyebrow": "Key Ingredients",
         "heading_lead": "A short, considered list —",
-        "heading_emphasis": "no single hero."
+        "heading_emphasis": "no single hero.",
+        "claim": "Improves visible signs of collagen and elastin loss.*",
+        "footnote": "<p>*This oil helps address visible signs of collagen and elastin loss by improving the look of lines and wrinkles and skin's firm feel.</p>",
+        "video_url": "",
+        "autoplay": true,
+        "loop": true,
+        "show_controls": false
       }
     },
     "ritual": {
       "type": "product-ritual",
+      "blocks": {
+        "step_yzmXRW": {
+          "type": "step",
+          "settings": {
+            "title": "Step title",
+            "body": "Describe what to do in this step of the routine."
+          }
+        },
+        "step_9cdz8L": {
+          "type": "step",
+          "settings": {
+            "title": "Step title",
+            "body": "Describe what to do in this step of the routine."
+          }
+        },
+        "step_HQNqEA": {
+          "type": "step",
+          "settings": {
+            "title": "Step title",
+            "body": "Describe what to do in this step of the routine."
+          }
+        }
+      },
+      "block_order": [
+        "step_yzmXRW",
+        "step_9cdz8L",
+        "step_HQNqEA"
+      ],
       "settings": {
         "eyebrow": "The Ritual",
         "heading_lead": "How to",
@@ -93,9 +128,11 @@
     "sensory": {
       "type": "product-sensory",
       "settings": {
+        "media_position": "left",
         "eyebrow": "The Sensory Experience",
         "heading_lead": "How it",
-        "heading_emphasis": "feels."
+        "heading_emphasis": "feels.",
+        "body": "<p>A short paragraph describing how the formula feels on skin and the experience of using it.</p>"
       }
     },
     "pairs_with": {
@@ -119,20 +156,41 @@
     "regimen": {
       "type": "product-regimen",
       "blocks": {
+        "product_rkj3eq": {
+          "type": "product",
+          "settings": {
+            "product": "brightening-face-cream",
+            "badge": "",
+            "description": ""
+          }
+        },
         "product_1": {
           "type": "product",
-          "settings": {}
+          "settings": {
+            "product": "brightening-face-mask",
+            "badge": "",
+            "description": ""
+          }
         },
         "product_2": {
           "type": "product",
-          "settings": {}
+          "settings": {
+            "product": "",
+            "badge": "",
+            "description": ""
+          }
         },
         "product_3": {
           "type": "product",
-          "settings": {}
+          "settings": {
+            "product": "",
+            "badge": "",
+            "description": ""
+          }
         }
       },
       "block_order": [
+        "product_rkj3eq",
         "product_1",
         "product_2",
         "product_3"
