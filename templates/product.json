@@ -76,26 +76,87 @@
     "key_ingredients": {
       "type": "product-key-ingredients",
       "settings": {
+        "media_position": "left",
         "eyebrow": "Key Ingredients",
         "heading_lead": "A short, considered list —",
-        "heading_emphasis": "no single hero."
-      }
-    },
-    "ritual": {
-      "type": "product-ritual",
-      "settings": {
-        "eyebrow": "The Ritual",
-        "heading_lead": "How to",
-        "heading_emphasis": "apply.",
-        "body": "<p>A few unhurried minutes, twice a day. Consistency is what skin responds to.</p>"
+        "heading_emphasis": "no single hero.",
+        "claim": "Improves visible signs of collagen and elastin loss.*",
+        "footnote": "<p>*This oil helps address visible signs of collagen and elastin loss by improving the look of lines and wrinkles and skin's firm feel.</p>",
+        "video_url": "",
+        "autoplay": true,
+        "loop": true,
+        "show_controls": false
       }
     },
     "sensory": {
       "type": "product-sensory",
       "settings": {
+        "media_position": "left",
         "eyebrow": "The Sensory Experience",
         "heading_lead": "How it",
-        "heading_emphasis": "feels."
+        "heading_emphasis": "feels.",
+        "body": "<p>A short paragraph describing how the formula feels on skin and the experience of using it.</p>"
+      }
+    },
+    "ritual": {
+      "type": "product-ritual",
+      "blocks": {
+        "step_94MEfc": {
+          "type": "step",
+          "settings": {
+            "title": "Step title",
+            "body": "Describe what to do in this step of the routine."
+          }
+        },
+        "step_aByV7t": {
+          "type": "step",
+          "settings": {
+            "title": "Step title",
+            "body": "Describe what to do in this step of the routine."
+          }
+        },
+        "step_mxCzgT": {
+          "type": "step",
+          "settings": {
+            "title": "Step title",
+            "body": "Describe what to do in this step of the routine."
+          }
+        },
+        "step_CYLgcg": {
+          "type": "step",
+          "settings": {
+            "title": "Step title",
+            "body": "Describe what to do in this step of the routine."
+          }
+        },
+        "step_xYdaEP": {
+          "type": "step",
+          "settings": {
+            "title": "Step title",
+            "body": "Describe what to do in this step of the routine."
+          }
+        },
+        "step_yP3Lp4": {
+          "type": "step",
+          "settings": {
+            "title": "Step title",
+            "body": "Describe what to do in this step of the routine."
+          }
+        }
+      },
+      "block_order": [
+        "step_94MEfc",
+        "step_aByV7t",
+        "step_mxCzgT",
+        "step_CYLgcg",
+        "step_xYdaEP",
+        "step_yP3Lp4"
+      ],
+      "settings": {
+        "eyebrow": "The Ritual",
+        "heading_lead": "How to",
+        "heading_emphasis": "apply.",
+        "body": "<p>A few unhurried minutes, twice a day. Consistency is what skin responds to.</p>"
       }
     },
     "pairs_with": {
@@ -114,33 +175,6 @@
         "eyebrow": "Questions",
         "heading_lead": "What people",
         "heading_emphasis": "ask."
-      }
-    },
-    "regimen": {
-      "type": "product-regimen",
-      "blocks": {
-        "product_1": {
-          "type": "product",
-          "settings": {}
-        },
-        "product_2": {
-          "type": "product",
-          "settings": {}
-        },
-        "product_3": {
-          "type": "product",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "product_1",
-        "product_2",
-        "product_3"
-      ],
-      "settings": {
-        "eyebrow": "",
-        "heading_lead": "Complete your regimen",
-        "heading_emphasis": ""
       }
     },
     "reviews": {
@@ -164,17 +198,26 @@
         "heading_lead": "Loved by skin like",
         "heading_emphasis": "yours."
       }
+    },
+    "marketplaces": {
+      "type": "marketplace-badges",
+      "settings": {
+        "eyebrow": "Also Available On",
+        "heading": "",
+        "note": "Same Cham, same standards — wherever you choose to shop.",
+        "dev_preview": false
+      }
     }
   },
   "order": [
     "main",
     "pillars",
     "key_ingredients",
-    "ritual",
     "sensory",
+    "ritual",
     "pairs_with",
     "faq",
-    "regimen",
-    "reviews"
+    "reviews",
+    "marketplaces"
   ]
 }
