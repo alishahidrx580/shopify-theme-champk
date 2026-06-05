@@ -70,8 +70,10 @@
       ],
       "settings": {
         "eyebrow": "Three Principles",
+        "show_rule": false,
         "heading_lead": "Comfort · Balance ·",
-        "heading_emphasis": "Finish"
+        "heading_emphasis": "Finish",
+        "image_aspect": "4 / 5"
       }
     },
     "beliefs": {
