@@ -1,6 +1,7 @@
 {%- liquid
   assign block_count = section.blocks.size
   assign show_rule = section.settings.show_rule
+  assign aspect = section.settings.image_aspect | default: '4 / 5'
 -%}
 
 <section class="page-cards-pair full-width page-cards-pair--bg-{{ section.settings.background }}">
@@ -22,11 +23,27 @@
       <div class="page-cards-pair__cards is-count-{{ block_count }}">
         {%- for block in section.blocks -%}
           <div
-            class="page-cards-pair__card"
+            class="page-cards-pair__card{% if block.settings.image != blank %} page-cards-pair__card--image{% endif %}"
             data-reveal
             data-reveal-delay="{{ forloop.index | times: 80 | plus: 40 }}"
             {{ block.shopify_attributes }}
           >
+            {%- if block.settings.image != blank -%}
+              <div class="page-cards-pair__media" style="--aspect: {{ aspect }};">
+                <img
+                  src="{{ block.settings.image | image_url: width: 1200 }}"
+                  srcset="{{ block.settings.image | image_url: width: 500 }} 500w, {{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1200 }} 1200w"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 40vw, 100vw"
+                  alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  loading="lazy"
+                  decoding="async"
+                  class="page-cards-pair__img"
+                >
+              </div>
+            {%- endif -%}
+
             {%- if block.settings.eyebrow != blank -%}
               <p class="eyebrow eyebrow--bare page-cards-pair__card-eyebrow">{{ block.settings.eyebrow }}</p>
             {%- endif -%}
@@ -132,6 +149,34 @@
     padding-top: 1.75rem;
   }
 
+  /* When a card has an image, the image leads instead of the hairline rule */
+  .page-cards-pair__card--image {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .page-cards-pair__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--aspect, 4 / 5);
+    overflow: hidden;
+    background-color: color-mix(in oklab, var(--foreground) 6%, transparent);
+    margin-bottom: 1.5rem;
+  }
+
+  .page-cards-pair__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+
+  .page-cards-pair__card--image:hover .page-cards-pair__img {
+    transform: scale(1.04);
+  }
+
   .page-cards-pair__card-eyebrow {
     color: color-mix(in oklab, var(--foreground) 70%, transparent);
   }
@@ -155,6 +200,10 @@
 
   .page-cards-pair__card-body > p { margin: 0; }
   .page-cards-pair__card-body > p + p { margin-top: 0.75rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-cards-pair__img { transition: none; }
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -192,6 +241,18 @@
       "type": "text",
       "id": "heading_emphasis",
       "label": "Heading (emphasis)"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect",
+      "label": "Card image aspect",
+      "options": [
+        { "value": "4 / 5", "label": "4:5 (portrait)" },
+        { "value": "3 / 4", "label": "3:4 (portrait)" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "16 / 9", "label": "16:9 (landscape)" }
+      ],
+      "default": "4 / 5"
     }
   ],
   "blocks": [
@@ -199,6 +260,11 @@
       "type": "card",
       "name": "Card",
       "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card image"
+        },
         {
           "type": "text",
           "id": "eyebrow",
