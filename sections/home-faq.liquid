@@ -3,10 +3,7 @@
     <div class="home-faq__grid">
       <div class="home-faq__head" data-reveal>
         {%- if section.settings.eyebrow != blank -%}
-          <span class="home-faq__eyebrow">
-            {%- if section.settings.show_rule -%}<span class="home-faq__rule" aria-hidden="true"></span>{%- endif -%}
-            <span class="eyebrow">{{ section.settings.eyebrow }}</span>
-          </span>
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
         {%- endif -%}
         <h2 class="home-faq__heading font-display">
           {{- section.settings.heading_lead -}}
@@ -82,20 +79,7 @@
     .home-faq__list { grid-column: span 8; }
   }
 
-  /* Eyebrow with gold leading rule */
-  .home-faq__eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .home-faq__rule {
-    display: inline-block;
-    width: 2.5rem;
-    height: 1px;
-    background-color: var(--primary);
-    flex: none;
-  }
+  /* Eyebrow uses the global .eyebrow class (which already includes its rule). */
 
   .home-faq__heading {
     margin-top: 1.25rem;
@@ -217,12 +201,6 @@
       "id": "eyebrow",
       "label": "t:labels.eyebrow",
       "default": "Learn More"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_rule",
-      "label": "Show eyebrow rule",
-      "default": true
     },
     {
       "type": "text",
