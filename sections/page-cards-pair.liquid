@@ -1,9 +1,17 @@
+{%- liquid
+  assign block_count = section.blocks.size
+  assign show_rule = section.settings.show_rule
+-%}
+
 <section class="page-cards-pair full-width page-cards-pair--bg-{{ section.settings.background }}">
   <div class="page-cards-pair__inner cham-container">
     <div class="page-cards-pair__grid">
       <div class="page-cards-pair__head" data-reveal>
         {%- if section.settings.eyebrow != blank -%}
-          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          <span class="page-cards-pair__eyebrow">
+            {%- if show_rule -%}<span class="page-cards-pair__rule" aria-hidden="true"></span>{%- endif -%}
+            <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          </span>
         {%- endif -%}
         <h2 class="page-cards-pair__heading font-display">
           {{- section.settings.heading_lead -}}
@@ -11,7 +19,7 @@
         </h2>
       </div>
 
-      <div class="page-cards-pair__cards">
+      <div class="page-cards-pair__cards is-count-{{ block_count }}">
         {%- for block in section.blocks -%}
           <div
             class="page-cards-pair__card"
@@ -22,8 +30,12 @@
             {%- if block.settings.eyebrow != blank -%}
               <p class="eyebrow eyebrow--bare page-cards-pair__card-eyebrow">{{ block.settings.eyebrow }}</p>
             {%- endif -%}
-            <h3 class="page-cards-pair__card-title font-display">{{ block.settings.title }}</h3>
-            <div class="page-cards-pair__card-body">{{ block.settings.body }}</div>
+            {%- if block.settings.title != blank -%}
+              <h3 class="page-cards-pair__card-title font-display">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.body != blank -%}
+              <div class="page-cards-pair__card-body">{{ block.settings.body }}</div>
+            {%- endif -%}
           </div>
         {%- endfor -%}
       </div>
@@ -57,19 +69,41 @@
   @media (min-width: 1024px) {
     .page-cards-pair__grid {
       grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 4.5rem;
+      align-items: start;
     }
     .page-cards-pair__head {
       grid-column: span 4;
+      position: sticky;
+      top: calc(var(--header-height, 0px) + 2rem);
     }
     .page-cards-pair__cards {
       grid-column: span 8;
     }
   }
 
+  /* Eyebrow with gold leading rule */
+  .page-cards-pair__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .page-cards-pair__rule {
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background-color: var(--primary);
+    flex: none;
+  }
+
   .page-cards-pair__heading {
     margin-top: 1.5rem;
     font-size: clamp(2.25rem, 4.5vw, 3rem);
+    font-weight: 300;
     line-height: 1.05;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
   }
 
   .page-cards-pair__heading em {
@@ -77,21 +111,25 @@
     font-style: italic;
   }
 
+  /* Count-aware card grid */
   .page-cards-pair__cards {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
   }
 
   @media (min-width: 640px) {
     .page-cards-pair__cards {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    .page-cards-pair__cards.is-count-1 {
+      grid-template-columns: minmax(0, 30rem);
+    }
   }
 
   .page-cards-pair__card {
     border-top: 1px solid var(--border);
-    padding-top: 1.5rem;
+    padding-top: 1.75rem;
   }
 
   .page-cards-pair__card-eyebrow {
@@ -100,24 +138,23 @@
 
   .page-cards-pair__card-title {
     margin-top: 0.75rem;
-    font-size: 1.875rem;
+    font-size: clamp(1.625rem, 2.4vw, 1.875rem);
+    font-weight: 300;
     line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
   }
 
   .page-cards-pair__card-body {
     margin-top: 1rem;
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     color: color-mix(in oklab, var(--foreground) 75%, transparent);
-    line-height: 1.65;
+    line-height: 1.7;
+    text-wrap: pretty;
   }
 
-  .page-cards-pair__card-body > p {
-    margin: 0;
-  }
-
-  .page-cards-pair__card-body > p + p {
-    margin-top: 0.75rem;
-  }
+  .page-cards-pair__card-body > p { margin: 0; }
+  .page-cards-pair__card-body > p + p { margin-top: 0.75rem; }
 {% endstylesheet %}
 
 {% schema %}
@@ -139,6 +176,12 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show eyebrow rule",
+      "default": true
     },
     {
       "type": "text",
