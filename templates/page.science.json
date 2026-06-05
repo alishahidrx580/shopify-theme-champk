@@ -1,22 +1,37 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "page-hero",
       "settings": {
         "eyebrow": "The Approach",
+        "show_rule": false,
         "heading_lead": "Skincare,",
         "heading_emphasis": "considered slowly",
         "heading_tail": ".",
         "body": "<p>We believe great skincare is the result of careful choices — not loud promises. Every Cham product is composed around a simple idea: skin looks its best when it feels comfortable and well cared for.</p>",
+        "body_size": "default",
+        "text_align": "left",
+        "body_max_width": 42,
         "max_width": 1100
       }
     },
     "image-band": {
       "type": "page-image-band",
       "settings": {
-        "image": "shopify://shop_images/texture.jpg",
+        "alt": "",
         "aspect_mobile": "16 / 9",
         "aspect_desktop": "21 / 8",
+        "focal_x": 50,
+        "focal_y": 50,
         "margin_top": 6
       }
     },
@@ -48,7 +63,11 @@
           }
         }
       },
-      "block_order": ["p1", "p2", "p3"],
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ],
       "settings": {
         "eyebrow": "Three Principles",
         "heading_lead": "Comfort · Balance ·",
@@ -75,7 +94,10 @@
           }
         }
       },
-      "block_order": ["c1", "c2"],
+      "block_order": [
+        "c1",
+        "c2"
+      ],
       "settings": {
         "background": "surface",
         "eyebrow": "What we believe",
@@ -122,12 +144,25 @@
           }
         }
       },
-      "block_order": ["q1", "q2", "q3", "q4", "q5"],
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
       "settings": {
         "eyebrow": "Questions",
-        "heading_lead": "What people ask"
+        "heading_lead": "What people ask",
+        "heading_emphasis": ""
       }
     }
   },
-  "order": ["hero", "image-band", "principles", "beliefs", "faq"]
+  "order": [
+    "hero",
+    "image-band",
+    "principles",
+    "beliefs",
+    "faq"
+  ]
 }
