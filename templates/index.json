@@ -143,8 +143,16 @@
       "type": "home-manifesto",
       "settings": {
         "eyebrow": "A different approach",
+        "show_rule": false,
         "heading": "<p>Skincare that works <em>with your skin</em><br/></p>",
         "body": "<p><br/>Most skincare treats the surface. CHAM formulates differently — around how skin already wants to behave. Our products support the skin's natural recovery signals, so what emerges is real radiance. Not a finish. Not a filter.<br/><br/></p>",
+        "image": "shopify://shop_images/Reframe_and_recompose_this_16_9_202605231715.jpg",
+        "video_url": "",
+        "media_position": "right",
+        "aspect_desktop": "3 / 4",
+        "aspect_mobile": "4 / 5",
+        "focal_x": 50,
+        "focal_y": 50,
         "signature": "",
         "show_ornament": false
       }
@@ -164,7 +172,7 @@
         "heading_emphasis": "natural radiance",
         "body": "<p>Each product is precision-crafted with a clear intent. Together, they work to make skin smoother, more even, and naturally luminous day after day.</p>",
         "cta_label": "Our Philosophy",
-        "cta_url": "/pages/research-and-philosophy",
+        "cta_url": "shopify://pages/science",
         "cta_style": "outline"
       }
     },
@@ -203,8 +211,10 @@
       ],
       "settings": {
         "eyebrow": "Composition Principles",
+        "show_rule": true,
         "heading_lead": "Three principles",
-        "heading_emphasis": "One result"
+        "heading_emphasis": "One result",
+        "image_aspect": "4 / 5"
       }
     },
     "split-intel-skincare": {
