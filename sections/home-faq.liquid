@@ -3,7 +3,10 @@
     <div class="home-faq__grid">
       <div class="home-faq__head" data-reveal>
         {%- if section.settings.eyebrow != blank -%}
-          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          <span class="home-faq__eyebrow">
+            {%- if section.settings.show_rule -%}<span class="home-faq__rule" aria-hidden="true"></span>{%- endif -%}
+            <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          </span>
         {%- endif -%}
         <h2 class="home-faq__heading font-display">
           {{- section.settings.heading_lead -}}
@@ -69,15 +72,38 @@
   @media (min-width: 1024px) {
     .home-faq__grid {
       grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 4.5rem;
     }
-    .home-faq__head { grid-column: span 4; }
+    .home-faq__head {
+      grid-column: span 4;
+      position: sticky;
+      top: calc(var(--header-height, 0px) + 2rem);
+    }
     .home-faq__list { grid-column: span 8; }
   }
 
+  /* Eyebrow with gold leading rule */
+  .home-faq__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .home-faq__rule {
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background-color: var(--primary);
+    flex: none;
+  }
+
   .home-faq__heading {
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     font-size: clamp(2.25rem, 5vw, 3rem);
+    font-weight: 300;
     line-height: 1.05;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
   }
 
   .home-faq__heading em {
@@ -103,17 +129,23 @@
     border-bottom: 1px solid var(--border);
   }
 
+  .home-faq__item:first-child {
+    border-top: 1px solid var(--border);
+  }
+
   .home-faq__question {
     list-style: none;
     cursor: pointer;
-    padding-block: 1.5rem;
+    padding-block: 1.6rem;
     font-size: 1.25rem;
+    font-weight: 300;
     line-height: 1.3;
+    letter-spacing: -0.01em;
     color: var(--foreground);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 1.5rem;
     transition: color 0.3s ease;
   }
 
@@ -131,31 +163,47 @@
     color: var(--primary);
   }
 
+  .home-faq__item[open] .home-faq__question {
+    color: var(--primary);
+  }
+
+  .home-faq__question:focus-visible {
+    outline: 2px solid var(--ring, var(--primary));
+    outline-offset: 4px;
+  }
+
   .home-faq__icon {
     flex-shrink: 0;
     color: var(--primary);
-    transition: transform 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.2, 0.6, 0.2, 1);
     display: inline-flex;
   }
 
   .home-faq__item[open] .home-faq__icon {
-    transform: rotate(45deg);
+    transform: rotate(135deg);
   }
 
   .home-faq__answer {
-    padding-bottom: 1.5rem;
+    padding-bottom: 1.6rem;
     padding-right: 2rem;
     color: color-mix(in oklab, var(--foreground) 75%, transparent);
-    line-height: 1.65;
+    line-height: 1.75;
     font-size: 1rem;
+    text-wrap: pretty;
+    animation: home-faq-reveal 0.4s cubic-bezier(0.2, 0.6, 0.2, 1);
   }
 
-  .home-faq__answer > p {
-    margin: 0;
+  @keyframes home-faq-reveal {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  .home-faq__answer > p + p {
-    margin-top: 1rem;
+  .home-faq__answer > p { margin: 0; }
+  .home-faq__answer > p + p { margin-top: 1rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-faq__icon { transition: none; }
+    .home-faq__answer { animation: none; }
   }
 {% endstylesheet %}
 
@@ -169,6 +217,12 @@
       "id": "eyebrow",
       "label": "t:labels.eyebrow",
       "default": "Learn More"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show eyebrow rule",
+      "default": true
     },
     {
       "type": "text",
