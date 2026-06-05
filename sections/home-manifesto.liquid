@@ -1,26 +1,41 @@
 {%- liquid
-  # The manifesto reads best as a proper editorial statement with hierarchy:
-  # eyebrow → big italic headline phrase → supporting body copy → ornament.
-  # Splitting headline and body into two fields gives real typographic
-  # control (different sizes, weights, line-heights) instead of one huge wall.
+  assign img = section.settings.image
+  assign raw_video = section.settings.video_url
+  assign video_src = ''
+  if raw_video != blank
+    assign url_prefix = raw_video | slice: 0, 4
+    if url_prefix == 'http'
+      assign video_src = raw_video
+    else
+      assign url_parts = raw_video | split: '/'
+      assign filename = url_parts | last
+      assign video_src = filename | file_url
+    endif
+  endif
+  assign media_position = section.settings.media_position | default: 'right'
+  assign show_rule = section.settings.show_rule
+  assign focal = section.settings.focal_x | append: '% ' | append: section.settings.focal_y | append: '%'
+  assign has_media = false
+  if img != blank or video_src != blank
+    assign has_media = true
+  endif
 -%}
 
-<section class="home-manifesto full-width">
+<section class="home-manifesto home-manifesto--media-{{ media_position }} full-width">
   <div class="home-manifesto__inner cham-container">
-    {%- if section.settings.eyebrow != blank -%}
-      <div class="home-manifesto__eyebrow-wrap" data-reveal>
-        <span class="eyebrow home-manifesto__eyebrow">{{ section.settings.eyebrow }}</span>
-      </div>
-    {%- endif -%}
-
     <div class="home-manifesto__grid">
-      <div class="home-manifesto__headline-col" data-reveal data-reveal-delay="80">
+      <div class="home-manifesto__text-col" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="home-manifesto__eyebrow">
+            {%- if show_rule -%}<span class="home-manifesto__rule" aria-hidden="true"></span>{%- endif -%}
+            <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          </span>
+        {%- endif -%}
+
         {%- if section.settings.heading != blank -%}
           <h2 class="home-manifesto__heading font-display">{{ section.settings.heading }}</h2>
         {%- endif -%}
-      </div>
 
-      <div class="home-manifesto__body-col" data-reveal data-reveal-delay="160">
         {%- if section.settings.body != blank -%}
           <div class="home-manifesto__body">{{ section.settings.body }}</div>
         {%- endif -%}
@@ -31,25 +46,60 @@
             <span class="home-manifesto__signature-text">{{ section.settings.signature }}</span>
           </div>
         {%- endif -%}
-      </div>
-    </div>
 
-    {%- if section.settings.show_ornament -%}
-      <div class="home-manifesto__ornament" aria-hidden="true" data-reveal data-reveal-delay="220">
-        <svg viewBox="0 0 120 24" xmlns="http://www.w3.org/2000/svg" fill="none">
-          <line x1="0" y1="12" x2="48" y2="12" stroke="currentColor" stroke-width="0.5" />
-          <circle cx="60" cy="12" r="3" stroke="currentColor" stroke-width="0.5" fill="none" />
-          <circle cx="60" cy="12" r="1" fill="currentColor" />
-          <line x1="72" y1="12" x2="120" y2="12" stroke="currentColor" stroke-width="0.5" />
-        </svg>
+        {%- if section.settings.show_ornament -%}
+          <div class="home-manifesto__ornament" aria-hidden="true">
+            <svg viewBox="0 0 120 24" xmlns="http://www.w3.org/2000/svg" fill="none">
+              <line x1="0" y1="12" x2="48" y2="12" stroke="currentColor" stroke-width="0.5" />
+              <circle cx="60" cy="12" r="3" stroke="currentColor" stroke-width="0.5" fill="none" />
+              <circle cx="60" cy="12" r="1" fill="currentColor" />
+              <line x1="72" y1="12" x2="120" y2="12" stroke="currentColor" stroke-width="0.5" />
+            </svg>
+          </div>
+        {%- endif -%}
       </div>
-    {%- endif -%}
+
+      {%- if has_media -%}
+        <div class="home-manifesto__media-col" data-reveal data-reveal-delay="120">
+          <div
+            class="home-manifesto__media"
+            style="--aspect-mobile: {{ section.settings.aspect_mobile }}; --aspect-desktop: {{ section.settings.aspect_desktop }};"
+          >
+            {%- if video_src != blank -%}
+              <video
+                class="home-manifesto__media-el"
+                data-manifesto-video
+                src="{{ video_src }}"
+                {% if img != blank %}poster="{{ img | image_url: width: 1200 }}"{% endif %}
+                muted
+                loop
+                playsinline
+                autoplay
+                preload="metadata"
+              ></video>
+            {%- elsif img != blank -%}
+              <img
+                class="home-manifesto__media-el"
+                src="{{ img | image_url: width: 1400 }}"
+                srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1400 }} 1400w"
+                sizes="(min-width: 1024px) 45vw, 100vw"
+                alt="{{ img.alt | escape }}"
+                width="{{ img.width }}"
+                height="{{ img.height }}"
+                loading="lazy"
+                decoding="async"
+                style="object-position: {{ focal }};"
+              >
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
   </div>
 </section>
 
 {% stylesheet %}
   .home-manifesto {
-    /* Mobile-first vertical rhythm. */
     padding-block: 5rem;
   }
 
@@ -65,20 +115,7 @@
     }
   }
 
-  /* Eyebrow sits above the grid as a quiet anchor, centered or left-aligned. */
-  .home-manifesto__eyebrow-wrap {
-    margin-bottom: 2.5rem;
-  }
-
-  @media (min-width: 1024px) {
-    .home-manifesto__eyebrow-wrap {
-      margin-bottom: 3.5rem;
-    }
-  }
-
-  /* Eyebrow inherits its base styles from the global .eyebrow class. */
-
-  /* Mobile-first: single column stack. Desktop: 12-col editorial grid. */
+  /* Grid: stacked on mobile, two columns on desktop */
   .home-manifesto__grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -87,28 +124,41 @@
 
   @media (min-width: 1024px) {
     .home-manifesto__grid {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 4rem;
-      align-items: start;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 5rem;
+      align-items: center;
     }
-
-    .home-manifesto__headline-col {
-      grid-column: 1 / span 7;
-    }
-
-    .home-manifesto__body-col {
-      grid-column: 8 / span 5;
-      padding-top: 1rem; /* Optical alignment with headline cap-height. */
-    }
+    .home-manifesto--media-right .home-manifesto__text-col { order: 1; }
+    .home-manifesto--media-right .home-manifesto__media-col { order: 2; }
+    .home-manifesto--media-left .home-manifesto__text-col { order: 2; }
+    .home-manifesto--media-left .home-manifesto__media-col { order: 1; }
   }
 
-  /* Headline: hero-scale but with a max-width so lines stay readable. */
+  /* Eyebrow with gold leading rule */
+  .home-manifesto__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .home-manifesto__rule {
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background-color: var(--primary);
+    flex: none;
+  }
+
+  /* Headline */
   .home-manifesto__heading {
     font-size: clamp(2rem, 8vw, 2.75rem);
+    font-weight: 300;
     line-height: 1.1;
+    letter-spacing: -0.015em;
     color: var(--foreground);
     margin: 0;
-    max-width: 18ch;
+    text-wrap: balance;
   }
 
   @media (min-width: 768px) {
@@ -120,7 +170,7 @@
 
   @media (min-width: 1024px) {
     .home-manifesto__heading {
-      font-size: clamp(3rem, 4.5vw, 4.25rem);
+      font-size: clamp(2.75rem, 4vw, 3.75rem);
       line-height: 1.02;
     }
   }
@@ -130,16 +180,16 @@
     font-style: italic;
   }
 
-  .home-manifesto__heading p {
-    margin: 0;
-  }
+  .home-manifesto__heading p { margin: 0; }
 
-  /* Body copy: clearly smaller, comfortable line-length, softer color. */
+  /* Body */
   .home-manifesto__body {
+    margin-top: 2rem;
     font-size: 1rem;
     line-height: 1.75;
     color: color-mix(in oklab, var(--foreground) 75%, transparent);
-    max-width: 38ch;
+    max-width: 46ch;
+    text-wrap: pretty;
   }
 
   @media (min-width: 768px) {
@@ -149,15 +199,10 @@
     }
   }
 
-  .home-manifesto__body > p {
-    margin: 0;
-  }
+  .home-manifesto__body > p { margin: 0; }
+  .home-manifesto__body > p + p { margin-top: 1rem; }
 
-  .home-manifesto__body > p + p {
-    margin-top: 1rem;
-  }
-
-  /* Optional signature line ("— CHAM" or founder name) adds editorial weight. */
+  /* Signature */
   .home-manifesto__signature {
     margin-top: 2rem;
     display: flex;
@@ -179,26 +224,53 @@
     font-weight: 500;
   }
 
-  /* Decorative ornament rule line — adds a quiet "design moment" below copy. */
+  /* Ornament */
   .home-manifesto__ornament {
-    margin-top: 4rem;
+    margin-top: 3rem;
     display: flex;
-    justify-content: center;
     color: var(--primary);
     opacity: 0.7;
-  }
-
-  @media (min-width: 1024px) {
-    .home-manifesto__ornament {
-      margin-top: 6rem;
-    }
   }
 
   .home-manifesto__ornament svg {
     width: 7.5rem;
     height: 1.5rem;
   }
+
+  /* Media */
+  .home-manifesto__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--aspect-mobile, 4 / 5);
+    overflow: hidden;
+    background-color: var(--surface);
+  }
+
+  @media (min-width: 1024px) {
+    .home-manifesto__media {
+      aspect-ratio: var(--aspect-desktop, 3 / 4);
+    }
+  }
+
+  .home-manifesto__media-el {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
 {% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('[data-manifesto-video]').forEach(function (v) {
+      v.removeAttribute('autoplay');
+      try { v.pause(); } catch (e) {}
+    });
+  })();
+{% endjavascript %}
 
 {% schema %}
 {
@@ -210,6 +282,12 @@
       "id": "eyebrow",
       "label": "t:labels.eyebrow",
       "default": "About Cham"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show eyebrow rule",
+      "default": true
     },
     {
       "type": "richtext",
@@ -224,6 +302,67 @@
       "label": "Supporting body copy",
       "info": "The full manifesto paragraph — appears smaller and softer next to the headline.",
       "default": "<p>Each Cham formulation is designed to complement your skin's natural rhythm, so it looks softer, calmer, and naturally luminous.</p><p>We work with restraint, choosing ingredients for what they do — not how they perform on a label.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video (optional)",
+      "info": "Filename of a video in Settings → Files (e.g. atelier.mp4) or a full https URL. Plays muted and looped, with the image as its poster. Overrides the image when set."
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Media position (desktop)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "aspect_desktop",
+      "label": "Media aspect (desktop)",
+      "options": [
+        { "value": "3 / 4", "label": "3:4 (portrait)" },
+        { "value": "4 / 5", "label": "4:5 (portrait)" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 3", "label": "4:3 (landscape)" }
+      ],
+      "default": "3 / 4"
+    },
+    {
+      "type": "select",
+      "id": "aspect_mobile",
+      "label": "Media aspect (mobile)",
+      "options": [
+        { "value": "4 / 5", "label": "4:5 (portrait)" },
+        { "value": "3 / 4", "label": "3:4 (portrait)" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "16 / 9", "label": "16:9 (landscape)" }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "range",
+      "id": "focal_x",
+      "label": "Image focal — horizontal",
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50
+    },
+    {
+      "type": "range",
+      "id": "focal_y",
+      "label": "Image focal — vertical",
+      "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50
     },
     {
       "type": "header",
@@ -244,7 +383,7 @@
       "type": "checkbox",
       "id": "show_ornament",
       "label": "Show decorative ornament",
-      "info": "A small centered rule-line with a gold dot, placed below the manifesto.",
+      "info": "A small rule-line with a gold dot, placed below the manifesto copy.",
       "default": true
     }
   ],
