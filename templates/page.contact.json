@@ -41,6 +41,7 @@
       ],
       "settings": {
         "eyebrow": "Get in Touch",
+        "show_rule": false,
         "heading_lead": "We'd love to",
         "heading_emphasis": "hear from you",
         "heading_tail": ".",
