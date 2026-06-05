@@ -1,8 +1,17 @@
+{%- liquid
+  assign block_count = section.blocks.size
+  assign show_rule = section.settings.show_rule
+  assign aspect = section.settings.image_aspect | default: '4 / 5'
+-%}
+
 <section class="home-pillars full-width">
   <div class="home-pillars__inner cham-container">
     <div class="home-pillars__head" data-reveal>
       {%- if section.settings.eyebrow != blank -%}
-        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        <span class="home-pillars__eyebrow">
+          {%- if show_rule -%}<span class="home-pillars__rule" aria-hidden="true"></span>{%- endif -%}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        </span>
       {%- endif -%}
       <h2 class="home-pillars__heading font-display">
         {{- section.settings.heading_lead -}}
@@ -10,14 +19,40 @@
       </h2>
     </div>
 
-    <div class="home-pillars__grid">
+    <div class="home-pillars__grid is-count-{{ block_count }}">
       {%- for block in section.blocks -%}
-        <div class="home-pillars__item" data-reveal data-reveal-delay="{{ forloop.index0 | times: 100 }}" {{ block.shopify_attributes }}>
+        {%- assign has_image = block.settings.image -%}
+        <div
+          class="home-pillars__item{% if has_image != blank %} home-pillars__item--image{% endif %}"
+          data-reveal
+          data-reveal-delay="{{ forloop.index0 | times: 100 }}"
+          {{ block.shopify_attributes }}
+        >
+          {%- if has_image != blank -%}
+            <div class="home-pillars__media" style="--aspect: {{ aspect }};">
+              <img
+                src="{{ block.settings.image | image_url: width: 1200 }}"
+                srcset="{{ block.settings.image | image_url: width: 500 }} 500w, {{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1200 }} 1200w"
+                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+                loading="lazy"
+                decoding="async"
+                class="home-pillars__img"
+              >
+            </div>
+          {%- endif -%}
+
           {%- if block.settings.number != blank -%}
             <span class="home-pillars__number font-display">{{ block.settings.number }}</span>
           {%- endif -%}
-          <h3 class="home-pillars__title font-display">{{ block.settings.title }}</h3>
-          <div class="home-pillars__body">{{ block.settings.body }}</div>
+          {%- if block.settings.title != blank -%}
+            <h3 class="home-pillars__title font-display">{{ block.settings.title }}</h3>
+          {%- endif -%}
+          {%- if block.settings.body != blank -%}
+            <div class="home-pillars__body">{{ block.settings.body }}</div>
+          {%- endif -%}
         </div>
       {%- endfor -%}
     </div>
@@ -33,10 +68,28 @@
     max-width: 42rem;
   }
 
+  /* Eyebrow with gold leading rule */
+  .home-pillars__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .home-pillars__rule {
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background-color: var(--primary);
+    flex: none;
+  }
+
   .home-pillars__heading {
     font-size: clamp(2.25rem, 5vw, 3.75rem);
+    font-weight: 300;
     line-height: 1.05;
-    margin-top: 1rem;
+    letter-spacing: -0.015em;
+    margin-top: 1.25rem;
+    text-wrap: balance;
   }
 
   .home-pillars__heading em {
@@ -44,50 +97,96 @@
     font-style: italic;
   }
 
+  /* Count-aware grid */
   .home-pillars__grid {
     display: grid;
     grid-template-columns: 1fr;
-    column-gap: 2rem;
-    row-gap: 3rem;
+    column-gap: 2.5rem;
+    row-gap: 3.5rem;
     margin-top: 5rem;
   }
 
   @media (min-width: 768px) {
     .home-pillars__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .home-pillars__grid.is-count-1 {
+      grid-template-columns: minmax(0, 28rem);
     }
   }
 
+  @media (min-width: 1024px) {
+    .home-pillars__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .home-pillars__grid.is-count-2,
+    .home-pillars__grid.is-count-4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Card */
   .home-pillars__item {
     border-top: 1px solid var(--border);
     padding-top: 2rem;
   }
 
+  /* When a card has an image, the image leads instead of the hairline rule */
+  .home-pillars__item--image {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .home-pillars__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--aspect, 4 / 5);
+    overflow: hidden;
+    background-color: var(--surface);
+    margin-bottom: 1.75rem;
+  }
+
+  .home-pillars__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+
+  .home-pillars__item--image:hover .home-pillars__img {
+    transform: scale(1.04);
+  }
+
   .home-pillars__number {
+    display: block;
     color: var(--primary);
-    font-size: 1.25rem;
+    font-size: 1.125rem;
+    letter-spacing: 0.04em;
   }
 
   .home-pillars__title {
-    font-size: 1.875rem;
+    font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+    font-weight: 300;
     line-height: 1.1;
-    margin-top: 0.75rem;
-  }
-
-  @media (min-width: 1024px) {
-    .home-pillars__title {
-      font-size: 2.25rem;
-    }
+    letter-spacing: -0.01em;
+    margin-top: 0.625rem;
+    text-wrap: balance;
   }
 
   .home-pillars__body {
     margin-top: 1rem;
     color: color-mix(in oklab, var(--foreground) 75%, transparent);
-    line-height: 1.65;
+    line-height: 1.7;
+    text-wrap: pretty;
   }
 
-  .home-pillars__body > p {
-    margin: 0;
+  .home-pillars__body > p { margin: 0; }
+  .home-pillars__body > p + p { margin-top: 0.75rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-pillars__img { transition: none; }
   }
 {% endstylesheet %}
 
@@ -103,6 +202,12 @@
       "default": "Composition Principles"
     },
     {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show eyebrow rule",
+      "default": true
+    },
+    {
       "type": "text",
       "id": "heading_lead",
       "label": "t:labels.heading_lead",
@@ -113,6 +218,18 @@
       "id": "heading_emphasis",
       "label": "t:labels.heading_emphasis",
       "default": "Optimum Glow"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect",
+      "label": "Image aspect",
+      "options": [
+        { "value": "4 / 5", "label": "4:5 (portrait)" },
+        { "value": "3 / 4", "label": "3:4 (portrait)" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "16 / 9", "label": "16:9 (landscape)" }
+      ],
+      "default": "4 / 5"
     }
   ],
   "blocks": [
@@ -120,6 +237,11 @@
       "type": "pillar",
       "name": "t:sections.home_pillars.block_pillar",
       "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
         {
           "type": "text",
           "id": "number",
