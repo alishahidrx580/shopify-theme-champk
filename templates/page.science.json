@@ -103,8 +103,10 @@
       "settings": {
         "background": "surface",
         "eyebrow": "What we believe",
+        "show_rule": false,
         "heading_lead": "Quiet routines.",
-        "heading_emphasis": "Patient results."
+        "heading_emphasis": "Patient results.",
+        "image_aspect": "4 / 5"
       }
     },
     "faq": {
