@@ -176,18 +176,18 @@
   @media (min-width: 1024px) {
     .contact__layout {
       margin-top: 5rem;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1.6fr) minmax(16rem, 1fr);
       gap: 5rem;
       align-items: start;
     }
-    .contact__form-col { grid-column: span 7; }
     .contact__info-col {
-      grid-column: span 4;
-      grid-column-start: 9;
       position: sticky;
       top: calc(var(--header-height, 0px) + 2rem);
     }
   }
+
+  .contact__form-col { min-width: 0; }
+  .contact__info-col { min-width: 0; }
 
   /* Form */
   .contact__row {
@@ -312,6 +312,7 @@
     margin-top: 0.75rem;
     line-height: 1.7;
     color: color-mix(in oklab, var(--foreground) 85%, transparent);
+    overflow-wrap: break-word;
   }
 
   .contact__info-content > p { margin: 0; }
