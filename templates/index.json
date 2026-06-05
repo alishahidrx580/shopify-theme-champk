@@ -211,7 +211,7 @@
       ],
       "settings": {
         "eyebrow": "Composition Principles",
-        "show_rule": true,
+        "show_rule": false,
         "heading_lead": "Three principles",
         "heading_emphasis": "One result",
         "image_aspect": "4 / 5"
