@@ -99,35 +99,51 @@
         "step_yzmXRW": {
           "type": "step",
           "settings": {
-            "title": "Step title",
-            "body": "Describe what to do in this step of the routine."
+            "title": "STEP 01",
+            "body": "Cleanse skin and pat until just damp. Damp skin absorbs serum measurably better than completely dry skin."
           }
         },
         "step_9cdz8L": {
           "type": "step",
           "settings": {
-            "title": "Step title",
-            "body": "Describe what to do in this step of the routine."
+            "title": "STEP 02",
+            "body": "Dispense 2–3 drops into clean palms. Warm between your fingertips for a moment before applying."
           }
         },
         "step_HQNqEA": {
           "type": "step",
           "settings": {
-            "title": "Step title",
-            "body": "Describe what to do in this step of the routine."
+            "title": "STEP 03",
+            "body": "Press the serum gently over your face, neck and décolleté. Do not rub or drag — press and hold for 2–3 seconds per area, then release."
+          }
+        },
+        "step_6MyDEE": {
+          "type": "step",
+          "settings": {
+            "title": "STEP 04",
+            "body": "Wait a full 30 seconds. The serum should absorb completely and leave skin feeling smooth and primed, not damp."
+          }
+        },
+        "step_zdmXGC": {
+          "type": "step",
+          "settings": {
+            "title": "STEP 05",
+            "body": "Follow immediately with THE BRIGHTENING CREAM. In the morning, always finish your routine with a broad-spectrum SPF."
           }
         }
       },
       "block_order": [
         "step_yzmXRW",
         "step_9cdz8L",
-        "step_HQNqEA"
+        "step_HQNqEA",
+        "step_6MyDEE",
+        "step_zdmXGC"
       ],
       "settings": {
         "eyebrow": "The Ritual",
         "heading_lead": "How to",
         "heading_emphasis": "apply.",
-        "body": "<p>A few unhurried minutes, twice a day. Consistency is what skin responds to.</p>"
+        "body": "<p>A few unhurried moments, morning and night. The serum works with consistency — not with rushing. Let each step complete before moving to the next.</p>"
       }
     },
     "sensory": {
@@ -137,7 +153,7 @@
         "eyebrow": "The Sensory Experience",
         "heading_lead": "How it",
         "heading_emphasis": "feels.",
-        "body": ""
+        "body": "<p>A short paragraph describing how the formula feels on skin and the experience of using it.</p>"
       }
     },
     "pairs_with": {
