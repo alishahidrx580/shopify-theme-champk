@@ -33,17 +33,22 @@
   assign gallery_fit = section.settings.gallery_fit | default: 'cover'
   assign focal_x     = section.settings.gallery_focal_x | default: 50
   assign focal_y     = section.settings.gallery_focal_y | default: 50
+
+  if category_label != blank
+    assign breadcrumb_label = category_label
+  else
+    assign breadcrumb_label = 'sections.main_product.breadcrumb_root' | t
+  endif
 -%}
 
 <section class="main-product full-width" data-product-section data-product-handle="{{ product.handle }}">
   <div class="main-product__inner cham-container">
     <div class="main-product__grid">
 
-      {%- comment -%} =========== HEADER =========== {%- endcomment -%}
       <div class="main-product__header">
         <nav class="main-product__breadcrumb" aria-label="Breadcrumb">
           <a href="{{ routes.all_products_collection_url }}" class="main-product__breadcrumb-link eyebrow eyebrow--bare">
-            {{ category_label | default: 'sections.main_product.breadcrumb_root' | t }}
+            {{ breadcrumb_label }}
           </a>
           <span class="main-product__breadcrumb-sep" aria-hidden="true">&gt;</span>
           <span class="main-product__breadcrumb-current">{{ short_name }}</span>
@@ -51,33 +56,20 @@
 
         <h1 class="main-product__title font-display">{{ product.title }}</h1>
 
-        {%- comment -%}
-          Ingredient meta line — e.g. "Rosa Damascena · Niacinamide · Centella Asiatica"
-          Pulled from Metafield: custom.ingredients (list of text)
-          For THE BRIGHTENING SERUM set 3 items:
-            1. Rosa Damascena
-            2. Niacinamide
-            3. Centella Asiatica
-        {%- endcomment -%}
         {%- if ingredient_list != blank and ingredient_list.size > 0 -%}
           <p class="main-product__ingredients-meta">
             {%- for ing in ingredient_list -%}
               {{- ing -}}
-              {%- unless forloop.last %} · {% endunless -%}
+              {%- unless forloop.last %} &middot; {% endunless -%}
             {%- endfor -%}
           </p>
         {%- endif -%}
 
         {%- if product.metafields.judgeme.badge != blank -%}
           <a href="#reviews" class="main-product__rating">{{ product.metafields.judgeme.badge }}</a>
-        {%- else -%}
-          <a href="#reviews" class="main-product__rating">
-            <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}"></div>
-          </a>
         {%- endif -%}
       </div>
 
-      {%- comment -%} =========== GALLERY =========== {%- endcomment -%}
       <div class="main-product__gallery" data-gallery>
         <div class="main-product__gallery-track" data-gallery-track>
           {%- if product.images.size > 0 -%}
@@ -126,34 +118,12 @@
         {%- endif -%}
       </div>
 
-      {%- comment -%} =========== INFO / BUY BOX =========== {%- endcomment -%}
       <div class="main-product__info">
 
-        {%- comment -%}
-          Hero statement — italic, Instrument Serif
-          Metafield: custom.hero_statement
-          Value for THE BRIGHTENING SERUM:
-            "Founded on Damascus rose. Activated by Niacinamide. For skin that simply looks clearer."
-        {%- endcomment -%}
         {%- if hero_statement != blank -%}
           <p class="main-product__hero-statement font-display">{{ hero_statement }}</p>
         {%- endif -%}
 
-        {%- comment -%}
-          Product description — short, 2 paragraphs
-          Enter in Shopify Admin → Products → Description:
-
-          Para 1:
-          "Seventy percent of this serum is Rosa Damascena Flower Water — Damascus rose, harvested
-          and distilled at its peak. This is not a trace botanical. It is the formula itself. Every
-          drop carries the calming, brightening properties of the rose revered across the Islamic
-          world for centuries."
-
-          Para 2:
-          "Within that base: Niacinamide at 3% to refine tone and quieten pigmentation; Betaine and
-          Glycerin for deep, lasting moisture; Centella Asiatica to calm and strengthen the skin
-          barrier. Formulated for face and body — neck, décolleté, underarms, and arms included."
-        {%- endcomment -%}
         {%- if product.description != blank -%}
           <div class="main-product__description rte" data-description>{{ product.description }}</div>
           <button type="button" class="main-product__see-more" data-see-more aria-expanded="false" data-more="See more" data-less="See less">
@@ -178,11 +148,6 @@
 
           <div class="main-product__size-line">
             <span data-variant-label>{{ variant_label }}</span>
-            {%- comment -%}
-              Volume note — appears beside the price
-              Metafield: custom.volume
-              Value: 100ml
-            {%- endcomment -%}
             {%- if volume != blank -%}
               <span class="main-product__volume">{{ volume }}</span>
             {%- endif -%}
@@ -240,51 +205,6 @@
 
         <p class="main-product__shipping-note">{{ shipping_note }}</p>
 
-        {%- comment -%}
-          ACCORDIONS
-          ──────────────────────────────────────────────────────────────
-          1. Benefits
-             Reads:  custom.claims (list)  +  custom.science_note
-             Claims to set in Shopify Admin (3 items, NOT "Paraben Free" — Methylparaben
-             present in formula per MSDS BH25111300019):
-               · Hypoallergenic
-               · Non-Comedogenic
-               · Cruelty Free
-
-             Science note metafield value:
-               "Seventy percent of this formula is ROSA DAMASCENA FLOWER WATER — pure Damascus
-               rose, distilled at source. It is not a trace addition. It is the base the entire
-               serum is built on, carrying natural anti-inflammatory and brightening properties
-               revered in traditional Persian and Arabian skincare for centuries.
-
-               Within that rose water base: NIACINAMIDE at 3% interrupts melanin transfer,
-               gradually refining uneven tone and calming post-inflammation pigmentation.
-               BETAINE and GLYCERIN (together 12%) provide multi-layered moisture binding.
-               CENTELLA ASIATICA calms reactive skin and strengthens the skin barrier.
-               CERAMIDE NP seals hydration so everything else works without interruption.
-
-               No fillers. No unnecessary actives. The faint scent you notice is the Damascus
-               rose itself."
-
-          2. Ingredients
-             Reads: custom.full_ingredients
-             Full INCI (from MSDS BH25111300019):
-               Rosa Damascena Flower Water, Propanediol, Glycerin, Betaine, Niacinamide,
-               Arginine, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Polysorbate 60,
-               Allantoin, Centella Asiatica Extract, Triticum Vulgare (Wheat) Germ Oil,
-               Ceramide NP, Sodium Hyaluronate, Methylparaben, Carbomer, Water,
-               Polyacrylamide, Propylene Glycol, C13-14 Isoparaffin, Butylene Glycol,
-               Ethylhexylglycerin, Laureth-7, Caprylhydroxamic Acid, Glyceryl Caprylate,
-               Camellia Sinensis Leaf Extract, Portulaca Oleracea Extract,
-               Hydroxyacetophenone
-
-          3. How to use
-             Reads: custom.how_to_use
-             Value:
-               "Two to three drops on cleansed skin, morning and night. Press gently over
-               face, neck and décolleté — do not rub. Wait for full absorption before
-               applying THE BRIGHTENING CREAM. In the morning, always finish with SPF."
-        {%- endcomment -%}
         <div class="main-product__accordion">
           <details class="main-product__accordion-item">
             <summary class="main-product__accordion-summary">
@@ -337,7 +257,6 @@
     </div>
   </div>
 
-  {%- comment -%} =========== STICKY ADD-TO-BAG BAR =========== {%- endcomment -%}
   <div class="main-product__sticky-bar" data-sticky-bar hidden>
     <div class="main-product__sticky-inner cham-container">
       <span class="main-product__sticky-title font-display">{{ short_name }}</span>
@@ -369,7 +288,6 @@
     }
   }
 
-  /* === Grid === */
   .main-product__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -387,7 +305,7 @@
         "gallery header"
         "gallery info";
       column-gap: 4rem;
-      row-gap: 1.5rem;
+      row-gap: 0.5rem;
       align-items: start;
     }
   }
@@ -396,7 +314,6 @@
   .main-product__gallery { grid-area: gallery; }
   .main-product__info    { grid-area: info; }
 
-  /* === Header === */
   .main-product__breadcrumb {
     display: flex;
     align-items: center;
@@ -425,9 +342,8 @@
     .main-product__title { font-size: clamp(2.75rem, 3.6vw, 4rem); }
   }
 
-  /* Ingredient meta line — "Rosa Damascena · Niacinamide · Centella Asiatica" */
   .main-product__ingredients-meta {
-    margin-top: 0.75rem;
+    margin: 0.85rem 0 0;
     font-size: 0.8125rem;
     text-transform: uppercase;
     letter-spacing: 0.18em;
@@ -435,6 +351,7 @@
   }
 
   .main-product__rating { display: inline-block; margin-top: 1rem; color: inherit; }
+  .main-product__rating:empty { display: none; margin: 0; }
   .main-product__rating .jdgm-star.jdgm--on,
   .main-product__rating .jdgm-star.jdgm--half { color: var(--primary); }
   .main-product__rating .jdgm-star.jdgm--off  { color: color-mix(in oklab, var(--foreground) 25%, transparent); }
@@ -444,7 +361,6 @@
     letter-spacing: 0.02em;
   }
 
-  /* === Gallery === */
   .main-product__gallery-track {
     display: flex;
     overflow-x: auto;
@@ -499,7 +415,6 @@
     .main-product__gallery-progress { display: none; }
   }
 
-  /* === Info / buy box === */
   @media (min-width: 1024px) {
     .main-product__info {
       position: sticky;
@@ -509,7 +424,7 @@
   }
 
   .main-product__hero-statement {
-    margin: 0 0 1.25rem;
+    margin: 0 0 1.5rem;
     font-size: 1.25rem;
     line-height: 1.3;
     font-style: italic;
@@ -550,7 +465,6 @@
     .main-product__see-more { display: none; }
   }
 
-  /* === Size / price + volume line === */
   .main-product__size-line {
     margin-top: 1.75rem;
     padding: 0.85rem 0;
@@ -563,7 +477,6 @@
     gap: 1rem;
   }
 
-  /* Volume note — right-aligned beside price */
   .main-product__volume {
     font-size: 0.75rem;
     letter-spacing: 0.14em;
@@ -572,7 +485,6 @@
     flex-shrink: 0;
   }
 
-  /* === Replenishment === */
   .main-product__replenishment {
     margin-top: 0.25rem;
     border-bottom: 1px solid var(--border);
@@ -608,7 +520,6 @@
     color: var(--muted-foreground);
   }
 
-  /* === Add to bag === */
   .main-product__atc {
     width: 100%;
     min-height: 3.75rem;
@@ -634,7 +545,6 @@
   .main-product__atc[data-loading="true"] { opacity: 0.7; cursor: progress; }
   .main-product__atc-price { letter-spacing: 0.08em; }
 
-  /* === Afterpay === */
   .main-product__installments {
     margin-top: 1rem;
     font-size: 0.8125rem;
@@ -649,7 +559,6 @@
     color: var(--muted-foreground);
   }
 
-  /* === Accordions === */
   .main-product__accordion {
     margin-top: 2rem;
     border-top: 1px solid var(--border);
@@ -687,7 +596,6 @@
   .main-product__benefit-list { margin: 0 0 0.75rem; padding-left: 1.1rem; }
   .main-product__benefit-list li { margin-bottom: 0.4rem; }
 
-  /* === Sticky bar === */
   .main-product__sticky-bar {
     position: fixed;
     left: 0;
@@ -763,7 +671,6 @@
     var track       = section.querySelector('[data-gallery-track]');
     var progress    = section.querySelector('[data-gallery-progress]');
 
-    /* ---- Add to bag (AJAX) ---- */
     function addToCart(btn) {
       if (!form || btn.disabled) return;
       var fd = new FormData(form);
@@ -790,7 +697,6 @@
     var stickyAtc = section.querySelector('[data-atc-sticky]');
     if (stickyAtc) stickyAtc.addEventListener('click', function () { addToCart(stickyAtc); });
 
-    /* ---- See more (mobile description clamp) ---- */
     if (description && seeMore) {
       if (window.matchMedia('(max-width: 1023px)').matches) description.classList.add('is-clamped');
       seeMore.addEventListener('click', function () {
@@ -800,7 +706,6 @@
       });
     }
 
-    /* ---- Mobile gallery progress bar ---- */
     if (track && progress) {
       var updateProgress = function () {
         var max   = track.scrollWidth - track.clientWidth;
@@ -814,7 +719,6 @@
       updateProgress();
     }
 
-    /* ---- Sticky bar (shows when header title scrolls out of view) ---- */
     if (stickyBar && header && 'IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
@@ -865,22 +769,22 @@
       "type": "paragraph",
       "content": "Each slider pair controls one image by its order in the product's Media. X: 0 = left, 50 = center, 100 = right. Y: 0 = top, 50 = center, 100 = bottom."
     },
-    { "type": "range", "id": "image_1_x", "label": "Image 1 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_1_y", "label": "Image 1 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_2_x", "label": "Image 2 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_2_y", "label": "Image 2 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_3_x", "label": "Image 3 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_3_y", "label": "Image 3 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_4_x", "label": "Image 4 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_4_y", "label": "Image 4 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_5_x", "label": "Image 5 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_5_y", "label": "Image 5 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_6_x", "label": "Image 6 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_6_y", "label": "Image 6 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_7_x", "label": "Image 7 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_7_y", "label": "Image 7 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_8_x", "label": "Image 8 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_8_y", "label": "Image 8 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_1_x", "label": "Image 1 - horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_1_y", "label": "Image 1 - vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_2_x", "label": "Image 2 - horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_2_y", "label": "Image 2 - vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_3_x", "label": "Image 3 - horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_3_y", "label": "Image 3 - vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_4_x", "label": "Image 4 - horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_4_y", "label": "Image 4 - vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_5_x", "label": "Image 5 - horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_5_y", "label": "Image 5 - vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_6_x", "label": "Image 6 - horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_6_y", "label": "Image 6 - vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_7_x", "label": "Image 7 - horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_7_y", "label": "Image 7 - vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_8_x", "label": "Image 8 - horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_8_y", "label": "Image 8 - vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
     {
       "type": "header",
       "content": "Default position (images 9+)"
