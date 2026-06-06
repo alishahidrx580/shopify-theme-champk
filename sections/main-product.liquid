@@ -268,15 +268,14 @@
       grid-template-areas:
         "gallery header"
         "gallery info";
-      grid-template-rows: auto auto;
+      grid-template-rows: min-content min-content;
       column-gap: 4rem;
       row-gap: 0;
+      align-content: start;
       align-items: start;
     }
-    /* Header defines row 1; info follows immediately beneath it with controlled spacing. */
     .main-product__header { align-self: start; }
     .main-product__info { margin-top: 1.5rem; }
-    /* Gallery spans both rows but starts at the top, not stretching the header row. */
     .main-product__gallery { align-self: start; }
   }
 
