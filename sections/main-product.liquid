@@ -169,6 +169,19 @@
           </button>
         </form>
 
+        {%- if claims_list != blank and claims_list.size > 0 -%}
+          <ul class="main-product__claims" role="list">
+            {%- for claim in claims_list -%}
+              <li class="main-product__claim">
+                <svg class="main-product__claim-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span>{{ claim }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
         <div class="main-product__accordion">
           <details class="main-product__accordion-item">
             <summary class="main-product__accordion-summary">
@@ -180,13 +193,6 @@
               </span>
             </summary>
             <div class="main-product__accordion-body">
-              {%- if claims_list != blank and claims_list.size > 0 -%}
-                <ul class="main-product__benefit-list">
-                  {%- for claim in claims_list -%}
-                    <li>{{ claim }}</li>
-                  {%- endfor -%}
-                </ul>
-              {%- endif -%}
               {%- if science_note != blank -%}
                 <div class="rte">{{ science_note }}</div>
               {%- endif -%}
@@ -506,6 +512,26 @@
   .main-product__atc[disabled] { opacity: 0.5; cursor: not-allowed; }
   .main-product__atc[data-loading="true"] { opacity: 0.7; cursor: progress; }
   .main-product__atc-price { letter-spacing: 0.08em; }
+
+  /* === Claims (checkmark row, below Add to bag) === */
+  .main-product__claims {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.5rem;
+  }
+  .main-product__claim {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--foreground) 75%, transparent);
+  }
+  .main-product__claim-icon { color: var(--primary); flex: none; }
 
   .main-product__installments {
     margin-top: 1rem;
