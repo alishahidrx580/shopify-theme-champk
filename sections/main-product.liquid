@@ -31,6 +31,7 @@
   endif
 
   assign gallery_fit = section.settings.gallery_fit | default: 'cover'
+  assign gallery_ratio = section.settings.gallery_ratio | default: '3 / 4'
   assign focal_x     = section.settings.gallery_focal_x | default: 50
   assign focal_y     = section.settings.gallery_focal_y | default: 50
 
@@ -41,7 +42,7 @@
   endif
 -%}
 
-<section class="main-product full-width" data-product-section data-product-handle="{{ product.handle }}">
+<section class="main-product full-width" data-product-section data-product-handle="{{ product.handle }}" style="--gallery-ratio: {{ gallery_ratio }};">
   <div class="main-product__inner cham-container">
     <div class="main-product__grid">
 
@@ -345,7 +346,7 @@
     flex: 0 0 100%;
     scroll-snap-align: start;
     margin: 0;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: var(--gallery-ratio, 3 / 4);
     overflow: hidden;
     background-color: var(--surface);
   }
@@ -379,7 +380,7 @@
       gap: 0.5rem;
       overflow: visible;
     }
-    .main-product__tile { flex: none; aspect-ratio: 1 / 1; }
+    .main-product__tile { flex: none; aspect-ratio: var(--gallery-ratio, 3 / 4); }
     .main-product__gallery-progress { display: none; }
   }
 
@@ -742,12 +743,25 @@
       "type": "select",
       "id": "gallery_fit",
       "label": "Image fit",
-      "info": "Fill = crops tiles to a square. Show full = whole image visible, may letterbox.",
+      "info": "Fill = crops tiles to the ratio. Show full = whole image visible, may letterbox.",
       "options": [
         { "value": "cover",   "label": "Fill tile (crop)" },
         { "value": "contain", "label": "Show full image (no crop)" }
       ],
       "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "gallery_ratio",
+      "label": "Image ratio",
+      "info": "Set to match your photos so nothing gets cropped. Your product images are 3:4.",
+      "options": [
+        { "value": "3 / 4", "label": "3:4 (portrait — matches your images)" },
+        { "value": "4 / 5", "label": "4:5 (portrait)" },
+        { "value": "1 / 1", "label": "1:1 (square)" },
+        { "value": "4 / 3", "label": "4:3 (landscape)" }
+      ],
+      "default": "3 / 4"
     },
     {
       "type": "header",
