@@ -40,22 +40,22 @@
         "card_Qapj6n": {
           "type": "card",
           "settings": {
-            "title": "Ingredient name",
-            "body": "A short description of this ingredient or complex and what it does for the skin."
+            "title": "The Damascus rose as base",
+            "body": "Seventy percent of this formula is Rosa Damascena Flower Water — not water with rose extract added. The Damascus rose is the base the serum is built on. It calms, it brightens, it carries a faint natural fragrance. No synthetic equivalent replicates what the rose delivers at this concentration."
           }
         },
         "card_8f6X9B": {
           "type": "card",
           "settings": {
-            "title": "Ingredient name",
-            "body": "A short description of this ingredient or complex and what it does for the skin."
+            "title": "Niacinamide where it counts",
+            "body": "At 3%, Niacinamide is at the concentration shown in clinical studies to interrupt melanin transfer and refine uneven tone. Sun marks, post-acne spots, and uneven texture all respond to consistent use. Not a bleaching agent — a tone organiser. Your skin stays its colour. It just becomes clearer."
           }
         },
         "card_TkUcjU": {
           "type": "card",
           "settings": {
-            "title": "Ingredient name",
-            "body": "A short description of this ingredient or complex and what it does for the skin."
+            "title": "For every part of you",
+            "body": "Neck, décolleté, underarms, arms — formulated for all of it, not just the face. Pakistani women know these are the areas that need consistent care and that most serums ignore. One 100ml bottle. Total brightening, head to toe."
           }
         }
       },
@@ -65,8 +65,8 @@
         "card_TkUcjU"
       ],
       "settings": {
-        "stat_value": "96% of women said their skin immediately looked smoother.*",
-        "stat_footnote": "*Consumer testing on 102 women after using product once.",
+        "stat_value": "",
+        "stat_footnote": "",
         "eyebrow": "CONSIDERED FORMULATION",
         "heading_lead": "Built around what your skin",
         "heading_emphasis": "actually responds to.",
