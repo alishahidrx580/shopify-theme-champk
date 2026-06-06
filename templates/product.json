@@ -99,6 +99,7 @@
         "step_yzmXRW": {
           "type": "step",
           "settings": {
+            "image": "shopify://shop_images/Use_the_provided_reference_image_202606062113.jpg",
             "title": "STEP 01",
             "body": "Cleanse skin and pat until just damp. Damp skin absorbs serum measurably better than completely dry skin."
           }
