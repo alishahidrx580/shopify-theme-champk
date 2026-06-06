@@ -14,8 +14,17 @@
   assign full_ingredients = product.metafields.custom.full_ingredients
   assign category_label   = product.metafields.custom.category | default: product.type
   assign claims_list      = product.metafields.custom.claims.value
-  assign ingredient_list  = product.metafields.custom.ingredients.value
   assign volume           = product.metafields.custom.volume
+
+  # Ingredients meta — works whether the metafield is a real list OR a single
+  # line typed with "/", "·" or "," separators.
+  assign ingredient_raw = product.metafields.custom.ingredients.value
+  assign ingredient_items = ''
+  if ingredient_raw != blank
+    assign ing_joined = ingredient_raw | join: '|'
+    assign ing_norm = ing_joined | replace: ' / ', '|' | replace: '/', '|' | replace: ' · ', '|' | replace: '·', '|' | replace: ', ', '|' | replace: ',', '|'
+    assign ingredient_items = ing_norm | split: '|'
+  endif
 
   assign price_formatted  = current_variant.price | money
   assign atc_label        = 'Add to bag'
@@ -56,11 +65,14 @@
 
         <h1 class="main-product__title font-display">{{ product.title }}</h1>
 
-        {%- if ingredient_list != blank and ingredient_list.size > 0 -%}
+        {%- if ingredient_items != blank and ingredient_items.size > 0 -%}
           <p class="main-product__ingredients-meta">
-            {%- for ing in ingredient_list -%}
-              {{- ing -}}
-              {%- unless forloop.last %} &middot; {% endunless -%}
+            {%- for ing in ingredient_items -%}
+              {%- assign ing_clean = ing | strip -%}
+              {%- if ing_clean != blank -%}
+                {{- ing_clean -}}
+                {%- unless forloop.last %} &middot; {% endunless -%}
+              {%- endif -%}
             {%- endfor -%}
           </p>
         {%- endif -%}
@@ -153,37 +165,6 @@
             {%- endif -%}
           </div>
 
-          <details class="main-product__replenishment">
-            <summary class="main-product__replenishment-summary">
-              <span>Replenishment:</span>
-              <span class="main-product__replenishment-icon" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-              </span>
-            </summary>
-            <div class="main-product__replenishment-body">
-              {%- if product.selling_plan_groups.size > 0 -%}
-                <label class="main-product__plan">
-                  <input type="radio" name="selling_plan" value="" data-selling-plan checked>
-                  <span>One-time purchase</span>
-                </label>
-                {%- for group in product.selling_plan_groups -%}
-                  {%- for plan in group.selling_plans -%}
-                    <label class="main-product__plan">
-                      <input type="radio" name="selling_plan" value="{{ plan.id }}" data-selling-plan>
-                      <span>{{ plan.name }}</span>
-                    </label>
-                  {%- endfor -%}
-                {%- endfor -%}
-              {%- else -%}
-                <p class="main-product__replenishment-note">
-                  Subscribe to receive this product on a recurring schedule. No subscription plans are set up for this product yet.
-                </p>
-              {%- endif -%}
-            </div>
-          </details>
-
           <button
             type="submit"
             class="main-product__atc"
@@ -195,15 +176,7 @@
             <span data-atc-label>{% if current_variant.available %}{{ atc_label }}{% else %}{{ sold_out_label }}{% endif %}</span>
             <span class="main-product__atc-price" data-atc-price>{{ variant_label }}</span>
           </button>
-
-          <p class="main-product__installments">
-            or 4 installments of
-            <span data-installment>{{ installment_each }}</span>
-            by Afterpay
-          </p>
         </form>
-
-        <p class="main-product__shipping-note">{{ shipping_note }}</p>
 
         <div class="main-product__accordion">
           <details class="main-product__accordion-item">
