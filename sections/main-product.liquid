@@ -45,34 +45,6 @@
   <div class="main-product__inner cham-container">
     <div class="main-product__grid">
 
-      <div class="main-product__header">
-        <nav class="main-product__breadcrumb" aria-label="Breadcrumb">
-          <a href="{{ routes.all_products_collection_url }}" class="main-product__breadcrumb-link eyebrow eyebrow--bare">
-            {{ breadcrumb_label }}
-          </a>
-          <span class="main-product__breadcrumb-sep" aria-hidden="true">&gt;</span>
-          <span class="main-product__breadcrumb-current">{{ short_name }}</span>
-        </nav>
-
-        <h1 class="main-product__title font-display">{{ product.title }}</h1>
-
-        {%- if ingredient_items != blank and ingredient_items.size > 0 -%}
-          <p class="main-product__ingredients-meta">
-            {%- for ing in ingredient_items -%}
-              {%- assign ing_clean = ing | strip -%}
-              {%- if ing_clean != blank -%}
-                {{- ing_clean -}}
-                {%- unless forloop.last %} &middot; {% endunless -%}
-              {%- endif -%}
-            {%- endfor -%}
-          </p>
-        {%- endif -%}
-
-        {%- if product.metafields.judgeme.badge != blank -%}
-          <a href="#reviews" class="main-product__rating">{{ product.metafields.judgeme.badge }}</a>
-        {%- endif -%}
-      </div>
-
       <div class="main-product__gallery" data-gallery>
         <div class="main-product__gallery-track" data-gallery-track>
           {%- if product.images.size > 0 -%}
@@ -122,6 +94,34 @@
       </div>
 
       <div class="main-product__info">
+
+        <div class="main-product__header">
+          <nav class="main-product__breadcrumb" aria-label="Breadcrumb">
+            <a href="{{ routes.all_products_collection_url }}" class="main-product__breadcrumb-link eyebrow eyebrow--bare">
+              {{ breadcrumb_label }}
+            </a>
+            <span class="main-product__breadcrumb-sep" aria-hidden="true">&gt;</span>
+            <span class="main-product__breadcrumb-current">{{ short_name }}</span>
+          </nav>
+
+          <h1 class="main-product__title font-display">{{ product.title }}</h1>
+
+          {%- if ingredient_items != blank and ingredient_items.size > 0 -%}
+            <p class="main-product__ingredients-meta">
+              {%- for ing in ingredient_items -%}
+                {%- assign ing_clean = ing | strip -%}
+                {%- if ing_clean != blank -%}
+                  {{- ing_clean -}}
+                  {%- unless forloop.last %} &middot; {% endunless -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </p>
+          {%- endif -%}
+
+          {%- if product.metafields.judgeme.badge != blank -%}
+            <a href="#reviews" class="main-product__rating">{{ product.metafields.judgeme.badge }}</a>
+          {%- endif -%}
+        </div>
 
         {%- if hero_statement != blank -%}
           <p class="main-product__hero-statement font-display">{{ hero_statement }}</p>
@@ -256,7 +256,6 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "header"
       "gallery"
       "info";
     gap: 1.5rem;
@@ -265,23 +264,17 @@
   @media (min-width: 1024px) {
     .main-product__grid {
       grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-      grid-template-areas:
-        "gallery header"
-        "gallery info";
-      grid-template-rows: min-content min-content;
+      grid-template-areas: "gallery info";
       column-gap: 4rem;
-      row-gap: 0;
-      align-content: start;
       align-items: start;
     }
-    .main-product__header { align-self: start; }
-    .main-product__info { margin-top: 1.5rem; }
-    .main-product__gallery { align-self: start; }
   }
 
-  .main-product__header  { grid-area: header; }
-  .main-product__gallery { grid-area: gallery; }
+  .main-product__gallery { grid-area: gallery; align-self: start; }
   .main-product__info    { grid-area: info; }
+
+  /* Header now lives inside the info column; small gap before the hero statement */
+  .main-product__header { margin-bottom: 1.5rem; }
 
   .main-product__breadcrumb {
     display: flex;
