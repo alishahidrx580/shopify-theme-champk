@@ -23,10 +23,16 @@
   if controls
     assign controls_flag = '1'
   endif
-  # Vimeo "background" mode hides controls; invert the controls flag for it.
   assign vimeo_bg = '1'
   if controls
     assign vimeo_bg = '0'
+  endif
+
+  # Show the click-to-play poster only for Shopify-hosted video, when a poster
+  # image exists and autoplay is OFF.
+  assign use_poster = false
+  if video != blank and image != blank and autoplay == false
+    assign use_poster = true
   endif
 -%}
 
@@ -35,9 +41,30 @@
     <div class="product-feature-media__grid">
 
       {%- comment -%} ===== Media (video / external embed / image) ===== {%- endcomment -%}
-      <div class="product-feature-media__media" data-reveal>
+      <div class="product-feature-media__media{% if use_poster %} product-feature-media__media--has-poster{% endif %}" data-reveal data-feature-media>
         {%- if video != blank -%}
-          {{ video | video_tag: image_size: '1200x', autoplay: autoplay, loop: loop_video, muted: true, controls: controls, playsinline: true, preload: 'metadata', class: 'product-feature-media__video' }}
+          {{ video | video_tag: image_size: '1200x', autoplay: autoplay, loop: loop_video, muted: true, controls: controls, playsinline: true, preload: 'metadata', class: 'product-feature-media__video', poster: image }}
+
+          {%- if use_poster -%}
+            <button type="button" class="product-feature-media__poster" data-feature-poster aria-label="Play video">
+              <img
+                src="{{ image | image_url: width: 1200 }}"
+                srcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 1200 }} 1200w, {{ image | image_url: width: 1800 }} 1800w"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                alt="{{ heading_lead | escape }}"
+                width="{{ image.width | default: 1200 }}"
+                height="{{ image.height | default: 1500 }}"
+                class="product-feature-media__poster-img"
+                loading="lazy"
+                decoding="async"
+              >
+              <span class="product-feature-media__play" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6 4 20 12 6 20 6 4"/>
+                </svg>
+              </span>
+            </button>
+          {%- endif -%}
         {%- elsif video_url != blank -%}
           <div class="product-feature-media__embed">
             {%- if video_url.type == 'youtube' -%}
@@ -154,6 +181,64 @@
     color: color-mix(in oklab, var(--primary) 30%, var(--surface));
   }
 
+  /* === Poster (click-to-play thumbnail) === */
+  .product-feature-media__poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+    background: none;
+    display: block;
+    z-index: 2;
+    transition: opacity 0.4s ease;
+  }
+
+  .product-feature-media__poster-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .product-feature-media__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 5rem;
+    height: 5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background-color: color-mix(in oklab, var(--background) 90%, transparent);
+    color: var(--primary);
+    box-shadow: 0 20px 60px -20px color-mix(in oklab, var(--primary) 35%, transparent);
+    transition: transform 0.4s cubic-bezier(0.2, 0.6, 0.2, 1), background-color 0.3s ease;
+  }
+
+  .product-feature-media__play svg { margin-left: 4px; }
+
+  .product-feature-media__poster:hover .product-feature-media__play {
+    transform: translate(-50%, -50%) scale(1.06);
+    background-color: var(--background);
+  }
+
+  .product-feature-media__poster:focus-visible {
+    outline: 2px solid var(--ring, var(--primary));
+    outline-offset: -4px;
+  }
+
+  /* Hidden once playback starts */
+  .product-feature-media__media--has-poster.is-playing .product-feature-media__poster {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   /* Media side: left by default, right when toggled (desktop only). */
   @media (min-width: 1024px) {
     .product-feature-media--media-right .product-feature-media__media { order: 2; }
@@ -194,6 +279,27 @@
   .product-feature-media__footnote > p + p { margin-top: 1rem; }
 {% endstylesheet %}
 
+{% javascript %}
+  (function () {
+    document.querySelectorAll('[data-feature-media]').forEach(function (media) {
+      var poster = media.querySelector('[data-feature-poster]');
+      var video = media.querySelector('video');
+      if (!poster || !video) return;
+
+      poster.addEventListener('click', function () {
+        media.classList.add('is-playing');
+        if (!video.hasAttribute('controls')) video.setAttribute('controls', '');
+        var p = video.play();
+        if (p && p.catch) p.catch(function () {});
+      });
+
+      video.addEventListener('pause', function () {
+        if (video.currentTime === 0) media.classList.remove('is-playing');
+      });
+    });
+  })();
+{% endjavascript %}
+
 {% schema %}
 {
   "name": "Feature media (video)",
@@ -232,14 +338,12 @@
     {
       "type": "text",
       "id": "claim",
-      "label": "Claim line",
-      "default": "Improves visible signs of collagen and elastin loss.*"
+      "label": "Claim line"
     },
     {
       "type": "richtext",
       "id": "footnote",
-      "label": "Footnote",
-      "default": "<p>*This oil helps address visible signs of collagen and elastin loss by improving the look of lines and wrinkles and skin's firm feel.</p>"
+      "label": "Footnote"
     },
     {
       "type": "header",
@@ -247,7 +351,7 @@
     },
     {
       "type": "paragraph",
-      "content": "Use a Shopify-hosted video for the best edge-to-edge fit. A YouTube/Vimeo link or an image can be used instead. If more than one is set, video wins, then the external link, then the image."
+      "content": "Use a Shopify-hosted video for the best edge-to-edge fit and the click-to-play thumbnail. A YouTube/Vimeo link or an image can be used instead. If more than one is set, video wins, then the external link, then the image."
     },
     {
       "type": "video",
@@ -263,13 +367,15 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image (fallback / poster)"
+      "label": "Thumbnail / poster image",
+      "info": "Shown before the video plays (Shopify-hosted video, with Autoplay off). Also used as the image fallback."
     },
     {
       "type": "checkbox",
       "id": "autoplay",
       "label": "Autoplay (muted)",
-      "default": true
+      "info": "Turn OFF to show the thumbnail with a play button (click to play).",
+      "default": false
     },
     {
       "type": "checkbox",
