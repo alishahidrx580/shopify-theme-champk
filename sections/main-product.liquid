@@ -7,19 +7,20 @@
   endif
   assign threshold_money = threshold | times: 100 | money
 
-  assign short_name = product.metafields.custom.short_name | default: product.title
-  assign hero_statement = product.metafields.custom.hero_statement
-  assign science_note = product.metafields.custom.science_note
-  assign how_to_use = product.metafields.custom.how_to_use
+  assign short_name       = product.metafields.custom.short_name | default: product.title
+  assign hero_statement   = product.metafields.custom.hero_statement
+  assign science_note     = product.metafields.custom.science_note
+  assign how_to_use       = product.metafields.custom.how_to_use
   assign full_ingredients = product.metafields.custom.full_ingredients
-  assign category_label = product.metafields.custom.category | default: product.type
-  assign claims_list = product.metafields.custom.claims.value
+  assign category_label   = product.metafields.custom.category | default: product.type
+  assign claims_list      = product.metafields.custom.claims.value
+  assign ingredient_list  = product.metafields.custom.ingredients.value
+  assign volume           = product.metafields.custom.volume
 
-  assign price_formatted = current_variant.price | money
-  assign atc_label = 'Add to bag'
-  assign sold_out_label = 'products.sold_out' | t
+  assign price_formatted  = current_variant.price | money
+  assign atc_label        = 'Add to bag'
+  assign sold_out_label   = 'products.sold_out' | t
 
-  # Variant label shown on the size control + add-to-bag, e.g. "1 oz. / $295"
   if product.has_only_default_variant
     assign variant_label = price_formatted
   else
@@ -27,20 +28,18 @@
   endif
 
   assign installment_each = current_variant.price | divided_by: 4 | money
+  assign shipping_note    = 'products.free_shipping_note' | t: amount: threshold_money
 
-  assign shipping_note = 'products.free_shipping_note' | t: amount: threshold_money
-
-  # === Gallery image fit + per-image focal position (unchanged data source) ===
   assign gallery_fit = section.settings.gallery_fit | default: 'cover'
-  assign focal_x = section.settings.gallery_focal_x | default: 50
-  assign focal_y = section.settings.gallery_focal_y | default: 50
+  assign focal_x     = section.settings.gallery_focal_x | default: 50
+  assign focal_y     = section.settings.gallery_focal_y | default: 50
 -%}
 
 <section class="main-product full-width" data-product-section data-product-handle="{{ product.handle }}">
   <div class="main-product__inner cham-container">
     <div class="main-product__grid">
 
-      {%- comment -%} =========== HEADER (title block — sits above gallery on mobile, top-right on desktop) =========== {%- endcomment -%}
+      {%- comment -%} =========== HEADER =========== {%- endcomment -%}
       <div class="main-product__header">
         <nav class="main-product__breadcrumb" aria-label="Breadcrumb">
           <a href="{{ routes.all_products_collection_url }}" class="main-product__breadcrumb-link eyebrow eyebrow--bare">
@@ -52,7 +51,23 @@
 
         <h1 class="main-product__title font-display">{{ product.title }}</h1>
 
-        {%- comment -%} Judge.me review count — links to #reviews like La Mer's "(N Reviews)". {%- endcomment -%}
+        {%- comment -%}
+          Ingredient meta line — e.g. "Rosa Damascena · Niacinamide · Centella Asiatica"
+          Pulled from Metafield: custom.ingredients (list of text)
+          For THE BRIGHTENING SERUM set 3 items:
+            1. Rosa Damascena
+            2. Niacinamide
+            3. Centella Asiatica
+        {%- endcomment -%}
+        {%- if ingredient_list != blank and ingredient_list.size > 0 -%}
+          <p class="main-product__ingredients-meta">
+            {%- for ing in ingredient_list -%}
+              {{- ing -}}
+              {%- unless forloop.last %} · {% endunless -%}
+            {%- endfor -%}
+          </p>
+        {%- endif -%}
+
         {%- if product.metafields.judgeme.badge != blank -%}
           <a href="#reviews" class="main-product__rating">{{ product.metafields.judgeme.badge }}</a>
         {%- else -%}
@@ -62,7 +77,7 @@
         {%- endif -%}
       </div>
 
-      {%- comment -%} =========== GALLERY (mosaic grid on desktop · swipe carousel on mobile) =========== {%- endcomment -%}
+      {%- comment -%} =========== GALLERY =========== {%- endcomment -%}
       <div class="main-product__gallery" data-gallery>
         <div class="main-product__gallery-track" data-gallery-track>
           {%- if product.images.size > 0 -%}
@@ -104,7 +119,6 @@
           {%- endif -%}
         </div>
 
-        {%- comment -%} Mobile-only scroll progress indicator (the thin bar under the image). {%- endcomment -%}
         {%- if product.images.size > 1 -%}
           <div class="main-product__gallery-progress" aria-hidden="true">
             <span class="main-product__gallery-progress-fill" data-gallery-progress></span>
@@ -112,12 +126,34 @@
         {%- endif -%}
       </div>
 
-      {%- comment -%} =========== INFO / BUY BOX (sticky on desktop) =========== {%- endcomment -%}
+      {%- comment -%} =========== INFO / BUY BOX =========== {%- endcomment -%}
       <div class="main-product__info">
+
+        {%- comment -%}
+          Hero statement — italic, Instrument Serif
+          Metafield: custom.hero_statement
+          Value for THE BRIGHTENING SERUM:
+            "Founded on Damascus rose. Activated by Niacinamide. For skin that simply looks clearer."
+        {%- endcomment -%}
         {%- if hero_statement != blank -%}
           <p class="main-product__hero-statement font-display">{{ hero_statement }}</p>
         {%- endif -%}
 
+        {%- comment -%}
+          Product description — short, 2 paragraphs
+          Enter in Shopify Admin → Products → Description:
+
+          Para 1:
+          "Seventy percent of this serum is Rosa Damascena Flower Water — Damascus rose, harvested
+          and distilled at its peak. This is not a trace botanical. It is the formula itself. Every
+          drop carries the calming, brightening properties of the rose revered across the Islamic
+          world for centuries."
+
+          Para 2:
+          "Within that base: Niacinamide at 3% to refine tone and quieten pigmentation; Betaine and
+          Glycerin for deep, lasting moisture; Centella Asiatica to calm and strengthen the skin
+          barrier. Formulated for face and body — neck, décolleté, underarms, and arms included."
+        {%- endcomment -%}
         {%- if product.description != blank -%}
           <div class="main-product__description rte" data-description>{{ product.description }}</div>
           <button type="button" class="main-product__see-more" data-see-more aria-expanded="false" data-more="See more" data-less="See less">
@@ -140,12 +176,18 @@
           <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
           <input type="hidden" name="quantity" value="1">
 
-          {%- comment -%} ----- Size / price (static, single — no dropdown) ----- {%- endcomment -%}
           <div class="main-product__size-line">
             <span data-variant-label>{{ variant_label }}</span>
+            {%- comment -%}
+              Volume note — appears beside the price
+              Metafield: custom.volume
+              Value: 100ml
+            {%- endcomment -%}
+            {%- if volume != blank -%}
+              <span class="main-product__volume">{{ volume }}</span>
+            {%- endif -%}
           </div>
 
-          {%- comment -%} ----- Replenishment / subscription (structural expandable) ----- {%- endcomment -%}
           <details class="main-product__replenishment">
             <summary class="main-product__replenishment-summary">
               <span>Replenishment:</span>
@@ -177,7 +219,6 @@
             </div>
           </details>
 
-          {%- comment -%} ----- Add to bag (full-width, price on the right) ----- {%- endcomment -%}
           <button
             type="submit"
             class="main-product__atc"
@@ -190,7 +231,6 @@
             <span class="main-product__atc-price" data-atc-price>{{ variant_label }}</span>
           </button>
 
-          {%- comment -%} ----- Afterpay installments line ----- {%- endcomment -%}
           <p class="main-product__installments">
             or 4 installments of
             <span data-installment>{{ installment_each }}</span>
@@ -200,58 +240,104 @@
 
         <p class="main-product__shipping-note">{{ shipping_note }}</p>
 
-        {%- comment -%} ----- Accordions: Benefits · Ingredients · How to use ----- {%- endcomment -%}
+        {%- comment -%}
+          ACCORDIONS
+          ──────────────────────────────────────────────────────────────
+          1. Benefits
+             Reads:  custom.claims (list)  +  custom.science_note
+             Claims to set in Shopify Admin (3 items, NOT "Paraben Free" — Methylparaben
+             present in formula per MSDS BH25111300019):
+               · Hypoallergenic
+               · Non-Comedogenic
+               · Cruelty Free
+
+             Science note metafield value:
+               "Seventy percent of this formula is ROSA DAMASCENA FLOWER WATER — pure Damascus
+               rose, distilled at source. It is not a trace addition. It is the base the entire
+               serum is built on, carrying natural anti-inflammatory and brightening properties
+               revered in traditional Persian and Arabian skincare for centuries.
+
+               Within that rose water base: NIACINAMIDE at 3% interrupts melanin transfer,
+               gradually refining uneven tone and calming post-inflammation pigmentation.
+               BETAINE and GLYCERIN (together 12%) provide multi-layered moisture binding.
+               CENTELLA ASIATICA calms reactive skin and strengthens the skin barrier.
+               CERAMIDE NP seals hydration so everything else works without interruption.
+
+               No fillers. No unnecessary actives. The faint scent you notice is the Damascus
+               rose itself."
+
+          2. Ingredients
+             Reads: custom.full_ingredients
+             Full INCI (from MSDS BH25111300019):
+               Rosa Damascena Flower Water, Propanediol, Glycerin, Betaine, Niacinamide,
+               Arginine, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Polysorbate 60,
+               Allantoin, Centella Asiatica Extract, Triticum Vulgare (Wheat) Germ Oil,
+               Ceramide NP, Sodium Hyaluronate, Methylparaben, Carbomer, Water,
+               Polyacrylamide, Propylene Glycol, C13-14 Isoparaffin, Butylene Glycol,
+               Ethylhexylglycerin, Laureth-7, Caprylhydroxamic Acid, Glyceryl Caprylate,
+               Camellia Sinensis Leaf Extract, Portulaca Oleracea Extract,
+               Hydroxyacetophenone
+
+          3. How to use
+             Reads: custom.how_to_use
+             Value:
+               "Two to three drops on cleansed skin, morning and night. Press gently over
+               face, neck and décolleté — do not rub. Wait for full absorption before
+               applying THE BRIGHTENING CREAM. In the morning, always finish with SPF."
+        {%- endcomment -%}
         <div class="main-product__accordion">
           <details class="main-product__accordion-item">
-              <summary class="main-product__accordion-summary">
-                <span>Benefits</span>
-                <span class="main-product__accordion-icon" aria-hidden="true">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                  </svg>
-                </span>
-              </summary>
-              <div class="main-product__accordion-body">
-                {%- if claims_list != blank and claims_list.size > 0 -%}
-                  <ul class="main-product__benefit-list">
-                    {%- for claim in claims_list -%}
-                      <li>{{ claim }}</li>
-                    {%- endfor -%}
-                  </ul>
-                {%- endif -%}
-                {%- if science_note != blank -%}<div class="rte">{{ science_note }}</div>{%- endif -%}
-              </div>
-            </details>
+            <summary class="main-product__accordion-summary">
+              <span>Benefits</span>
+              <span class="main-product__accordion-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="main-product__accordion-body">
+              {%- if claims_list != blank and claims_list.size > 0 -%}
+                <ul class="main-product__benefit-list">
+                  {%- for claim in claims_list -%}
+                    <li>{{ claim }}</li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+              {%- if science_note != blank -%}
+                <div class="rte">{{ science_note }}</div>
+              {%- endif -%}
+            </div>
+          </details>
 
           <details class="main-product__accordion-item">
-              <summary class="main-product__accordion-summary">
-                <span>Ingredients</span>
-                <span class="main-product__accordion-icon" aria-hidden="true">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                  </svg>
-                </span>
-              </summary>
-              <div class="main-product__accordion-body main-product__accordion-body--ingredients">{{ full_ingredients }}</div>
-            </details>
+            <summary class="main-product__accordion-summary">
+              <span>Ingredients</span>
+              <span class="main-product__accordion-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="main-product__accordion-body main-product__accordion-body--ingredients">{{ full_ingredients }}</div>
+          </details>
 
           <details class="main-product__accordion-item">
-              <summary class="main-product__accordion-summary">
-                <span>How to use</span>
-                <span class="main-product__accordion-icon" aria-hidden="true">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                  </svg>
-                </span>
-              </summary>
-              <div class="main-product__accordion-body">{{ how_to_use }}</div>
-            </details>
+            <summary class="main-product__accordion-summary">
+              <span>How to use</span>
+              <span class="main-product__accordion-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="main-product__accordion-body">{{ how_to_use }}</div>
+          </details>
         </div>
       </div>
     </div>
   </div>
 
-  {%- comment -%} =========== STICKY ADD-TO-BAG BAR (appears on scroll, desktop + mobile) =========== {%- endcomment -%}
+  {%- comment -%} =========== STICKY ADD-TO-BAG BAR =========== {%- endcomment -%}
   <div class="main-product__sticky-bar" data-sticky-bar hidden>
     <div class="main-product__sticky-inner cham-container">
       <span class="main-product__sticky-title font-display">{{ short_name }}</span>
@@ -283,7 +369,7 @@
     }
   }
 
-  /* === Grid: mobile stacks header > gallery > info; desktop = gallery left, header+info right === */
+  /* === Grid === */
   .main-product__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -306,9 +392,9 @@
     }
   }
 
-  .main-product__header { grid-area: header; }
+  .main-product__header  { grid-area: header; }
   .main-product__gallery { grid-area: gallery; }
-  .main-product__info { grid-area: info; }
+  .main-product__info    { grid-area: info; }
 
   /* === Header === */
   .main-product__breadcrumb {
@@ -332,23 +418,33 @@
     font-weight: 300;
     line-height: 1.02;
     letter-spacing: -0.015em;
+    margin: 0;
   }
 
   @media (min-width: 1024px) {
     .main-product__title { font-size: clamp(2.75rem, 3.6vw, 4rem); }
   }
 
-  .main-product__rating { display: inline-block; margin-top: 0.85rem; color: inherit; }
+  /* Ingredient meta line — "Rosa Damascena · Niacinamide · Centella Asiatica" */
+  .main-product__ingredients-meta {
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted-foreground);
+  }
+
+  .main-product__rating { display: inline-block; margin-top: 1rem; color: inherit; }
   .main-product__rating .jdgm-star.jdgm--on,
   .main-product__rating .jdgm-star.jdgm--half { color: var(--primary); }
-  .main-product__rating .jdgm-star.jdgm--off { color: color-mix(in oklab, var(--foreground) 25%, transparent); }
+  .main-product__rating .jdgm-star.jdgm--off  { color: color-mix(in oklab, var(--foreground) 25%, transparent); }
   .main-product__rating .jdgm-prev-badge__text {
     color: var(--muted-foreground);
     font-size: 0.75rem;
     letter-spacing: 0.02em;
   }
 
-  /* === Gallery — mobile: horizontal swipe carousel === */
+  /* === Gallery === */
   .main-product__gallery-track {
     display: flex;
     overflow-x: auto;
@@ -392,7 +488,6 @@
     transform-origin: left;
   }
 
-  /* === Gallery — desktop: editorial 2-col mosaic that scrolls === */
   @media (min-width: 1024px) {
     .main-product__gallery-track {
       display: grid;
@@ -428,7 +523,6 @@
   .main-product__description > p { margin: 0; }
   .main-product__description > p + p { margin-top: 1rem; }
 
-  /* "See more" truncation — mobile only (La Mer shows it on phones). */
   .main-product__see-more {
     margin-top: 0.5rem;
     font-size: 0.75rem;
@@ -441,6 +535,7 @@
     border: 0;
     cursor: pointer;
   }
+
   @media (max-width: 1023px) {
     .main-product__description.is-clamped {
       display: -webkit-box;
@@ -450,20 +545,34 @@
       overflow: hidden;
     }
   }
+
   @media (min-width: 1024px) {
     .main-product__see-more { display: none; }
   }
 
-  /* === Size / price line (static, no dropdown) === */
+  /* === Size / price + volume line === */
   .main-product__size-line {
     margin-top: 1.75rem;
     padding: 0.85rem 0;
     border-bottom: 1px solid var(--border);
     font-size: 0.95rem;
     color: var(--foreground);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
   }
 
-  /* === Replenishment expandable === */
+  /* Volume note — right-aligned beside price */
+  .main-product__volume {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    flex-shrink: 0;
+  }
+
+  /* === Replenishment === */
   .main-product__replenishment {
     margin-top: 0.25rem;
     border-bottom: 1px solid var(--border);
@@ -525,7 +634,7 @@
   .main-product__atc[data-loading="true"] { opacity: 0.7; cursor: progress; }
   .main-product__atc-price { letter-spacing: 0.08em; }
 
-  /* === Afterpay installments === */
+  /* === Afterpay === */
   .main-product__installments {
     margin-top: 1rem;
     font-size: 0.8125rem;
@@ -568,7 +677,7 @@
     line-height: 1.65;
     font-size: 0.875rem;
   }
-  .main-product__accordion-body > p { margin: 0; }
+  .main-product__accordion-body > p  { margin: 0; }
   .main-product__accordion-body > p + p { margin-top: 1rem; }
   .main-product__accordion-body--ingredients {
     font-size: 0.75rem;
@@ -578,7 +687,7 @@
   .main-product__benefit-list { margin: 0 0 0.75rem; padding-left: 1.1rem; }
   .main-product__benefit-list li { margin-bottom: 0.4rem; }
 
-  /* === Sticky add-to-bag bar === */
+  /* === Sticky bar === */
   .main-product__sticky-bar {
     position: fixed;
     left: 0;
@@ -694,10 +803,10 @@
     /* ---- Mobile gallery progress bar ---- */
     if (track && progress) {
       var updateProgress = function () {
-        var max = track.scrollWidth - track.clientWidth;
+        var max   = track.scrollWidth - track.clientWidth;
         var ratio = max > 0 ? track.scrollLeft / max : 0;
         var slides = track.children.length || 1;
-        progress.style.width = (100 / slides) + '%';
+        progress.style.width     = (100 / slides) + '%';
         progress.style.transform = 'translateX(' + (ratio * (slides - 1) * 100) + '%)';
       };
       track.addEventListener('scroll', updateProgress, { passive: true });
@@ -705,7 +814,7 @@
       updateProgress();
     }
 
-    /* ---- Sticky add-to-bag bar (shows once the title scrolls out of view) ---- */
+    /* ---- Sticky bar (shows when header title scrolls out of view) ---- */
     if (stickyBar && header && 'IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
@@ -730,7 +839,7 @@
       "min": 0,
       "max": 9900,
       "step": 100,
-      "unit": "₹",
+      "unit": "Rs",
       "default": 0
     },
     {
@@ -743,7 +852,7 @@
       "label": "Image fit",
       "info": "Fill = crops tiles to a square. Show full = whole image visible, may letterbox.",
       "options": [
-        { "value": "cover", "label": "Fill tile (crop)" },
+        { "value": "cover",   "label": "Fill tile (crop)" },
         { "value": "contain", "label": "Show full image (no crop)" }
       ],
       "default": "cover"
@@ -757,27 +866,27 @@
       "content": "Each slider pair controls one image by its order in the product's Media. X: 0 = left, 50 = center, 100 = right. Y: 0 = top, 50 = center, 100 = bottom."
     },
     { "type": "range", "id": "image_1_x", "label": "Image 1 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_1_y", "label": "Image 1 — vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_1_y", "label": "Image 1 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
     { "type": "range", "id": "image_2_x", "label": "Image 2 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_2_y", "label": "Image 2 — vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_2_y", "label": "Image 2 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
     { "type": "range", "id": "image_3_x", "label": "Image 3 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_3_y", "label": "Image 3 — vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_3_y", "label": "Image 3 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
     { "type": "range", "id": "image_4_x", "label": "Image 4 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_4_y", "label": "Image 4 — vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_4_y", "label": "Image 4 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
     { "type": "range", "id": "image_5_x", "label": "Image 5 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_5_y", "label": "Image 5 — vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_5_y", "label": "Image 5 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
     { "type": "range", "id": "image_6_x", "label": "Image 6 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_6_y", "label": "Image 6 — vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_6_y", "label": "Image 6 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
     { "type": "range", "id": "image_7_x", "label": "Image 7 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_7_y", "label": "Image 7 — vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_7_y", "label": "Image 7 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
     { "type": "range", "id": "image_8_x", "label": "Image 8 — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "image_8_y", "label": "Image 8 — vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "image_8_y", "label": "Image 8 — vertical",   "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
     {
       "type": "header",
       "content": "Default position (images 9+)"
     },
     { "type": "range", "id": "gallery_focal_x", "label": "Default horizontal", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50 },
-    { "type": "range", "id": "gallery_focal_y", "label": "Default vertical", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50 }
+    { "type": "range", "id": "gallery_focal_y", "label": "Default vertical",   "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50 }
   ],
   "disabled_on": {
     "groups": ["header", "footer"]
