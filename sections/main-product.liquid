@@ -10,9 +10,9 @@
   assign claims_list      = product.metafields.custom.claims.value
   assign volume           = product.metafields.custom.volume
 
-  # Ingredients meta — works whether the metafield is a real list OR a single
-  # line typed with "/", "·" or "," separators.
-  assign ingredient_raw = product.metafields.custom.ingredients.value
+  # Ingredients meta — sourced from custom.key_ingredients (list of single-line text).
+  # Works whether the value returns as a list OR a single "/", "·" or "," string.
+  assign ingredient_raw = product.metafields.custom.key_ingredients.value
   assign ingredient_items = ''
   if ingredient_raw != blank
     assign ing_joined = ingredient_raw | join: '|'
