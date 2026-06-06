@@ -14,6 +14,7 @@
       "settings": {
         "free_shipping_override": 0,
         "gallery_fit": "cover",
+        "gallery_ratio": "3 / 4",
         "image_1_x": 50,
         "image_1_y": 50,
         "image_2_x": 50,
@@ -136,7 +137,7 @@
         "eyebrow": "The Sensory Experience",
         "heading_lead": "How it",
         "heading_emphasis": "feels.",
-        "body": "<p>A short paragraph describing how the formula feels on skin and the experience of using it.</p>"
+        "body": ""
       }
     },
     "pairs_with": {
