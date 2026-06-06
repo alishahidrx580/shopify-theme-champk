@@ -1,12 +1,6 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
 
-  assign threshold = section.settings.free_shipping_override
-  if threshold == 0 or threshold == blank
-    assign threshold = settings.free_shipping_threshold
-  endif
-  assign threshold_money = threshold | times: 100 | money
-
   assign short_name       = product.metafields.custom.short_name | default: product.title
   assign hero_statement   = product.metafields.custom.hero_statement
   assign science_note     = product.metafields.custom.science_note
@@ -35,9 +29,6 @@
   else
     assign variant_label = current_variant.title | append: ' / ' | append: price_formatted
   endif
-
-  assign installment_each = current_variant.price | divided_by: 4 | money
-  assign shipping_note    = 'products.free_shipping_note' | t: amount: threshold_money
 
   assign gallery_fit = section.settings.gallery_fit | default: 'cover'
   assign focal_x     = section.settings.gallery_focal_x | default: 50
