@@ -123,6 +123,7 @@
         "step_6MyDEE": {
           "type": "step",
           "settings": {
+            "image": "shopify://shop_images/Use_the_provided_reference_image_202606071136.jpg",
             "title": "STEP 04",
             "body": "Wait a full 30 seconds. The serum should absorb completely and leave skin feeling smooth and primed, not damp."
           }
