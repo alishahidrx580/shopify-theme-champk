@@ -115,6 +115,7 @@
         "step_HQNqEA": {
           "type": "step",
           "settings": {
+            "image": "shopify://shop_images/Use_the_provided_reference_image_202606071133.jpg",
             "title": "STEP 03",
             "body": "Press the serum gently over your face, neck and décolleté. Do not rub or drag — press and hold for 2–3 seconds per area, then release."
           }
