@@ -131,6 +131,7 @@
         "step_zdmXGC": {
           "type": "step",
           "settings": {
+            "image": "shopify://shop_images/Compose_a_single_skincare-routine_photograph__202606071145.jpg",
             "title": "STEP 05",
             "body": "Follow immediately with THE BRIGHTENING CREAM. In the morning, always finish your routine with a broad-spectrum SPF."
           }
