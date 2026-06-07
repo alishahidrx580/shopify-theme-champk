@@ -1,5 +1,11 @@
 {%- liquid
-  assign step_count = section.blocks.size
+  # Per-product ritual steps from a product metafield (list of "pillar" metaobjects,
+  # reused for its image/title/body fields). Falls back to nothing if unset.
+  assign steps = product.metafields.custom.ritual_steps.value
+  assign step_count = 0
+  if steps != blank
+    assign step_count = steps.size
+  endif
 -%}
 
 <section class="product-ritual full-width">
@@ -23,10 +29,12 @@
 
     {%- if step_count > 0 -%}
       <ol class="product-ritual__steps is-count-{{ step_count }}">
-        {%- for block in section.blocks -%}
+        {%- for step in steps -%}
           {%- assign num = '0' | append: forloop.index | slice: -2, 2 -%}
-          {%- assign step_image = block.settings.image -%}
-          <li class="product-ritual__step" data-reveal data-reveal-delay="{{ forloop.index0 | times: 80 }}" {{ block.shopify_attributes }}>
+          {%- assign step_image = step.image -%}
+          {%- assign step_title = step.title -%}
+          {%- assign step_body = step.body -%}
+          <li class="product-ritual__step" data-reveal data-reveal-delay="{{ forloop.index0 | times: 80 }}">
             <div class="product-ritual__step-head">
               <span class="product-ritual__step-number font-display">{{ num }}</span>
               <span class="product-ritual__step-rail" aria-hidden="true"></span>
@@ -38,7 +46,7 @@
                   src="{{ step_image | image_url: width: 900 }}"
                   srcset="{{ step_image | image_url: width: 450 }} 450w, {{ step_image | image_url: width: 900 }} 900w, {{ step_image | image_url: width: 1300 }} 1300w"
                   sizes="(min-width: 768px) 32vw, 100vw"
-                  alt="{{ block.settings.title | escape }}"
+                  alt="{{ step_title | escape }}"
                   width="{{ step_image.width | default: 900 }}"
                   height="{{ step_image.height | default: 1125 }}"
                   class="product-ritual__step-img"
@@ -50,11 +58,11 @@
               {%- endif -%}
             </div>
 
-            {%- if block.settings.title != blank -%}
-              <h3 class="product-ritual__step-title">{{ block.settings.title }}</h3>
+            {%- if step_title != blank -%}
+              <h3 class="product-ritual__step-title">{{ step_title }}</h3>
             {%- endif -%}
-            {%- if block.settings.body != blank -%}
-              <p class="product-ritual__step-body">{{ block.settings.body }}</p>
+            {%- if step_body != blank -%}
+              <p class="product-ritual__step-body">{{ step_body }}</p>
             {%- endif -%}
           </li>
         {%- endfor -%}
@@ -76,7 +84,6 @@
     }
   }
 
-  /* === Restrained header (no oversized display heading) === */
   .product-ritual__head {
     max-width: 52rem;
   }
@@ -104,7 +111,6 @@
   .product-ritual__body > p { margin: 0; }
   .product-ritual__body > p + p { margin-top: 1rem; }
 
-  /* === Step cards === */
   .product-ritual__steps {
     list-style: none;
     margin: 3rem 0 0;
@@ -120,7 +126,6 @@
       margin-top: 4rem;
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-    /* Count-aware columns so 1–6 cards always look balanced, not stretched. */
     .product-ritual__steps.is-count-1 {
       grid-template-columns: minmax(0, 32rem);
       justify-content: center;
@@ -131,8 +136,6 @@
     }
   }
 
-  /* Number + hairline rail across the top — aligns across the row so the
-     steps read as one connected sequence. */
   .product-ritual__step-head {
     display: flex;
     align-items: center;
@@ -194,6 +197,10 @@
   "tag": "section",
   "settings": [
     {
+      "type": "paragraph",
+      "content": "The steps are per-product. Set them on each product under Metafields → Ritual steps (a list of Pillar entries, each with a title, instruction and image). The heading below is shared across products."
+    },
+    {
       "type": "text",
       "id": "eyebrow",
       "label": "t:labels.eyebrow",
@@ -218,58 +225,9 @@
       "default": "<p>A few unhurried minutes, twice a day. Consistency is what skin responds to.</p>"
     }
   ],
-  "blocks": [
-    {
-      "type": "step",
-      "name": "Step",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title",
-          "default": "Step title"
-        },
-        {
-          "type": "textarea",
-          "id": "body",
-          "label": "Instruction",
-          "default": "Describe what to do in this step of the routine."
-        }
-      ]
-    }
-  ],
-  "max_blocks": 6,
   "presets": [
     {
-      "name": "t:sections.product_ritual.name",
-      "blocks": [
-        {
-          "type": "step",
-          "settings": {
-            "title": "Cleanse",
-            "body": "Start with freshly cleansed, slightly damp skin to help the formula absorb."
-          }
-        },
-        {
-          "type": "step",
-          "settings": {
-            "title": "Warm",
-            "body": "Dispense and gently warm between fingertips to activate the formula."
-          }
-        },
-        {
-          "type": "step",
-          "settings": {
-            "title": "Press",
-            "body": "Press evenly over face and neck, then breathe and let it settle."
-          }
-        }
-      ]
+      "name": "t:sections.product_ritual.name"
     }
   ],
   "enabled_on": {
