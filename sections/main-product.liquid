@@ -2,6 +2,7 @@
   assign current_variant = product.selected_or_first_available_variant
 
   assign short_name       = product.metafields.custom.short_name | default: product.title
+  assign subtitle         = product.metafields.custom.subtitle
   assign hero_statement   = product.metafields.custom.hero_statement
   assign science_note     = product.metafields.custom.science_note
   assign how_to_use       = product.metafields.custom.how_to_use
@@ -106,6 +107,10 @@
           </nav>
 
           <h1 class="main-product__title font-display">{{ product.title }}</h1>
+
+          {%- if subtitle != blank -%}
+            <p class="main-product__subtitle">{{ subtitle }}</p>
+          {%- endif -%}
 
           {%- if ingredient_items != blank and ingredient_items.size > 0 -%}
             <p class="main-product__ingredients-meta">
@@ -309,6 +314,13 @@
 
   @media (min-width: 1024px) {
     .main-product__title { font-size: clamp(2.75rem, 3.6vw, 4rem); }
+  }
+
+  .main-product__subtitle {
+    margin: 0.75rem 0 0;
+    font-size: 1rem;
+    font-style: italic;
+    color: color-mix(in oklab, var(--foreground) 70%, transparent);
   }
 
   .main-product__ingredients-meta {
