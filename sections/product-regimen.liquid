@@ -1,5 +1,12 @@
 {%- liquid
-  assign block_count = section.blocks.size
+  # Per-product cross-sell. Reads a product list metafield + a parallel teaser
+  # list (matched by position). Falls back to nothing if the list is unset.
+  assign cross_products = product.metafields.custom.cross_sell.value
+  assign cross_teasers = product.metafields.custom.cross_sell_teasers.value
+  assign block_count = 0
+  if cross_products != blank
+    assign block_count = cross_products.size
+  endif
 -%}
 
 <section class="product-regimen full-width">
@@ -20,19 +27,18 @@
 
     {%- if block_count > 0 -%}
       <div class="product-regimen__grid is-count-{{ block_count }}">
-        {%- for block in section.blocks -%}
+        {%- for p in cross_products -%}
           {%- liquid
-            assign p = block.settings.product
             if p == blank
               continue
             endif
             assign cur = p.selected_or_first_available_variant
-            assign card_desc = block.settings.description
+            assign card_desc = cross_teasers[forloop.index0]
             if card_desc == blank
               assign card_desc = p.description | strip_html | truncatewords: 16
             endif
           -%}
-          <article class="product-regimen__card" data-reveal data-reveal-delay="{{ forloop.index0 | times: 90 }}" {{ block.shopify_attributes }}>
+          <article class="product-regimen__card" data-reveal data-reveal-delay="{{ forloop.index0 | times: 90 }}">
             <form
               class="product-regimen__form"
               action="{{ routes.cart_add_url }}"
@@ -43,9 +49,6 @@
               <input type="hidden" name="quantity" value="1">
 
               <a class="product-regimen__media" href="{{ p.url }}">
-                {%- if block.settings.badge != blank -%}
-                  <span class="product-regimen__badge eyebrow eyebrow--bare">{{ block.settings.badge }}</span>
-                {%- endif -%}
                 {%- if p.featured_image != blank -%}
                   <img
                     src="{{ p.featured_image | image_url: width: 900 }}"
@@ -175,17 +178,6 @@
     aspect-ratio: 1 / 1;
     overflow: hidden;
     background-color: var(--surface);
-  }
-
-  .product-regimen__badge {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    z-index: 1;
-    color: var(--foreground);
-    background-color: color-mix(in oklab, var(--background) 80%, transparent);
-    padding: 0.35rem 0.6rem;
-    font-size: 0.625rem;
   }
 
   .product-regimen__img {
@@ -375,6 +367,10 @@
   "tag": "section",
   "settings": [
     {
+      "type": "paragraph",
+      "content": "The products shown are per-product. Set them on each product under Metafields → Cross sell (a list of products) and Cross sell teasers (a matching list of short lines). The heading below is shared across products."
+    },
+    {
       "type": "text",
       "id": "eyebrow",
       "label": "t:labels.eyebrow"
@@ -391,40 +387,9 @@
       "label": "t:labels.heading_emphasis"
     }
   ],
-  "blocks": [
-    {
-      "type": "product",
-      "name": "Product",
-      "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Product"
-        },
-        {
-          "type": "text",
-          "id": "badge",
-          "label": "Badge",
-          "info": "Optional label shown on the image, e.g. Best Seller."
-        },
-        {
-          "type": "text",
-          "id": "description",
-          "label": "Short description",
-          "info": "Optional. Falls back to the product's own description if left blank."
-        }
-      ]
-    }
-  ],
-  "max_blocks": 4,
   "presets": [
     {
-      "name": "Complete your regimen",
-      "blocks": [
-        { "type": "product" },
-        { "type": "product" },
-        { "type": "product" }
-      ]
+      "name": "Complete your regimen"
     }
   ],
   "enabled_on": {
