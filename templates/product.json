@@ -58,7 +58,7 @@
         "video": "shopify://files/videos/8548f683a508415e8a43c744bd99f5b1.mp4",
         "video_url": "",
         "image": "shopify://shop_images/17th_jpg.jpg",
-        "autoplay": true,
+        "autoplay": false,
         "loop": true,
         "show_controls": false
       }
