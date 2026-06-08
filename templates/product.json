@@ -37,37 +37,6 @@
     },
     "pillars": {
       "type": "product-pillars",
-      "blocks": {
-        "card_Qapj6n": {
-          "type": "card",
-          "settings": {
-            "image": "shopify://shop_images/A_luxury_skincare_ingredient_macro_202606061903.jpg",
-            "title": "The Damascus rose as base",
-            "body": "Seventy percent of this formula is Rosa Damascena Flower Water — not water with rose extract added. The Damascus rose is the base the serum is built on. It calms, it brightens, it carries a faint natural fragrance. No synthetic equivalent replicates what the rose delivers at this concentration."
-          }
-        },
-        "card_8f6X9B": {
-          "type": "card",
-          "settings": {
-            "image": "shopify://shop_images/A_luxury_skincare_ingredient_macro_202606061906.jpg",
-            "title": "Niacinamide where it counts",
-            "body": "At 3%, Niacinamide is at the concentration shown in clinical studies to interrupt melanin transfer and refine uneven tone. Sun marks, post-acne spots, and uneven texture all respond to consistent use. Not a bleaching agent — a tone organiser. Your skin stays its colour. It just becomes clearer."
-          }
-        },
-        "card_TkUcjU": {
-          "type": "card",
-          "settings": {
-            "image": "shopify://shop_images/Compose_a_single_luxury_skincare_202606061928_1.jpg",
-            "title": "For every part of you",
-            "body": "Neck, décolleté, underarms, arms — formulated for all of it, not just the face. Pakistani women know these are the areas that need consistent care and that most serums ignore. One 100ml bottle. Total brightening, head to toe."
-          }
-        }
-      },
-      "block_order": [
-        "card_Qapj6n",
-        "card_8f6X9B",
-        "card_TkUcjU"
-      ],
       "settings": {
         "stat_value": "",
         "stat_footnote": "",
@@ -95,55 +64,6 @@
     },
     "ritual": {
       "type": "product-ritual",
-      "blocks": {
-        "step_yzmXRW": {
-          "type": "step",
-          "settings": {
-            "image": "shopify://shop_images/Use_the_provided_reference_image_202606062113.jpg",
-            "title": "STEP 01",
-            "body": "Cleanse skin and pat until just damp. Damp skin absorbs serum measurably better than completely dry skin."
-          }
-        },
-        "step_9cdz8L": {
-          "type": "step",
-          "settings": {
-            "image": "shopify://shop_images/rotate_the_wrist_of_drops_202606062146.jpg",
-            "title": "STEP 02",
-            "body": "Dispense 2–3 drops into clean palms. Warm between your fingertips for a moment before applying."
-          }
-        },
-        "step_HQNqEA": {
-          "type": "step",
-          "settings": {
-            "image": "shopify://shop_images/Use_the_provided_reference_image_202606071133.jpg",
-            "title": "STEP 03",
-            "body": "Press the serum gently over your face, neck and décolleté. Do not rub or drag — press and hold for 2–3 seconds per area, then release."
-          }
-        },
-        "step_6MyDEE": {
-          "type": "step",
-          "settings": {
-            "image": "shopify://shop_images/Use_the_provided_reference_image_202606071136.jpg",
-            "title": "STEP 04",
-            "body": "Wait a full 30 seconds. The serum should absorb completely and leave skin feeling smooth and primed, not damp."
-          }
-        },
-        "step_zdmXGC": {
-          "type": "step",
-          "settings": {
-            "image": "shopify://shop_images/Compose_a_single_skincare-routine_photograph__202606071145.jpg",
-            "title": "STEP 05",
-            "body": "Follow immediately with THE BRIGHTENING CREAM. In the morning, always finish your routine with a broad-spectrum SPF."
-          }
-        }
-      },
-      "block_order": [
-        "step_yzmXRW",
-        "step_9cdz8L",
-        "step_HQNqEA",
-        "step_6MyDEE",
-        "step_zdmXGC"
-      ],
       "settings": {
         "eyebrow": "The Ritual",
         "heading_lead": "How to",
@@ -158,7 +78,7 @@
         "eyebrow": "The Sensory Experience",
         "heading_lead": "How it",
         "heading_emphasis": "feels.",
-        "body": "<p>A short paragraph describing how the formula feels on skin and the experience of using it.</p>"
+        "body": ""
       }
     },
     "pairs_with": {
@@ -181,46 +101,6 @@
     },
     "regimen": {
       "type": "product-regimen",
-      "blocks": {
-        "product_rkj3eq": {
-          "type": "product",
-          "settings": {
-            "product": "brightening-face-cream",
-            "badge": "",
-            "description": ""
-          }
-        },
-        "product_1": {
-          "type": "product",
-          "settings": {
-            "product": "brightening-face-mask",
-            "badge": "",
-            "description": ""
-          }
-        },
-        "product_2": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "badge": "",
-            "description": ""
-          }
-        },
-        "product_3": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "badge": "",
-            "description": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_rkj3eq",
-        "product_1",
-        "product_2",
-        "product_3"
-      ],
       "settings": {
         "eyebrow": "",
         "heading_lead": "Complete your regimen",
