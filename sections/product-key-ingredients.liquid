@@ -5,7 +5,22 @@
   assign footnote = section.settings.footnote
   assign video = section.settings.video
   assign video_url = section.settings.video_url
+
+  # ===== Poster / thumbnail resolution =====
+  # Priority: per-product metafield image (if present) > section image setting.
+  # This lets every product show its own thumbnail while keeping a shared fallback.
   assign image = section.settings.image
+  assign poster_key = section.settings.poster_metafield | default: 'custom.feature_poster'
+  assign poster_parts = poster_key | split: '.'
+  assign poster_ns = poster_parts[0]
+  assign poster_field = poster_parts[1]
+  if product != blank and poster_ns != blank and poster_field != blank
+    assign product_poster = product.metafields[poster_ns][poster_field].value
+    if product_poster != blank
+      assign image = product_poster
+    endif
+  endif
+
   assign media_position = section.settings.media_position | default: 'left'
   assign autoplay = section.settings.autoplay
   assign loop_video = section.settings.loop
@@ -365,10 +380,17 @@
       "accept": ["youtube", "vimeo"]
     },
     {
+      "type": "text",
+      "id": "poster_metafield",
+      "label": "Per-product poster metafield",
+      "info": "namespace.key of a product image metafield used as the per-product thumbnail. Falls back to the image below when a product has no value. Default: custom.feature_poster",
+      "default": "custom.feature_poster"
+    },
+    {
       "type": "image_picker",
       "id": "image",
-      "label": "Thumbnail / poster image",
-      "info": "Shown before the video plays (Shopify-hosted video, with Autoplay off). Also used as the image fallback."
+      "label": "Thumbnail / poster image (fallback)",
+      "info": "Used when a product has no poster metafield value. Shown before the video plays (Shopify-hosted video, with Autoplay off). Also used as the image fallback."
     },
     {
       "type": "checkbox",
