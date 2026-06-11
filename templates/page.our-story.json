@@ -17,10 +17,10 @@
         "heading_lead": "A quiet rebellion",
         "heading_emphasis": "against louder skincare",
         "heading_tail": ".",
-        "body": "<p>Cham Beauty began in a small laboratory outside Paris, with a single conviction: skin is not a surface to be corrected — it is a system to be supported. We watched an industry pile actives on top of actives, chasing instant glow with oils, films and fillers that vanished by morning. We wanted something else. Something true.</p>",
+        "body": "<p>Cham Beauty began in a small laboratory outside Paris, with a single conviction: skin is not a surface to be corrected — it is a system to be supported. We watched an industry pile actives on top of actives, selling transformation overnight and delivering irritation by morning. Pakistani skin had enough. We wanted something else. Something true.<br/><br/></p>",
         "body_size": "large",
         "text_align": "left",
-        "body_max_width": 48,
+        "body_max_width": 50,
         "max_width": 1100
       }
     },
@@ -42,8 +42,8 @@
         "show_rule": false,
         "heading_lead": "Developed with French standards",
         "heading_emphasis": "",
-        "body": "<p>Each Cham formula is developed in collaboration with experienced cosmetic chemists working to French formulation standards. We focus on the quality of every ingredient, the elegance of every texture, and the way each product fits into a calm, daily routine.</p><p>We do not chase hero ingredients. We compose. The base matters as much as the active. The texture matters as much as the molecule. Every detail is considered, because skin can tell.</p>",
-        "margin_top": 6
+        "body": "<p>Each Cham formula is developed in collaboration with experienced cosmetic chemists working to French formulation standards. At the base of every formulation is Rosa Damascena Flower Water — Damascus rose, steam-distilled, chosen for its soothing and conditioning properties. We focus on the quality of every ingredient, the elegance of every texture, and the way each product settles into a calm, daily routine.<br/></p><p>We do not chase hero ingredients. We compose. The base matters as much as the active. The texture matters as much as the molecule. Every detail is considered, because skin can tell.<br/><br/></p>",
+        "margin_top": 5
       }
     },
     "quote": {
@@ -51,6 +51,7 @@
       "settings": {
         "quote": "The most beautiful skin is the most well-spoken-to. Our work is simply to listen, then answer with precision.",
         "attribution": "— The Cham Atelier, Paris",
+        "text_align": "left",
         "margin_top": 8
       }
     },
@@ -70,11 +71,13 @@
       "settings": {
         "video_url": "https://cdn.shopify.com/videos/c/o/v/8548f683a508415e8a43c744bd99f5b1.mp4",
         "video_side": "right",
+        "autoplay": false,
         "eyebrow": "Inside the Atelier",
+        "show_rule": false,
         "heading_lead": "The ritual,",
         "heading_emphasis": "in motion",
         "heading_tail": ".",
-        "body": "<p>A glimpse into how Cham is made, used and felt — quiet gestures, considered textures, and the slow craft behind every formula.</p>",
+        "body": "<p>A glimpse into how Cham is made, used and felt — quiet gestures, considered textures, and the care behind every formula. Nothing rushed. Nothing added without reason.<br/><br/><br/></p>",
         "margin_top": 8
       }
     },
@@ -85,21 +88,21 @@
           "type": "card",
           "settings": {
             "title": "Small Batches",
-            "body": "<p>Produced in small batches with our partner laboratories to maintain quality and consistency.</p>"
+            "body": "<p>Produced in small, controlled batches with our partner laboratories. Smaller runs mean tighter quality control — every formula reviewed before it leaves the atelier. Consistency is not a promise here; it is a production decision.<br/><br/></p>"
           }
         },
         "c2": {
           "type": "card",
           "settings": {
             "title": "Considered Formulation",
-            "body": "<p>Each product is composed for comfort, balance and a beautiful daily feel — not for instant transformation.</p>"
+            "body": "<p>Each product is composed for comfort, balance and a beautiful daily feel. Not for instant transformation — because instant transformation in skincare is always borrowed time. The skin pays it back by morning.<br/><br/><br/></p>"
           }
         },
         "c3": {
           "type": "card",
           "settings": {
             "title": "Quiet Beauty",
-            "body": "<p>No noise. No theatre. Only what skin actually wants in a daily routine.</p>"
+            "body": "<p>No noise. No theatre. No whitening promise, no overnight miracle. Only what skin actually needs from a daily routine — and nothing it doesn't.</p>"
           }
         }
       },
@@ -109,8 +112,30 @@
         "c3"
       ],
       "settings": {
+        "eyebrow": "",
+        "show_rule": true,
+        "heading": "",
         "margin_top": 6,
         "margin_bottom": 8
+      }
+    },
+    "home_image_text_MH3pfh": {
+      "type": "home-image-text",
+      "name": "t:sections.home_image_text.presets_default",
+      "settings": {
+        "layout_style": "contained",
+        "padding_size": "default",
+        "image_side": "left",
+        "image_frame": "natural",
+        "image_position": "center center",
+        "background": "default",
+        "eyebrow": "FOR PAKISTAN",
+        "heading_lead": "Skin that knows",
+        "heading_emphasis": "its climate.",
+        "body": "<p>Pakistan's skin faces what most skincare was not designed for: intense UV, monsoon humidity, dry winters, and an industry that has spent decades selling fairness instead of health. Cham was brought to Pakistan because this skin deserves better than that. Formulas that work with the barrier, not against it. Results measured in how skin feels at the end of a week — not how it looks in a before-and-after.<br/><br/>Every formula in the Cham range is MSDS-verified, INCI-listed, and transparently documented. There are no proprietary blends, no hidden ingredients, no miracle claims. What you see on the product page is what is in the bottle — nothing more, nothing less.<br/><br/><br/></p>",
+        "cta_label": "",
+        "cta_url": "",
+        "cta_style": "outline"
       }
     }
   },
@@ -121,6 +146,7 @@
     "quote",
     "image-ritual",
     "atelier",
-    "cards"
+    "cards",
+    "home_image_text_MH3pfh"
   ]
 }
