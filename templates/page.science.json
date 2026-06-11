@@ -15,9 +15,9 @@
         "eyebrow": "The Approach",
         "show_rule": false,
         "heading_lead": "Skincare,",
-        "heading_emphasis": "considered slowly",
-        "heading_tail": ".",
-        "body": "<p>We believe great skincare is the result of careful choices — not loud promises. Every Cham product is composed around a simple idea: skin looks its best when it feels comfortable and well cared for.</p>",
+        "heading_emphasis": "considered slowly.",
+        "heading_tail": "",
+        "body": "<p>We believe great skincare is the result of careful choices — not loud promises. Every Cham formulation is built around the real needs of real skin: skin that lives in Pakistan's sun, its humidity, its changing seasons. Our approach is simple: fewer ingredients, chosen well. Trust the process.</p>",
         "body_size": "default",
         "text_align": "left",
         "body_max_width": 42,
@@ -43,7 +43,7 @@
           "settings": {
             "number": "01",
             "title": "Comfort",
-            "body": "<p>We start with how a formula feels — lightweight textures and well-tolerated bases that make daily use a pleasure, not a chore.</p>"
+            "body": "<p>Every formula begins with feel. Lightweight, non-greasy textures designed for daily wear. In Pakistan's heat and humidity, comfort isn't a luxury — it's the starting point. A formula you enjoy using is one you'll actually use.<br/><br/><br/></p>"
           }
         },
         "p2": {
@@ -51,7 +51,7 @@
           "settings": {
             "number": "02",
             "title": "Balance",
-            "body": "<p>Hydration, soothing humectants and a considered ingredient ratio. We avoid harsh strippers and unnecessary fragrance loads.</p>"
+            "body": "<p>Hydration-first. Barrier-supportive. We avoid unnecessary fragrance loads and harsh actives that strip more than they give. What remains is a formula your skin can return to every morning without compromise or irritation.<br/><br/></p>"
           }
         },
         "p3": {
@@ -59,7 +59,7 @@
           "settings": {
             "number": "03",
             "title": "Finish",
-            "body": "<p>A soft, even, naturally luminous-looking finish — the visible result of skin that simply feels good in its own right.</p>"
+            "body": "<p>A soft, even, naturally luminous finish. Not coverage — comfort made visible. The result of skin that has been given the right foundation: hydration, balance, and a little patience<br/><br/></p>"
           }
         }
       },
@@ -84,7 +84,7 @@
           "settings": {
             "eyebrow": "Less, but better",
             "title": "Considered range",
-            "body": "<p>A small, edited collection that works together. Each product earns its place — no fillers, no duplicates.</p>"
+            "body": "<p>A small, edited collection that works together. Every product earns its place — no fillers, no duplicates, no confusion. A clear routine you can build from without ever feeling overwhelmed.</p>"
           }
         },
         "c2": {
@@ -92,7 +92,7 @@
           "settings": {
             "eyebrow": "Honest claims",
             "title": "No miracles",
-            "body": "<p>We talk about how things look and feel — not what they do at a cellular level. Honest, appearance-based language. Individual results may vary.</p>"
+            "body": "<p>We describe only what you can see and feel. Never what happens at a cellular level. Honest, appearance-based language throughout. Individual results vary — and we respect that enough to say so.</p>"
           }
         }
       },
@@ -126,6 +126,27 @@
             "answer": "<p>We support the skin rather than overpower it with aggressive actives or heavy textures. We focus on how ingredients work together, how formulations feel on the skin, and how they fit naturally into a daily routine.</p>"
           }
         },
+        "faq_item_WxajBY": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I use Cham products on sensitive or acne-prone skin?",
+            "answer": "<p>Yes. Our formulations are designed with tolerability as a priority. We avoid common irritants — synthetic fragrance, harsh exfoliants, and high-concentration essential oils. All products are dermatologist-tested. If you have a known skin condition or sensitivity, we recommend reviewing the full ingredient list on your chosen product page before use, or speaking with a dermatologist.<br/><br/></p>"
+          }
+        },
+        "faq_item_Viwz3E": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I know my Cham product is authentic?",
+            "answer": "<p>Only purchase from chambeautypk.com or our verified retail partners. Counterfeit skincare is a real concern in Pakistan — we strongly recommend avoiding unofficial resellers and unverified online listings,<br/>especially on social media marketplaces. Every genuine Cham product ships directly from us. If you have any doubt about authenticity, contact us on WhatsApp before purchase.</p>"
+          }
+        },
+        "faq_item_dhgFgx": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do you offer Cash on Delivery (COD)?",
+            "answer": "<p>Yes, Cash on Delivery is available on all orders across Pakistan. You can also pay online via bank transfer or card. No advance payment is required for COD orders. For COD, payment is collected by the courier<br/>at your doorstep on delivery.<br/><br/><br/></p>"
+          }
+        },
         "q3": {
           "type": "faq_item",
           "settings": {
@@ -140,6 +161,13 @@
             "answer": "<p>No. The way ingredients interact within a formulation, the quality of the base, and the overall stability all matter. We focus on ingredient synergy rather than highlighting one molecule in isolation.</p>"
           }
         },
+        "faq_item_eAkinR": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is Cham available across Pakistan?",
+            "answer": "<p>Yes. We deliver nationwide — Karachi, Lahore, Islamabad, Rawalpindi, Peshawar, Quetta, Faisalabad, and all major cities. Orders are dispatched within 1–2 business days. Standard delivery takes 3–5 business days depending on your location. For any delivery queries, contact us via WhatsApp.</p>"
+          }
+        },
         "q5": {
           "type": "faq_item",
           "settings": {
@@ -151,8 +179,12 @@
       "block_order": [
         "q1",
         "q2",
+        "faq_item_WxajBY",
+        "faq_item_Viwz3E",
+        "faq_item_dhgFgx",
         "q3",
         "q4",
+        "faq_item_eAkinR",
         "q5"
       ],
       "settings": {
