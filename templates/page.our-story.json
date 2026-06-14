@@ -92,6 +92,7 @@
         "c1": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/Create_a_photorealistic_luxury_skincare_202606142018.jpg",
             "title": "Small Batches",
             "body": "<p>Produced in small, controlled batches with our partner laboratories. Smaller runs mean tighter quality control — every formula reviewed before it leaves the atelier. Consistency is not a promise here; it is a production decision.<br/><br/></p>"
           }
@@ -99,6 +100,7 @@
         "c2": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/now_chnage_hair_color_to_202606142022.jpg",
             "title": "Considered Formulation",
             "body": "<p>Each product is composed for comfort, balance and a beautiful daily feel. Not for instant transformation — because instant transformation in skincare is always borrowed time. The skin pays it back by morning.<br/><br/><br/></p>"
           }
@@ -106,6 +108,7 @@
         "c3": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/Create_a_photorealistic_minimalist_luxury_202606142027.jpg",
             "title": "Quiet Beauty",
             "body": "<p>No noise. No theatre. No whitening promise, no overnight miracle. Only what skin actually needs from a daily routine — and nothing it doesn't.</p>"
           }
@@ -118,8 +121,8 @@
       ],
       "settings": {
         "eyebrow": "",
-        "show_rule": true,
         "heading": "",
+        "card_ratio": "3 / 4",
         "margin_top": 6,
         "margin_bottom": 8
       }
