@@ -27,12 +27,14 @@
     "image-portrait": {
       "type": "page-image-band",
       "settings": {
+        "image": "shopify://shop_images/Edit_the_provided_image._Keep_202606141806.jpg",
+        "image_mobile": "shopify://shop_images/Edit_the_provided_image._Keep_202606141806.jpg",
         "alt": "",
         "aspect_mobile": "16 / 9",
         "aspect_desktop": "21 / 9",
         "focal_x": 50,
-        "focal_y": 50,
-        "margin_top": 6
+        "focal_y": 60,
+        "margin_top": 0
       }
     },
     "origin": {
