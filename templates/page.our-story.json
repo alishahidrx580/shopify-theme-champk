@@ -74,6 +74,7 @@
       "type": "page-video-text",
       "settings": {
         "video_url": "https://cdn.shopify.com/videos/c/o/v/8548f683a508415e8a43c744bd99f5b1.mp4",
+        "poster": "shopify://shop_images/convert_this_image_ratio_to_202606141831.jpg",
         "video_side": "right",
         "autoplay": false,
         "eyebrow": "Inside the Atelier",
