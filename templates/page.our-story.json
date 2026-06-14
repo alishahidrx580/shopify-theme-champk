@@ -54,18 +54,20 @@
         "quote": "The most beautiful skin is the most well-spoken-to. Our work is simply to listen, then answer with precision.",
         "attribution": "— The Cham Atelier, Paris",
         "text_align": "left",
-        "margin_top": 8
+        "margin_top": 4
       }
     },
     "image-ritual": {
       "type": "page-image-band",
       "settings": {
+        "image": "shopify://shop_images/Before_generating__study_both_reference_202606141819.jpg",
+        "image_mobile": "shopify://shop_images/Before_generating__study_both_reference_202606141819.jpg",
         "alt": "",
         "aspect_mobile": "16 / 9",
         "aspect_desktop": "21 / 9",
         "focal_x": 50,
         "focal_y": 50,
-        "margin_top": 6
+        "margin_top": 2
       }
     },
     "atelier": {
