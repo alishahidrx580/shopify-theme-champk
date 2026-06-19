@@ -43,6 +43,7 @@
         "p1": {
           "type": "pillar",
           "settings": {
+            "image": "shopify://shop_images/Photorealistic_luxury_skincare_editorial_macro_202606191946.jpg",
             "number": "01",
             "title": "Comfort",
             "body": "<p>Every formula begins with feel. Lightweight, non-greasy textures designed for daily wear. In Pakistan's heat and humidity, comfort isn't a luxury — it's the starting point. A formula you enjoy using is one you'll actually use.<br/><br/><br/></p>"
