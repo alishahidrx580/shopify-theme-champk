@@ -87,6 +87,7 @@
         "c1": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/Photorealistic_luxury_skincare_editorial_photograph__202606192008.jpg",
             "eyebrow": "Less, but better",
             "title": "Considered range",
             "body": "<p>A small, edited collection that works together. Every product earns its place — no fillers, no duplicates, no confusion. A clear routine you can build from without ever feeling overwhelmed.</p>"
@@ -95,6 +96,7 @@
         "c2": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/Photorealistic_editorial_portrait_photograph_of_202606192011.jpg",
             "eyebrow": "Honest claims",
             "title": "No miracles",
             "body": "<p>We describe only what you can see and feel. Never what happens at a cellular level. Honest, appearance-based language throughout. Individual results vary — and we respect that enough to say so.</p>"
