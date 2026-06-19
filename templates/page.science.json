@@ -27,12 +27,14 @@
     "image-band": {
       "type": "page-image-band",
       "settings": {
+        "image": "shopify://shop_images/Photorealistic_luxury_skincare_ingredient_still-life_202606191719.jpg",
+        "image_mobile": "shopify://shop_images/Photorealistic_luxury_skincare_ingredient_still-life_202606191719.jpg",
         "alt": "",
         "aspect_mobile": "16 / 9",
         "aspect_desktop": "21 / 8",
         "focal_x": 50,
         "focal_y": 50,
-        "margin_top": 6
+        "margin_top": 3
       }
     },
     "principles": {
