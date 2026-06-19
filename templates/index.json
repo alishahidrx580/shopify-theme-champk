@@ -182,6 +182,7 @@
         "p1": {
           "type": "pillar",
           "settings": {
+            "image": "shopify://shop_images/Photorealistic_luxury_skincare_editorial_macro_202606191946.jpg",
             "number": "01",
             "title": "Comfort",
             "body": "<p>Textures designed to feel weightless and kind on every skin type. No heaviness, no residue.</p>"
@@ -190,6 +191,7 @@
         "p2": {
           "type": "pillar",
           "settings": {
+            "image": "shopify://shop_images/Photorealistic_luxury_skincare_editorial_macro_202606191950.jpg",
             "number": "02",
             "title": "Balance",
             "body": "<p>Hydration, barrier and pH supported in equilibrium — never stripped or overstimulated.</p>"
@@ -198,6 +200,7 @@
         "p3": {
           "type": "pillar",
           "settings": {
+            "image": "shopify://shop_images/Photorealistic_luxury_skincare_editorial_photograph__202606191952.jpg",
             "number": "03",
             "title": "Finish",
             "body": "<p>A soft, even, naturally luminous look that comes from skin that simply feels good.</p>"
