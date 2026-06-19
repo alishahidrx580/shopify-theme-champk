@@ -52,6 +52,7 @@
         "p2": {
           "type": "pillar",
           "settings": {
+            "image": "shopify://shop_images/Photorealistic_luxury_skincare_editorial_macro_202606191950.jpg",
             "number": "02",
             "title": "Balance",
             "body": "<p>Hydration-first. Barrier-supportive. We avoid unnecessary fragrance loads and harsh actives that strip more than they give. What remains is a formula your skin can return to every morning without compromise or irritation.<br/><br/></p>"
@@ -60,6 +61,7 @@
         "p3": {
           "type": "pillar",
           "settings": {
+            "image": "shopify://shop_images/Photorealistic_luxury_skincare_editorial_photograph__202606191952.jpg",
             "number": "03",
             "title": "Finish",
             "body": "<p>A soft, even, naturally luminous finish. Not coverage — comfort made visible. The result of skin that has been given the right foundation: hydration, balance, and a little patience<br/><br/></p>"
