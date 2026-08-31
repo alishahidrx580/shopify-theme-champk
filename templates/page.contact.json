@@ -16,26 +16,34 @@
           "type": "info_block",
           "settings": {
             "label": "Care",
-            "content": "<p>hi@chamskincare.com</p><p>Mon — Fri · 10:00 to 18:00 IST</p>"
+            "content": "<p>chambeautypk@gmail.com</p><p>Mon — Fri · 10:00 to 18:00 PKT</p>"
+          }
+        },
+        "b2": {
+          "type": "info_block",
+          "settings": {
+            "label": "Phone",
+            "content": "<p>+923268399421</p>"
           }
         },
         "b3": {
           "type": "info_block",
           "settings": {
             "label": "Address",
-            "content": "<p>Noida, Uttar Pradesh</p>"
+            "content": "<p>DHA Phase 3, Y Block, Lahore</p>"
           }
         },
         "b5": {
           "type": "info_block",
           "settings": {
             "label": "Follow",
-            "content": "<p>Instagram · @chamskincare.official</p>"
+            "content": "<p>Instagram · @chambeautypk</p>"
           }
         }
       },
       "block_order": [
         "b1",
+        "b2",
         "b3",
         "b5"
       ],
