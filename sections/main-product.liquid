@@ -666,7 +666,7 @@
 
     var form        = section.querySelector('[data-product-form]');
     var stickyBar   = section.querySelector('[data-sticky-bar]');
-    var header      = section.querySelector('.main-product__header');
+    var atcButton      = section.querySelector('[data-atc]');
     var description = section.querySelector('[data-description]');
     var seeMore     = section.querySelector('[data-see-more]');
     var track       = section.querySelector('[data-gallery-track]');
@@ -720,13 +720,13 @@
       updateProgress();
     }
 
-    if (stickyBar && header && 'IntersectionObserver' in window) {
+    if (stickyBar && atcButton && 'IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           stickyBar.classList.toggle('is-visible', !en.isIntersecting);
         });
       }, { rootMargin: '-80px 0px 0px 0px', threshold: 0 });
-      io.observe(header);
+      io.observe(atcButton);
     }
   })();
 {% endjavascript %}
