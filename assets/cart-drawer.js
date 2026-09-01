@@ -156,23 +156,63 @@
   if (urlParams.get('cart') === 'open') {
     open();
   }
+  // External scripts (e.g. the product page's Add to cart form) fire this
+  // event instead of doing a full page reload. We re-fetch the current
+  // page, swap in the fresh drawer markup (correct for brand-new items and
+  // the empty -> non-empty transition alike), sync the count badges
+  // site-wide, and re-bind the discount form (its listener doesn't survive
+  // the markup swap since it's not delegated).
+  async function refreshFromServer() {
+    const res = await fetch(window.location.pathname + window.location.search);
+    if (!res.ok) throw new Error('Cart refresh failed: ' + res.status);
+    const html = await res.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+
+    const freshDrawer = doc.querySelector('[data-cart-drawer]');
+    if (freshDrawer) {
+      drawer.innerHTML = freshDrawer.innerHTML;
+      bindDiscountForm();
+    }
+
+    const freshCount = doc.querySelector('[data-cart-count]');
+    if (freshCount) {
+      const newCount = freshCount.textContent.trim();
+      document.querySelectorAll('[data-cart-count]').forEach((el) => {
+        el.textContent = newCount;
+        el.setAttribute('data-cart-count', newCount);
+      });
+    }
+  }
+
+  document.addEventListener('cart:refresh', async () => {
+    try {
+      await refreshFromServer();
+    } catch (err) {
+      console.error('Cart refresh failed', err);
+    }
+    open();
+  });
+
 
   // Discount form — apply via Shopify's /discount/<code>?redirect=... URL.
   // We round-trip through a redirect so Shopify can validate and apply server-side.
   // After return, if the attempted code didn't land in the applied list we
   // surface the error inline (matches the prod-site UX).
-  const discountForm = drawer.querySelector('[data-discount-form]');
-  if (discountForm) {
-    discountForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const input = discountForm.querySelector('[data-discount-input]');
-      if (!input) return;
-      const code = input.value.trim();
-      if (!code) return;
-      const redirect = window.location.pathname + '?cart=open&attempted_discount=' + encodeURIComponent(code);
-      window.location.assign('/discount/' + encodeURIComponent(code) + '?redirect=' + encodeURIComponent(redirect));
-    });
+  function bindDiscountForm() {
+    const discountForm = drawer.querySelector('[data-discount-form]');
+    if (discountForm) {
+      discountForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = discountForm.querySelector('[data-discount-input]');
+        if (!input) return;
+        const code = input.value.trim();
+        if (!code) return;
+        const redirect = window.location.pathname + '?cart=open&attempted_discount=' + encodeURIComponent(code);
+        window.location.assign('/discount/' + encodeURIComponent(code) + '?redirect=' + encodeURIComponent(redirect));
+      });
+    }
   }
+  bindDiscountForm();
 
   // After a discount redirect, compare the attempted code against the applied
   // discounts rendered server-side. If absent, show the error message. Either
