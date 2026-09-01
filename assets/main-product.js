@@ -226,8 +226,12 @@
 
   // -------- Variants --------
   function initVariants(section, form, variants) {
+    if (!variants.length) return;
+
     const radios = form.querySelectorAll('[data-option-position]');
-    if (!radios.length || !variants.length) return;
+    onVariantChange(section, form, variants);
+
+    if (!radios.length) return;
 
     radios.forEach((radio) => {
       radio.addEventListener('change', () => onVariantChange(section, form, variants));
