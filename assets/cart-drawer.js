@@ -134,6 +134,9 @@
       newQty = 0;
     }
 
+    const errorEl = row.querySelector('[data-cart-qty-error]');
+    if (errorEl) errorEl.hidden = true;
+
     row.setAttribute('data-loading', 'true');
     try {
       const res = await fetch('/cart/change.js', {
@@ -141,12 +144,19 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: lineKey, quantity: newQty }),
       });
-      if (!res.ok) throw new Error('Cart change failed: ' + res.status);
-      const cart = await res.json();
+    if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.description || data.message || 'Cart change failed: ' + res.status);
+        }
+        const cart = await res.json();
       applyCart(cart, row, newQty === 0);
     } catch (err) {
       console.error('Cart change failed', err);
       row.removeAttribute('data-loading');
+      if (errorEl) {
+        errorEl.querySelector('span').textContent = err.message || 'Could not update quantity.';
+        errorEl.hidden = false;
+      }
     }
   });
 
