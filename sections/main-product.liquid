@@ -720,14 +720,14 @@
       updateProgress();
     }
 
-    if (stickyBar && atcButton && 'IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          var scrolledPast = !en.isIntersecting && en.boundingClientRect.top < 0;
-          stickyBar.classList.toggle('is-visible', scrolledPast);
-        });
-      }, { rootMargin: '-80px 0px 0px 0px', threshold: 0 });
-      io.observe(atcButton);
+    if (stickyBar && atcButton) {
+      var updateStickyBar = function () {
+        var rect = atcButton.getBoundingClientRect();
+        stickyBar.classList.toggle('is-visible', rect.top < 0);
+      };
+      window.addEventListener('scroll', updateStickyBar, { passive: true });
+      window.addEventListener('resize', updateStickyBar);
+      updateStickyBar();
     }
   })();
 {% endjavascript %}
