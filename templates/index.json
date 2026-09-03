@@ -12,6 +12,16 @@
     "hero": {
       "type": "home-hero",
       "blocks": {
+        "hero_image_3exm4i": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/cham-hero-rose.png",
+            "position_x": 50,
+            "position_y": 50,
+            "position_x_mobile": 50,
+            "position_y_mobile": 50
+          }
+        },
         "hero_image_jkywpR": {
           "type": "hero_image",
           "settings": {
@@ -24,12 +34,13 @@
         }
       },
       "block_order": [
+        "hero_image_3exm4i",
         "hero_image_jkywpR"
       ],
       "settings": {
         "image": "shopify://shop_images/cham-hero.png",
-        "position_x": 50,
-        "position_y": 50,
+        "position_x": 0,
+        "position_y": 69,
         "position_x_mobile": 50,
         "position_y_mobile": 50,
         "rotation_seconds": 7,
@@ -38,19 +49,19 @@
         "kb_zoom_to": 110,
         "kb_duration_s": 14,
         "kb_preset_mobile": "whisper",
-        "eyebrow": "Developed with French Formulation Standards",
-        "heading_lead": "Intelligent Skincare.",
+        "eyebrow": "",
+        "heading_lead": "",
         "heading_break": true,
-        "heading_emphasis": "Radiance revealed.",
-        "body": "<p>Precisely formulated to support the skin's natural recovery rhythms. Three products. One quiet result.<br/><br/><br/></p>",
-        "cta_primary_label": "Begin the ritual →",
+        "heading_emphasis": "",
+        "body": "<p><br/><br/></p>",
+        "cta_primary_label": "",
         "cta_primary_url": "/collections/all",
-        "cta_secondary_label": "The science behind CHAM",
+        "cta_secondary_label": "",
         "cta_secondary_url": "/pages/research-and-philosophy",
-        "min_height_svh": 85,
-        "min_height_px": 480,
+        "min_height_svh": 100,
+        "min_height_px": 520,
         "min_height_svh_mobile": 80,
-        "min_height_px_mobile": 520
+        "min_height_px_mobile": 640
       }
     },
     "featured-products": {
