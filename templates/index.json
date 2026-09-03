@@ -11,6 +11,21 @@
   "sections": {
     "hero": {
       "type": "home-hero",
+      "blocks": {
+        "hero_image_jkywpR": {
+          "type": "hero_image",
+          "settings": {
+            "image": "shopify://shop_images/cham-hero-rose.png",
+            "position_x": 50,
+            "position_y": 50,
+            "position_x_mobile": 50,
+            "position_y_mobile": 50
+          }
+        }
+      },
+      "block_order": [
+        "hero_image_jkywpR"
+      ],
       "settings": {
         "image": "shopify://shop_images/cham-hero.png",
         "position_x": 50,
