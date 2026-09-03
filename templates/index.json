@@ -11,59 +11,8 @@
   "sections": {
     "hero": {
       "type": "home-hero",
-      "blocks": {
-        "hero_image_pHnHmi": {
-          "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Good_thinking___if_Nano_202605231602.jpg",
-            "position_x": 50,
-            "position_y": 1,
-            "image_mobile": "shopify://shop_images/need_this_image_for_9_16_202605231659.jpg",
-            "position_x_mobile": 50,
-            "position_y_mobile": 40
-          }
-        },
-        "hero_image_h474QN": {
-          "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Here_s_the_updated_prompt_with_202605231524.jpg",
-            "position_x": 50,
-            "position_y": 55,
-            "image_mobile": "shopify://shop_images/transform_this_image_for_9_16_202605231704.jpg",
-            "position_x_mobile": 50,
-            "position_y_mobile": 66
-          }
-        },
-        "hero_image_MG9Trz": {
-          "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Prompt__Transform_this_reference_image_202605231347_7bf9eb8f-d871-4bc0-b3db-e60a209cf369.jpg",
-            "position_x": 50,
-            "position_y": 0,
-            "image_mobile": "shopify://shop_images/Reframe_and_recompose_this_16_9_202605231713.jpg",
-            "position_x_mobile": 50,
-            "position_y_mobile": 50
-          }
-        },
-        "hero_image_cVJWxQ": {
-          "type": "hero_image",
-          "settings": {
-            "image": "shopify://shop_images/Woman_with_a_glowing_skin.jpg",
-            "position_x": 50,
-            "position_y": 4,
-            "image_mobile": "shopify://shop_images/Reframe_and_recompose_this_16_9_202605231715.jpg",
-            "position_x_mobile": 50,
-            "position_y_mobile": 50
-          }
-        }
-      },
-      "block_order": [
-        "hero_image_pHnHmi",
-        "hero_image_h474QN",
-        "hero_image_MG9Trz",
-        "hero_image_cVJWxQ"
-      ],
       "settings": {
+        "image": "shopify://shop_images/cham-hero.png",
         "position_x": 50,
         "position_y": 50,
         "position_x_mobile": 50,
