@@ -31,11 +31,21 @@
             "position_x_mobile": 50,
             "position_y_mobile": 50
           }
+        },
+        "hero_image_dMy7wM": {
+          "type": "hero_image",
+          "settings": {
+            "position_x": 50,
+            "position_y": 50,
+            "position_x_mobile": 50,
+            "position_y_mobile": 50
+          }
         }
       },
       "block_order": [
         "hero_image_3exm4i",
-        "hero_image_jkywpR"
+        "hero_image_jkywpR",
+        "hero_image_dMy7wM"
       ],
       "settings": {
         "image": "shopify://shop_images/cham-hero.png",
