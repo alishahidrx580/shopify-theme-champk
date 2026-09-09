@@ -48,11 +48,11 @@
         "hero_image_dMy7wM"
       ],
       "custom_css": [
-        ".home-hero__overlay{background:linear-gradient(180deg,rgba(20,14,8,0) 0%,rgba(20,14,8,.15) 35%,rgba(20,14,8,.55) 68%,rgba(20,14,8,.72) 100%),linear-gradient(90deg,rgba(20,14,8,.35) 0%,rgba(20,14,8,.15) 45%,rgba(20,14,8,0) 70%);pointer-events:none}",
-        ".home-hero__eyebrow,.home-hero__heading,.home-hero__heading em,.home-hero__body p{text-shadow:0 2px 14px rgba(0,0,0,.45),0 1px 3px rgba(0,0,0,.35)}",
-        ".home-hero__heading{color:#fff}",
-        ".home-hero__body p{color:rgba(255,255,255,.92)}",
-        ".home-hero__cta-secondary{color:#fff;}"
+        ".home-hero__overlay{background:linear-gradient(180deg,transparent,rgba(20,14,8,.65)),linear-gradient(90deg,rgba(20,14,8,.3),transparent 70%);pointer-events:none}",
+        ".home-hero__eyebrow,.home-hero__heading,.home-hero__heading em,.home-hero__body p{text-shadow:0 2px 10px rgba(0,0,0,.5)}",
+        ".home-hero__heading,.home-hero__body p,.home-hero__cta-secondary{color:#fff}",
+        ".home-hero__cta-secondary{border-bottom:1px solid #fff}",
+        ".home-hero__inner{justify-content:center}"
       ],
       "settings": {
         "image": "shopify://shop_images/cham-hero.png",
