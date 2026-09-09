@@ -18,6 +18,7 @@
             "image": "shopify://shop_images/cham-hero-rose.png",
             "position_x": 50,
             "position_y": 50,
+            "image_mobile": "shopify://shop_images/cham-hero-rose.png_2K_202609091800.jpg",
             "position_x_mobile": 50,
             "position_y_mobile": 50
           }
@@ -48,16 +49,13 @@
         "hero_image_dMy7wM"
       ],
       "custom_css": [
-        ".home-hero__overlay{background:linear-gradient(180deg,transparent,rgba(20,14,8,.65)),linear-gradient(90deg,rgba(20,14,8,.3),transparent 70%);pointer-events:none}",
-        ".home-hero__eyebrow,.home-hero__heading,.home-hero__heading em,.home-hero__body p{text-shadow:0 2px 10px rgba(0,0,0,.5)}",
-        ".home-hero__heading,.home-hero__body p,.home-hero__cta-secondary{color:#fff}",
-        ".home-hero__cta-secondary{border-bottom:1px solid #fff}",
-        ".home-hero__inner{justify-content:center}"
+        "body {}"
       ],
       "settings": {
         "image": "shopify://shop_images/cham-hero.png",
         "position_x": 0,
         "position_y": 69,
+        "image_mobile": "shopify://shop_images/cham-hero.png_2K_202609091758.jpg",
         "position_x_mobile": 50,
         "position_y_mobile": 50,
         "rotation_seconds": 7,
