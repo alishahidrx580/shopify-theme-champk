@@ -25,6 +25,7 @@
         },
         "hero_image_jkywpR": {
           "type": "hero_image",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/cham-hero-rose.png",
             "position_x": 50,
