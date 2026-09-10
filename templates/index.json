@@ -49,7 +49,12 @@
         "hero_image_dMy7wM"
       ],
       "custom_css": [
-        ".home-hero__overlay{top:30%;backdrop-filter:blur(26px) saturate(1.1) brightness(1.08);}"
+        ".home-hero__overlay{background-color:rgba(20,14,8,.5);background-image:linear-gradient(to top,rgba(20,14,8,.35),transparent 70%)}",
+        ".home-hero__eyebrow{font-size:.7rem!important;text-shadow:0 1px 6px rgba(0,0,0,.5)}",
+        ".home-hero__heading{text-shadow:0 2px 20px rgba(0,0,0,.45)}",
+        ".home-hero__body{text-shadow:0 1px 10px rgba(0,0,0,.4)}",
+        ".home-hero__ctas{margin-top:2rem}",
+        ".home-hero__cta-primary{padding:1rem 2.2rem;box-shadow:0 6px 18px rgba(0,0,0,.3)}"
       ],
       "settings": {
         "image": "shopify://shop_images/cham-hero.png",
